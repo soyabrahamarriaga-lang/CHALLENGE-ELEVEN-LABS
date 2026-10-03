@@ -31,6 +31,23 @@ async function setup(overrides = {}, options = {}) {
   const base = `http://127.0.0.1:${server.address().port}`;
   return {
     status: () => fetch(base + "/api/livekit/status"),
+    agentStatus: () => fetch(base + "/api/elevenlabs/status"),
+    agent: (body = {}, headers = {}) =>
+      fetch(base + "/api/elevenlabs/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: env.APP_ORIGIN,
+          ...headers,
+        },
+        body: JSON.stringify({
+          displayName: "Experto",
+          consent: true,
+          joinCode: env.LIVEKIT_JOIN_CODE,
+          mode: "voice",
+          ...body,
+        }),
+      }),
     join: (body = {}, headers = {}) =>
       fetch(base + "/api/livekit/token", {
         method: "POST",
@@ -129,5 +146,47 @@ describe("LiveKit token service", () => {
     const result = await api.join();
     expect(result.status).toBe(500);
     expect(await result.text()).not.toContain(env.LIVEKIT_API_SECRET);
+  });
+});
+
+describe("protected agent endpoint", () => {
+  it("requires code, consent and origin before contacting ElevenLabs", async () => {
+    const agentAccess = vi.fn(async () => ({
+      conversationToken: "test-agent-token",
+    }));
+    const api = await setup({}, { agentConfig: { ready: true }, agentAccess });
+    expect((await api.agent({ consent: false })).status).toBe(400);
+    expect((await api.agent({ joinCode: "wrong" })).status).toBe(401);
+    expect(
+      (await api.agent({}, { Origin: "https://untrusted.example" })).status,
+    ).toBe(403);
+    expect((await api.agent({ mode: "other" })).status).toBe(400);
+    expect(agentAccess).not.toHaveBeenCalled();
+    const response = await api.agent({ agentId: "cannot-override" });
+    expect(await response.json()).toEqual({
+      conversationToken: "test-agent-token",
+    });
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    expect(agentAccess).toHaveBeenCalledWith("voice");
+  });
+  it("can authorize individual conversations without LiveKit and supports text mode", async () => {
+    const agentAccess = vi.fn(async () => ({ signedUrl: "test-signed-url" }));
+    const api = await setup(
+      { LIVEKIT_API_KEY: "" },
+      { agentConfig: { ready: true }, agentAccess },
+    );
+    expect(await (await api.agentStatus()).json()).toEqual({
+      configured: true,
+    });
+    expect((await api.agent({ mode: "text" })).status).toBe(200);
+    expect(agentAccess).toHaveBeenCalledWith("text");
+    const missing = await setup(
+      {},
+      { agentConfig: { ready: false }, agentAccess },
+    );
+    expect(await (await missing.agentStatus()).json()).toEqual({
+      configured: false,
+    });
+    expect((await missing.agent()).status).toBe(503);
   });
 });

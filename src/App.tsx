@@ -27,6 +27,7 @@ import {
 import { useDemoAgent } from "./services/useDemoAgent";
 import { timeLabel } from "./domain/callMachine";
 const LiveCall = lazy(() => import("./features/LiveCall"));
+const AgentConversation = lazy(() => import("./features/AgentConversation"));
 import "./features/LiveCall.css";
 function readRoute() {
   const parts = window.location.hash.replace(/^#\/?/, "").split("/");
@@ -95,6 +96,10 @@ export default function App() {
     dispatch({ type: "PAUSE" });
     navigate("call");
   };
+  const openAgent = () => {
+    dispatch({ type: "PAUSE" });
+    navigate("agent");
+  };
   const onSave = (title: string) => {
     const session = createDemoSession(title, state.elapsed, state.excluded);
     const persisted = demoRepository.save(session);
@@ -121,17 +126,19 @@ export default function App() {
     }
   };
   const sectionTitle =
-    route.view === "call"
-      ? "Videollamada"
-      : route.view === "home"
-        ? route.role === "senior"
-          ? "Compartir experiencia"
-          : "Mi aprendizaje"
-        : route.view === "saved"
-          ? "Guardadas"
-          : route.view === "session"
-            ? "Explorar una experiencia"
-            : "Biblioteca";
+    route.view === "agent"
+      ? "Tu aprendiz de IA"
+      : route.view === "call"
+        ? "Videollamada"
+        : route.view === "home"
+          ? route.role === "senior"
+            ? "Compartir experiencia"
+            : "Mi aprendizaje"
+          : route.view === "saved"
+            ? "Guardadas"
+            : route.view === "session"
+              ? "Explorar una experiencia"
+              : "Biblioteca";
   const currentSession = sessions.find((s) => s.id === route.id);
   const inSession = state.session === "active" || state.session === "paused";
   return (
@@ -226,6 +233,14 @@ export default function App() {
             )}
           </button>
           <button
+            className={route.view === "agent" ? "selected" : ""}
+            aria-current={route.view === "agent" ? "page" : undefined}
+            onClick={openAgent}
+          >
+            <AudioLines size={19} />
+            Tu aprendiz de IA
+          </button>
+          <button
             className={route.view === "call" ? "selected" : ""}
             aria-current={route.view === "call" ? "page" : undefined}
             onClick={openLiveCall}
@@ -287,7 +302,12 @@ export default function App() {
               <strong>{sectionTitle}</strong>
             </span>
           </div>
-          {route.view === "call" ? (
+          {route.view === "agent" ? (
+            <span className="real-call-badge">
+              <AudioLines size={16} />
+              ElevenLabs · Individual
+            </span>
+          ) : route.view === "call" ? (
             <span className="real-call-badge">
               <Video size={16} />
               Videollamada real
@@ -339,6 +359,7 @@ export default function App() {
               openLibrary={() => navigate("library")}
               onSave={onSave}
               openLiveCall={openLiveCall}
+              openAgent={openAgent}
             />
           )}
           {route.view === "home" && route.role === "intern" && (
@@ -378,12 +399,17 @@ export default function App() {
                 onAction={() => navigate("library")}
               />
             ))}
+          {route.view === "agent" && (
+            <Suspense fallback={<p role="status">Preparando conversación…</p>}>
+              <AgentConversation />
+            </Suspense>
+          )}
           {route.view === "call" && (
             <Suspense fallback={<p role="status">Preparando videollamada…</p>}>
               <LiveCall />
             </Suspense>
           )}
-          {!["home", "library", "saved", "session", "call"].includes(
+          {!["home", "library", "saved", "session", "call", "agent"].includes(
             route.view,
           ) && (
             <EmptyState
@@ -508,8 +534,9 @@ export default function App() {
               Los perfiles y procesos de la biblioteca son simulados. La sección
               Videollamada permite comunicarse de verdad cuando LiveKit está
               configurado. Las sesiones que guardes permanecen en este
-              navegador; no se envían a un servidor. La integración real de IA y
-              las grabaciones se incorporarán después.
+              navegador; no se envían a un servidor. Tu aprendiz de IA abre una
+              conversación individual real con ElevenLabs; sus mensajes no
+              generan todavía un Work Map.
             </p>
           </div>
           <div className="modal-actions">

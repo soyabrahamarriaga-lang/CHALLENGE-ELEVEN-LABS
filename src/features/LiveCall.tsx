@@ -391,8 +391,8 @@ export default function LiveCall() {
               </li>
             </ol>
             <p className="rtc-agent-note">
-              La integración del aprendiz de IA se conectará a esta sala en una
-              etapa posterior.
+              Para conversar individualmente con el agente, abre «Tu aprendiz
+              de IA». El agente no participa en esta sala del equipo.
             </p>
           </aside>
         </div>

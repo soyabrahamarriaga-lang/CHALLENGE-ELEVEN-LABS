@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "id": "20261003T233502Z-codex-6c620d9f",
+  "at": "2026-10-03T23:35:02.264626Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "elevenlabs-individual-agent",
+  "summary": "Integrar conversación individual con el agente ElevenLabs existente por voz o texto",
+  "result": "API autenticada, accesos temporales WebRTC y WebSocket emitidos y conversación real por texto respondida en UserHelper; voz física pendiente del operador",
+  "files": [
+    ".env.example",
+    "DESIGN.md",
+    "README.md",
+    "agent-session.html",
+    "context/STATE.md",
+    "context/decisions/ADR-0010.md",
+    "context/ontology.json",
+    "docs/ELEVENLABS.md",
+    "docs/FRONTEND-PROTOTYPE.md",
+    "docs/LIVEKIT.md",
+    "docs/READINESS.md",
+    "package-lock.json",
+    "package.json",
+    "server/elevenlabs.mjs",
+    "server/elevenlabs.test.mjs",
+    "server/livekit.mjs",
+    "server/livekit.test.mjs",
+    "src/App.tsx",
+    "src/features/AgentConversation.css",
+    "src/features/AgentConversation.tsx",
+    "src/features/LiveCall.tsx",
+    "src/features/Senior.tsx",
+    "src/services/agentFrame.ts",
+    "src/services/agentProtocol.test.ts",
+    "src/services/agentProtocol.ts",
+    "src/styles.css",
+    "vite.config.ts"
+  ],
+  "decisions": [
+    "SDK oficial con accesos temporales emitidos por backend, agente fijo, origen, consentimiento y código de equipo; la clave permanece privada",
+    "Aislar SDK en un iframe del mismo origen retirado al cancelar o salir para terminar también trabajo y permisos pendientes; conversación individual separada de sala LiveKit",
+    "Documentar retención de audio activa y autenticación obligatoria desactivada en el agente observado sin cambiar su configuración remota",
+    "PR dependiente de codex/livekit-calls porque reutiliza su servicio de acceso todavía pendiente en PR #5; no integrar esa base automáticamente"
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0010.md"
+  ],
+  "ontology_review": "Añadir conversación individual y mensaje atribuido; distinguir configuración, conexión, transporte, transcripción y conocimiento validado; conservar esquema versión 1",
+  "validation": [
+    "npm test: 38 pruebas pasaron en 6 archivos",
+    "npm run build: TypeScript y Vite pasaron; dos entradas HTML generadas; aviso por chunk multimedia compartido de 518.42 kB",
+    "python3 -m unittest discover -s tests -q: 28 pruebas pasaron",
+    "API real: configuración y acceso temporal de ambos transportes verificados sin imprimir credenciales; no se inició voz real",
+    "Navegador: inicio bloqueado sin consentimiento; texto sintético enviado y respuesta del agente recibida; terminar deja cero iframes; código incorrecto muestra error sin sesión; volver a la vista deja mensajes vacíos y consentimiento reiniciado; ancho 390 px sin desbordamiento"
+  ],
+  "next_steps": [
+    "Probar voz y salida de audio con permiso explícito del operador, denegación y cancelación de permiso pendiente, cierre y desconexión en navegador de entrega",
+    "Integrar PR dependiente después de LiveKit; desplegar frontend y backend con HTTPS y ambas rutas API",
+    "Acordar retención y acceso del agente; implementar visión, evidencia, debrief, teach-back y Map/Teach según roadmap"
+  ]
+}

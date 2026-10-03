@@ -15,11 +15,13 @@ UserHelper tiene frontend React + TypeScript con perfiles senior e intern, llama
 
 Se añadió una sección independiente de videollamada con transporte LiveKit, cámara, micrófono y pantalla mediante activación explícita, más un backend de tokens. Configuración y límites: docs/LIVEKIT.md; decisión: ADR-0009. Las credenciales del proyecto Cloud autenticaron con éxito en una consulta de salas; dos clientes de navegador entraron a la misma sala y mostraron presencia mutua con dispositivos apagados. La transmisión real de medios entre dos computadoras todavía necesita prueba con sus operadores.
 
-Todavía faltan visión sobre la pantalla compartida, agente ElevenLabs, debrief, teach-back validado, Work Map generado desde evidencia, tutor e intervención en un caso nuevo. El prototipo no demuestra todavía los mínimos Capture → Map → Teach del challenge.
+Se añadió conversación individual con el agente existente de ElevenLabs por voz o texto, independiente de la sala del equipo. Se verificaron credenciales, accesos temporales y una respuesta real por texto; la prueba física de micrófono y audio queda pendiente del operador. La API key permanece en el backend; el proveedor tiene retención de audio activada y autenticación obligatoria del agente desactivada. Detalles: docs/ELEVENLABS.md y ADR-0010.
+
+Todavía faltan visión sobre la pantalla compartida, debrief, teach-back validado, Work Map generado desde evidencia, tutor e intervención en un caso nuevo. El prototipo no demuestra todavía los mínimos Capture → Map → Teach del challenge.
 
 ## Prioridad actual del usuario
 
-Integrar videollamadas LiveKit en UserHelper y configurar el proyecto Cloud creado por el usuario; mantener el mapa y el roadmap como guía del agente y la integración posterior. **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC)**. T0 del 3 de octubre a las 13:41:57 se conserva: el presupuesto total pasa a 16 h 18 min 3 s; no se reinicia el reloj. Equipo de tres personas. Se verificó sesión de ElevenLabs en Chrome y una lista visible sin agentes. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con acceso MCP autenticado todavía sin verificar. El intento de guardar autorización falló por permisos del almacén local; no bloquea el frontend simulado. No requiere API key para ese acceso.
+Integrar el agente ElevenLabs existente para conversación individual con el experto, conservando la videollamada del equipo por separado; mantener mapa y roadmap como guía. **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC)**. T0 del 3 de octubre a las 13:41:57 se conserva: el presupuesto total pasa a 16 h 18 min 3 s; no se reinicia el reloj. Equipo de tres personas. La inspección inicial del navegador mostró una lista vacía, superada por la inspección API del agente que el usuario configuró después. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con acceso MCP autenticado todavía sin verificar. El intento de guardar autorización falló por permisos del almacén local; no bloquea el frontend simulado. No requiere API key para ese acceso MCP; la conversación de producto sí usa la API key local y ya no depende de resolver MCP.
 
 Plan vigente: `docs/ROADMAP-15H.md`; método: `docs/WORKFLOW.md`; acceso: `docs/READINESS.md`. La ampliación v2 del harness (issue #2) se conservó localmente y queda diferida; la base estable sigue operativa.
 
@@ -32,7 +34,7 @@ Plan vigente: `docs/ROADMAP-15H.md`; método: `docs/WORKFLOW.md`; acceso: `docs/
 
 ## Preguntas pendientes
 - ¿Flujo propio del equipo o facturas del ejemplo? No se ha elegido.
-- ElevenLabs y tokens declarados disponibles; verificar agente/LLM, permisos y modelo de visión. No guardar credenciales en el repositorio.
+- Agente/LLM y acceso temporal ElevenLabs verificados; faltan prueba de voz física, modelo de visión y política acordada de retención/acceso. No guardar credenciales en el repositorio.
 - ¿Cómo detectar lectura/pausa y cómo impedir un guardado erróneo en la interfaz elegida?
 - El límite de las 06:00 está fijado por el usuario; faltan confirmar el canal de entrega y las bases oficiales, que no constan en el PDF.
 - ¿Monitor cada hora, cada cuatro horas o bajo pedido? No está configurado.

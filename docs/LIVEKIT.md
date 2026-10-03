@@ -60,7 +60,7 @@ El código compartido es una barrera de acceso para el hackathon, no autenticaci
 
 Los resultados observados de esta revisión se registran en la entrada del harness. Las pruebas automatizadas usan dobles de dispositivos: validan consentimiento, cancelación, permisos tardíos, pausa, reconexión y límites del servicio sin activar cámara o micrófono reales.
 
-La prueba completa de medios entre dos computadoras requiere que las personas activen sus dispositivos y comprueben audio bidireccional, video, ventana compartida, permisos denegados, salida y recuperación de red. No confundir una prueba de entrada a sala con esa prueba de medios. La incorporación de ElevenLabs y los mínimos Capture → Map → Teach siguen pendientes.
+La prueba completa de medios entre dos computadoras requiere que las personas activen sus dispositivos y comprueben audio bidireccional, video, ventana compartida, permisos denegados, salida y recuperación de red. No confundir una prueba de entrada a sala con esa prueba de medios. El agente ElevenLabs individual está disponible en **Tu aprendiz de IA**, según [ELEVENLABS.md](ELEVENLABS.md); no participa en esta sala. Los mínimos Capture → Map → Teach siguen pendientes.
 
 Fuentes oficiales: [conexión y salas](https://docs.livekit.io/intro/basics/connect/), [compartir pantalla](https://docs.livekit.io/transport/media/screenshare/), [endpoint de tokens](https://docs.livekit.io/frontends/build/authentication/endpoint/), [ElevenLabs como TTS de un agente LiveKit](https://docs.livekit.io/agents/models/tts/elevenlabs/). El último recurso es una opción de integración futura, no evidencia de un agente desplegado.
 

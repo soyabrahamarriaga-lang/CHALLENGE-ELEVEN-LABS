@@ -57,6 +57,7 @@ export function Senior({
   openLibrary,
   onSave,
   openLiveCall,
+  openAgent,
 }: {
   state: CallState;
   dispatch: Dispatch<CallEvent>;
@@ -65,6 +66,7 @@ export function Senior({
   openLibrary: () => void;
   onSave: (title: string) => void;
   openLiveCall: () => void;
+  openAgent: () => void;
 }) {
   const [consentOpen, setConsentOpen] = useState(false);
   const [consent, setConsent] = useState(false);
@@ -86,6 +88,16 @@ export function Senior({
           </p>
         </div>
         <span className="date-label">Tu espacio de senior</span>
+      </div>
+      <div className="real-call-entry agent-entry">
+        <p>
+          <strong>Tu experiencia, en conversación.</strong>Conversa
+          individualmente con tu agente de ElevenLabs.
+        </p>
+        <button className="button primary" onClick={openAgent}>
+          <AudioLines size={18} />
+          Hablar con mi agente
+        </button>
       </div>
       <div className="real-call-entry">
         <p>
