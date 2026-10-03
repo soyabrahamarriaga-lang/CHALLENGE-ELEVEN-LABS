@@ -4969,3 +4969,10 @@ textarea {
     visibility: visible;
   }
 }
+.agent-entry {
+  margin-bottom: 14px;
+}
+.agent-entry p strong {
+  display: block;
+  margin-bottom: 5px;
+}

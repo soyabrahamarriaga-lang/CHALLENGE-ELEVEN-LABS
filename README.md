@@ -2,7 +2,7 @@
 
 Proyecto para el Challenge 01 del 7th Global AI Hackathon (Hack-Nation × ElevenLabs): aprender el criterio de un experto mientras trabaja, construir un Work Map verificable y enseñar a otra persona en un caso nuevo.
 
-**Estado:** UserHelper en React + TypeScript, con perfiles senior/intern de demostración y una sección de videollamada mediante LiveKit. La biblioteca, escenas y procesos siguen siendo ejemplos sintéticos. El agente y Capture → Map → Teach todavía requieren integración. El harness de contexto y colaboración sigue operativo.
+**Estado:** UserHelper en React + TypeScript, con perfiles senior/intern de demostración y una sección de videollamada mediante LiveKit. La biblioteca, escenas y procesos siguen siendo ejemplos sintéticos. Incluye conversación individual con el agente ElevenLabs existente; Capture → Map → Teach todavía requiere integración. El harness de contexto y colaboración sigue operativo.
 
 ## Ejecutar el prototipo
 
@@ -25,6 +25,10 @@ El build queda en `dist/` y no se versiona. El contrato, recorrido de prueba y p
 ## Videollamadas reales
 
 Completar `.env` con la URL y credenciales de LiveKit, sala y código de equipo. Ejecutar `npm run dev:token` en otra terminal junto a `npm run dev`. Entrar por **Videollamada**; cámara, micrófono y pantalla comienzan apagados. Consulta [LIVEKIT.md](docs/LIVEKIT.md) para la configuración completa, trabajo desde otras computadoras y límites de la integración.
+
+## Conversación individual con tu agente
+
+Completar `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` en `.env`, conservar el código de equipo y reiniciar `npm run dev:token`. Abrir **Tu aprendiz de IA**, aceptar el aviso e iniciar por voz o texto. La clave permanece en el backend. Esta conversación no se escucha en la sala del equipo; pantalla y Work Map siguen pendientes. Configuración, privacidad y resultados: [ELEVENLABS.md](docs/ELEVENLABS.md).
 
 ## Leer primero
 - [Roadmap hasta las 06:00 del 4 de octubre](docs/ROADMAP-15H.md): problema, opciones, mapas, hitos y reparto entre tres personas.

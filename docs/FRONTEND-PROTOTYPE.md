@@ -15,6 +15,10 @@ Fuente: solicitud directa del usuario en Texto pegado.txt, 2026-10-03. Sustituye
 
 La solicitud posterior de integrar LiveKit amplía el límite «solo frontend» con un backend de tokens y una vista independiente. Este documento conserva el contrato y las pruebas del prototipo sintético original. La configuración, controles de captura y límites actuales están en [LIVEKIT.md](LIVEKIT.md) y ADR-0009. Los recorridos de biblioteca y el agente de demostración no pasan a ser reales por añadir transporte.
 
+## Ampliación posterior: conversación individual real
+
+La conexión con el agente existente está disponible en **Tu aprendiz de IA**, por voz o texto; [ELEVENLABS.md](ELEVENLABS.md) y ADR-0010 documentan API, consentimiento, retención y verificación. Este recorrido no sustituye el adaptador de demostración ni transforma la biblioteca sintética en evidencia real.
+
 ## Contrato mínimo
 
 ConnectionStatus es independiente de SessionStatus. Connect solo modifica la primera. Start requiere conexión y consentimiento explícito de demo. Pause congela duración y preguntas. Disconnect/error detiene la actividad y conserva un borrador. Resume exige conexión. Finish impide nuevos eventos; guardar produce una sesión marcada como ejemplo, sin afirmar una transcripción real.

@@ -131,9 +131,9 @@
     {
       "id": "agent_connection",
       "name": "Conexión del agente",
-      "definition": "Disponibilidad de comunicación, independiente del consentimiento y de la actividad de una sesión.",
+      "definition": "Estado de comunicación efectiva con el agente, distinto de tener configuración disponible, del consentimiento y de la sala del equipo.",
       "status": "confirmed",
-      "evidence": "Solicitud frontend del usuario; ADR-0008."
+      "evidence": "Solicitud frontend e integración individual del usuario; ADR-0008 y ADR-0010."
     },
     {
       "id": "demo_session",
@@ -162,6 +162,20 @@
       "definition": "Flujo de micrófono, cámara o pantalla publicado con activación explícita; no es por sí mismo evidencia persistida ni evento visual interpretado.",
       "status": "confirmed",
       "evidence": "Solicitud de integración LiveKit del usuario; ADR-0009."
+    },
+    {
+      "id": "agent_conversation",
+      "name": "Conversación individual del agente",
+      "definition": "Intercambio de voz o texto entre una persona y el agente existente; no supone pantalla observada ni conocimiento validado.",
+      "status": "confirmed",
+      "evidence": "Elección explícita del usuario; ADR-0010."
+    },
+    {
+      "id": "conversation_message",
+      "name": "Mensaje de conversación",
+      "definition": "Texto emitido por la persona o el agente, incluido texto derivado de voz; requiere atribución y confirmación antes de tratarse como razón validada.",
+      "status": "confirmed",
+      "evidence": "Integración ElevenLabs; ADR-0010."
     }
   ],
   "relations": [
@@ -272,6 +286,18 @@
       "to": "media_track",
       "meaning": "La sala distribuye las pistas activadas a los participantes suscritos.",
       "from": "rtc_room"
+    },
+    {
+      "type": "participates_in",
+      "to": "agent_conversation",
+      "meaning": "El experto conversa individualmente con el agente.",
+      "from": "expert"
+    },
+    {
+      "type": "contains",
+      "to": "conversation_message",
+      "meaning": "La conversación contiene mensajes atribuidos; una transcripción no es un Work Map.",
+      "from": "agent_conversation"
     }
   ],
   "invariants": [
@@ -286,7 +312,11 @@
     "Marcar un recorrido como revisado no acredita dominio de una tarea.",
     "Conectar a una sala no activa dispositivos ni demuestra presencia del AI Apprentice.",
     "Pausar, salir o interrumpirse la conexión detiene la captura local; reconectar no la reactiva automáticamente.",
-    "Transportar pantalla no equivale a interpretar eventos visuales, conservar evidencia ni generar un Work Map."
+    "Transportar pantalla no equivale a interpretar eventos visuales, conservar evidencia ni generar un Work Map.",
+    "La disponibilidad de credenciales no demuestra conexión efectiva con el agente.",
+    "Una conversación individual ElevenLabs no se difunde automáticamente a la sala LiveKit del equipo.",
+    "Descartar mensajes locales no elimina audio o transcripciones conservados por el proveedor.",
+    "Un mensaje del agente que afirma observar no demuestra que la pantalla haya sido enviada o interpretada."
   ],
   "open_questions": [
     "¿Qué flujo y casos se usarán para demostrar transferencia?",
@@ -294,6 +324,7 @@
     "¿Cómo se representa la incertidumbre y se decide que el debrief terminó?",
     "¿Qué mecanismo permite intervenir antes del guardado en la interfaz elegida?",
     "¿Cómo se retira evidencia y se actualizan mapas/tutores derivados de ella?",
-    "¿Qué límites y excepciones no quedan cubiertos por una sola sesión?"
+    "¿Qué límites y excepciones no quedan cubiertos por una sola sesión?",
+    "¿Qué retención y acceso del proveedor acuerda el equipo antes de usar datos reales del experto?"
   ]
 }

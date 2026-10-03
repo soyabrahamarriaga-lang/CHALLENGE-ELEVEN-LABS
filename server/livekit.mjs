@@ -2,6 +2,11 @@ import { createServer } from "node:http";
 import { createHash, timingSafeEqual, randomUUID } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import { AccessToken, TrackSource } from "livekit-server-sdk";
+import {
+  ElevenLabsError,
+  getConversationAccess,
+  readElevenLabsConfig,
+} from "./elevenlabs.mjs";
 
 export function readConfig(env = process.env) {
   const url = env.LIVEKIT_URL || "";
@@ -64,6 +69,14 @@ async function readBody(req) {
 // Shared room passphrase is a hackathon access gate, not individual user authentication.
 // The signing key and secret never cross this process boundary.
 export function createHandler(config = readConfig(), options = {}) {
+  const agentConfig = options.agentConfig || readElevenLabsConfig();
+  const agentAccess =
+    options.agentAccess ||
+    ((mode) =>
+      getConversationAccess(
+        agentConfig,
+        mode === "voice" ? "webrtc" : "websocket",
+      ));
   const attempts = new Map();
   const now = options.now || Date.now;
   const mint =
@@ -91,6 +104,12 @@ export function createHandler(config = readConfig(), options = {}) {
   return async (req, res) => {
     try {
       const path = (req.url || "").split("?")[0];
+      if (req.method === "GET" && path === "/api/elevenlabs/status")
+        return send(res, 200, {
+          configured: Boolean(
+            agentConfig.ready && config.joinCode.length >= 16,
+          ),
+        });
       if (req.method === "GET" && path === "/api/livekit/status") {
         send(res, 200, {
           configured: config.ready,
@@ -98,7 +117,8 @@ export function createHandler(config = readConfig(), options = {}) {
         });
         return;
       }
-      if (path !== "/api/livekit/token")
+      const isAgent = path === "/api/elevenlabs/session";
+      if (path !== "/api/livekit/token" && !isAgent)
         return send(res, 404, { error: "not_found" });
       if (req.method !== "POST")
         return send(res, 405, { error: "method_not_allowed" });
@@ -109,7 +129,12 @@ export function createHandler(config = readConfig(), options = {}) {
         return send(res, 403, { error: "origin_not_allowed" });
       if (!req.headers["content-type"]?.startsWith("application/json"))
         return send(res, 415, { error: "json_required" });
-      if (!config.ready) return send(res, 503, { error: "not_configured" });
+      if (
+        !(isAgent
+          ? agentConfig.ready && config.joinCode.length >= 16
+          : config.ready)
+      )
+        return send(res, 503, { error: "not_configured" });
       const time = now();
       for (const [key, item] of attempts)
         if (time - item.start >= 60000) attempts.delete(key);
@@ -145,6 +170,11 @@ export function createHandler(config = readConfig(), options = {}) {
         return send(res, 400, { error: "invalid_name" });
       if (!sameSecret(body.joinCode, config.joinCode))
         return send(res, 401, { error: "invalid_code" });
+      if (isAgent) {
+        if (!["voice", "text"].includes(body.mode))
+          return send(res, 400, { error: "invalid_mode" });
+        return send(res, 200, await agentAccess(body.mode));
+      }
       const participantToken = await mint(displayName);
       send(res, 200, {
         serverUrl: config.url,
@@ -152,7 +182,9 @@ export function createHandler(config = readConfig(), options = {}) {
         roomName: config.room,
         participantName: displayName,
       });
-    } catch {
+    } catch (error) {
+      if (error instanceof ElevenLabsError)
+        return send(res, error.status, { error: error.code });
       send(res, 500, { error: "token_unavailable" });
     }
   };

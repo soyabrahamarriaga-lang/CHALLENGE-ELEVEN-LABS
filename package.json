@@ -11,6 +11,7 @@
     "dev:token": "node --env-file-if-exists=.env server/livekit.mjs"
   },
   "dependencies": {
+    "@elevenlabs/client": "1.26.0",
     "@fontsource-variable/manrope": "5.3.0",
     "livekit-client": "2.22.3",
     "livekit-server-sdk": "2.19.1",

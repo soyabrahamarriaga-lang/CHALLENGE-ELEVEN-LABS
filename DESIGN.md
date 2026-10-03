@@ -260,3 +260,7 @@ El diálogo blanco usa radio de escenario, relleno de (28px) en escritorio y (22
 ## Extensión de videollamada
 
 La sala LiveKit mantiene tipografía, superficies claras y acentos verdes existentes. «Videollamada real» identifica el recorrido; el estado de conexión, el aviso de transmisión y la ausencia/presencia de agente son visibles por separado. El lobby explica acceso y consentimiento; al conectar, los participantes y pantallas sustituyen el formulario. Dispositivos apagados por defecto, controles con estado textual, pausa y salida siempre accesibles. La biblioteca conserva sus indicaciones de datos sintéticos.
+
+## Extensión de conversación individual
+
+«Tu aprendiz de IA» conserva Manrope, verde salvia y superficies claras. El panel de inicio reúne código, consentimiento y alternativas de voz/texto; al conectar muestra estado y cierre. Los mensajes aparecen en una columna propia con autor y hora; en móvil los paneles se apilan. Aviso visible de envío a ElevenLabs y posible conservación, sin prometer pantalla observada ni mapa generado. La conversación y la videollamada del equipo tienen navegación distinta.
