@@ -1,6 +1,6 @@
 # Flujo de trabajo: entender → comparar → mapear → ejecutar → demostrar
 
-Este es el flujo de decisión del equipo. Se aplica antes de construir la aplicación. Las decisiones adoptadas y sus motivos se registran en `context/entries/`; las estructurales usan un ADR. El [roadmap de 15 horas](ROADMAP-15H.md) aplica este método al challenge.
+Este es el flujo de decisión del equipo. Se aplica antes de construir la aplicación. Las decisiones adoptadas y sus motivos se registran en `context/entries/`; las estructurales usan un ADR. El [roadmap hasta las 06:00 del 4 de octubre](ROADMAP-15H.md) aplica este método al challenge.
 
 ## 1. Entender el problema
 

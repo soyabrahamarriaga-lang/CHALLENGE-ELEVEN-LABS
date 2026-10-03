@@ -15,7 +15,7 @@ Aplicación web, pantalla compartida, visión, agente ElevenLabs, debrief, Work 
 
 ## Prioridad actual del usuario
 
-Antes de construir la aplicación: entender el problema, comparar/pivotear ideas y cerrar el mapa. Hay **15 horas desde la confirmación del 3 de octubre a las 13:41:57 de México**; límite operativo aproximado: **4 de octubre a las 04:42**. Equipo de tres personas. Se verificó sesión de ElevenLabs en Chrome y una lista visible sin agentes. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con autorización OAuth de lectura pendiente. No requiere API key para ese acceso.
+Antes de construir la aplicación: entender el problema, comparar/pivotear ideas y cerrar el mapa. **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC)**. T0 del 3 de octubre a las 13:41:57 se conserva: el presupuesto total pasa a 16 h 18 min 3 s; no se reinicia el reloj. Equipo de tres personas. Se verificó sesión de ElevenLabs en Chrome y una lista visible sin agentes. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con autorización OAuth de lectura pendiente. No requiere API key para ese acceso.
 
 Plan vigente: `docs/ROADMAP-15H.md`; método: `docs/WORKFLOW.md`; acceso: `docs/READINESS.md`. La ampliación v2 del harness (issue #2) se conservó localmente y queda diferida; la base estable sigue operativa.
 
@@ -30,7 +30,7 @@ Plan vigente: `docs/ROADMAP-15H.md`; método: `docs/WORKFLOW.md`; acceso: `docs/
 - ¿Flujo propio del equipo o facturas del ejemplo? No se ha elegido.
 - ElevenLabs y tokens declarados disponibles; verificar agente/LLM, permisos y modelo de visión. No guardar credenciales en el repositorio.
 - ¿Cómo detectar lectura/pausa y cómo impedir un guardado erróneo en la interfaz elegida?
-- El límite operativo de 15 horas está fijado; faltan confirmar el canal de entrega y las bases oficiales, que no constan en el PDF.
+- El límite de las 06:00 está fijado por el usuario; faltan confirmar el canal de entrega y las bases oficiales, que no constan en el PDF.
 - ¿Monitor cada hora, cada cuatro horas o bajo pedido? No está configurado.
 
 ## Relevo

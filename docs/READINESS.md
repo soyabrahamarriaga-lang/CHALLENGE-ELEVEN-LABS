@@ -4,13 +4,13 @@ Actualizado: 2026-10-03. Esta hoja contiene estado operativo; nunca claves, toke
 
 | Elemento | Estado | Evidencia / siguiente comprobación |
 |---|---|---|
-| Plazo | Confirmado por usuario | 15 horas desde su confirmación; T0 registrado 2026-10-03 19:41:57 UTC |
+| Plazo | Corregido por usuario | 4 de octubre de 2026 a las 06:00 America/Mexico_City (12:00 UTC); sustituye el cálculo inicial de 15 horas. T0 se conserva |
 | Equipo | Confirmado por usuario | Tres personas; Abraham y dos colaboradores cuyos nombres/especialidades faltan |
 | GitHub | Verificado | Cuenta con acceso; main protegido; CI y PR de la base pasaron |
 | ElevenLabs y tokens | Declarado disponible por usuario | No se han inspeccionado valores de credenciales |
 | Sesión para inspección | Verificada en Chrome | Sesión autenticada y plataforma ElevenAgents accesible; el usuario solicitó continuar mediante acceso directo |
 | Agente(s) existente(s) | Lista visible vacía | ElevenAgents mostró que no había agentes en la vista consultada; falta contrastar por MCP el workspace y el alcance de la lista |
-| MCP directo | Registrado; OAuth pendiente | Servidor oficial remoto configurado en Codex; iniciada autorización con scope convai_read. No se ha comprobado una llamada autenticada |
+| MCP directo | Registrado; OAuth pendiente | Servidor oficial remoto configurado en Codex; primer intento con scope convai_read expiró esperando consentimiento. No se ha comprobado una llamada autenticada |
 | Modelo LLM del agente | Sin verificar | Revisar configuración del agente, sin modificarla |
 | Voz y modelo de voz | Sin verificar | Identificar opciones configuradas y disponibilidad para conversación |
 | Transcripción / Scribe | Sin verificar | Distinguir lo configurado para el agente de una API de transcripción separada |

@@ -1,8 +1,8 @@
-# Roadmap de 15 horas: de problema entendido a demo entregable
+# Roadmap: de problema entendido a entrega el 4 de octubre a las 06:00
 
 **Solicitud vigente:** definir primero el problema, explorar/pivotear ideas, cerrar un mapa y después ejecutar. La aplicación todavía no se ha empezado. Este documento es el plan de ejecución, no una declaración de progreso completado.
 
-**Tiempo confirmado por el usuario:** 15 horas desde su confirmación. T0 registrado: **3 de octubre de 2026, 13:41:57, America/Mexico_City** (19:41:57 UTC). El plazo operativo termina el **4 de octubre, 04:41:57 local** (10:41:57 UTC), aproximadamente **04:42**. La tabla redondea al minuto. Falta conocer el canal oficial y contrastar las bases del evento; no se programa una automatización ni se reinicia el reloj al cambiar de tarea.
+**Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC).** Esta precisión sustituye el cálculo inicial de 15 horas. T0 registrado se conserva: **3 de octubre de 2026, 13:41:57 local** (19:41:57 UTC). El presupuesto total es **16 h 18 min 3 s**. No se reinicia el reloj. La tabla conserva el plan base de 15 horas con objetivo interno de entrega a las 04:42; el margen adicional queda para verificación y contingencias, con la última hora protegida de **05:00 a 06:00**. El nombre de archivo conserva el enlace del plan original. Falta conocer el canal oficial y contrastar las bases del evento; no hay automatización programada.
 
 **Capacidad confirmada:** tres personas. Abraham + Persona 2 + Persona 3; nombres y especialidades de las otras dos personas pendientes. Claude y Codex son herramientas de apoyo, no se cuentan como miembros humanos adicionales. Se verificó acceso a ElevenLabs en Chrome y una lista visible vacía; la inspección directa por MCP está pendiente de OAuth. Todavía no se ha elegido agente ni LLM para el producto. La tabla es una distribución de tiempo, no una garantía de terminación.
 
@@ -31,7 +31,7 @@ flowchart LR
 
 **Hipótesis de diseño por validar:** una tarea acotada y un sandbox propio ofrecen suficiente contexto visual y control del guardado; el experto puede expresar sus reglas en una sesión corta; un mapa estructurado permite al tutor razonar sobre variantes. Ninguna está demostrada todavía.
 
-**Exclusiones del MVP de 15 horas:** soporte universal a cualquier aplicación, automatización autónoma completa, ERP completo, múltiples expertos, traducción entre idiomas, panel corporativo, app móvil, analítica histórica y exportación avanzada para otros agentes. Los stretch goals quedan después de cumplir el núcleo.
+**Exclusiones del MVP:** soporte universal a cualquier aplicación, automatización autónoma completa, ERP completo, múltiples expertos, traducción entre idiomas, panel corporativo, app móvil, analítica histórica y exportación avanzada para otros agentes. La corrección del plazo no amplía el alcance.
 
 ## 2. Alternativas antes de decidir
 
@@ -96,7 +96,16 @@ Esto es un mapa para acordar responsabilidades; no obliga a una base de datos ni
 | T+10:30–12:00 | 00:12–01:42 | Equipo: integrar recorrido, verificar privacidad y recuperación de errores | E2E completo; contenido excluido no reaparece; errores de permiso/conexión manejados |
 | T+12:00–13:00 | 01:42–02:42 | Abraham como juez; Personas 2 y 3 corrigen con apoyo de agentes | Checklist mínimo pasa con caso nuevo y evidencia anotada |
 | T+13:00–14:00 | 02:42–03:42 | Abraham: pitch y entrega; Personas 2 y 3: documentación/despliegue | Demo ensayada, slide moonshot, enlaces y paquete según bases oficiales |
-| T+14:00–15:00 | 03:42–04:42 | Equipo: margen para subir, comprobar recepción y recuperar fallos | Entrega confirmada; solo correcciones de bloqueo, sin nuevas funciones |
+| T+14:00–15:00 | 03:42–04:42 | Equipo: subir, comprobar recepción y recuperar fallos | Objetivo interno de entrega confirmada; solo correcciones de bloqueo, sin nuevas funciones |
+
+**Margen añadido por la corrección del límite:**
+
+| Ventana local | Uso | Salida |
+|---|---|---|
+| 04:42–05:00 | Verificar paquete, enlaces, accesibilidad de demo y recepción; resolver bloqueos | Paquete listo o ya recibido; ninguna función nueva |
+| 05:00–06:00 | Última hora reservada para entrega, contingencias y comprobante | Entrega recibida antes de las 06:00 |
+
+Los horarios mostrados están redondeados al minuto. La extensión exacta desde el fin del plan base es 1 h 18 min 3 s. Si ya se entregó correctamente a las 04:42, no hace falta esperar al límite.
 
 **Reloj real:** el tiempo consumido desde la confirmación del usuario pertenece a la primera ventana. Si aparece una hora oficial diferente, recalcular sin ocultar tiempo consumido y confirmar la diferencia. Si se llega tarde a un hito, activar recorte en el checkpoint; no robar automáticamente la hora de entrega.
 
@@ -144,7 +153,7 @@ No se han enviado tareas a otros chats ni se ha iniciado desarrollo del producto
 
 ## 9. Riesgos y datos por confirmar al inicio
 
-1. El usuario confirmó 15 horas desde su mensaje; falta el canal oficial y comprobar que las bases coincidan.
+1. El usuario corrigió el límite a las 06:00 del 4 de octubre; falta el canal oficial y comprobar que las bases coincidan. El cálculo anterior queda sustituido según ADR-0007.
 2. Hay tres personas confirmadas; faltan nombres, especialidades y turnos de las otras dos.
 3. ElevenLabs accesible en Chrome, sin agentes en la lista visible consultada. El usuario prefiere MCP; completar OAuth y comprobar el workspace antes de elegir agente/LLM. Véase docs/READINESS.md. No bloquear la definición del problema mientras termina la conexión.
 4. Experto o conocimiento real del flujo elegido; el modelo no debe inventar reglas que nadie confirmó.
