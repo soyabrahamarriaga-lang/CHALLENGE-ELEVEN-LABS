@@ -5,6 +5,9 @@ Proyecto para el Challenge 01 del 7th Global AI Hackathon (Hack-Nation × Eleven
 **Estado:** infraestructura de contexto y colaboración. La aplicación Capture → Map → Teach todavía no está implementada. El flujo de trabajo de la demo y el stack siguen pendientes de decisión.
 
 ## Leer primero
+- [Roadmap de 15 horas](docs/ROADMAP-15H.md): problema, opciones, mapas, hitos y reparto entre tres personas.
+- [Flujo de decisión](docs/WORKFLOW.md): entender, comparar y mapear antes de ejecutar.
+- [Disponibilidad y accesos](docs/READINESS.md): qué sabemos y qué falta verificar.
 - [Análisis completo del challenge](docs/CHALLENGE.md): requisitos, ejemplos, cifras, recursos y ambigüedades.
 - [Estado y relevo](context/STATE.md): qué existe, qué falta y siguiente trabajo.
 - [Ontología](context/ontology.json): conceptos, relaciones, evidencia y dudas.

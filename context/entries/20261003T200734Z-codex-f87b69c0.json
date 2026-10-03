@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "id": "20261003T200734Z-codex-f87b69c0",
+  "at": "2026-10-03T20:07:34.775501Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "roadmap-15h-and-elevenlabs-access",
+  "summary": "Definir mapa y roadmap de 15 horas para tres personas y acceso directo por MCP",
+  "result": "Plan y método documentados antes de implementar; MCP oficial registrado localmente, autorización OAuth de lectura pendiente; alternativa REST probada con respuestas simuladas.",
+  "files": [
+    ".env.example",
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-0005.md",
+    "context/decisions/ADR-0006.md",
+    "docs/READINESS.md",
+    "docs/ROADMAP-15H.md",
+    "docs/WORKFLOW.md",
+    "scripts/elevenlabs_check.py",
+    "tests/test_elevenlabs_check.py"
+  ],
+  "decisions": [
+    "Mantener T0 confirmado y 15 horas de plazo; cerrar problema y mapa antes de ejecutar; diferir ampliación v2 del harness.",
+    "Elegir MCP oficial remoto con OAuth por solicitud del usuario; usar el recurso declarado por el proveedor sin desactivar validación; no crear API key para MCP."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0005.md",
+    "context/decisions/ADR-0006.md"
+  ],
+  "ontology_review": "Se distinguen problema, hipótesis, evidencia y solución; cliente MCP, workspace, permisos, agente de producto y modelos. Ontología del producto sin cambios.",
+  "validation": [
+    "python3 -m unittest discover -s tests -v: 28 pruebas correctas; ninguna llamada autenticada real a ElevenLabs.",
+    "Roadmap validado: 11 ventanas contiguas, 900 minutos; enlaces locales correctos; git diff --check sin errores.",
+    "Metadatos OAuth oficiales inspeccionados; Codex inició consentimiento con scope convai_read para api.us.elevenlabs.io."
+  ],
+  "next_steps": [
+    "Completar OAuth y confirmar lista de agentes por MCP; escoger dominio y registrar matriz de opciones y responsables.",
+    "Integrar mediante PR; coordinar con aporte de onboarding existente en origin/Dev-Mati, todavía sin PR abierto al verificar."
+  ]
+}
