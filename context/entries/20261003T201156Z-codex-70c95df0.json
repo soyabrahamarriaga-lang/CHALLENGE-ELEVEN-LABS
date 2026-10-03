@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "id": "20261003T201156Z-codex-70c95df0",
+  "at": "2026-10-03T20:11:56.127994Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "roadmap-deadline-correction",
+  "summary": "Corregir límite de entrega a las 06:00 del 4 de octubre",
+  "result": "Roadmap, estado y acceso actualizados; límite absoluto 06:00 local, T0 conservado y última hora reservada para entrega.",
+  "files": [
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-0005.md",
+    "context/decisions/ADR-0007.md",
+    "docs/READINESS.md",
+    "docs/ROADMAP-15H.md",
+    "docs/WORKFLOW.md"
+  ],
+  "decisions": [
+    "La precisión posterior del usuario sustituye el cálculo de 15 horas: plazo total 16:18:03, con 1:18:03 adicional; mantener objetivo interno de entrega y no ampliar funciones.",
+    "Registrar que el primer intento OAuth expiró sin callback: MCP configurado no equivale a conexión autenticada."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0007.md"
+  ],
+  "ontology_review": "Distinguir límite absoluto, presupuesto relativo y objetivo interno; modelo de producto sin cambios.",
+  "validation": [
+    "Aritmética con datetime/ZoneInfo: 06:00 America/Mexico_City = 12:00 UTC; intervalo total 16:18:03 y extensión 1:18:03.",
+    "Plan base conserva 11 ventanas contiguas y 900 minutos; enlaces locales correctos; git diff --check correcto. Sin cambios de código tras las 28 pruebas del aporte anterior."
+  ],
+  "next_steps": [
+    "Revisar el plan en PR #3, elegir dominio y cerrar el mapa; completar autorización OAuth de ElevenLabs."
+  ]
+}
