@@ -180,7 +180,7 @@ export function DemoNote({ children }: { children?: ReactNode }) {
       <ShieldCheck size={15} />
       <span>
         {children ||
-          "Todo lo que ves es una demostración. No hay llamadas, grabaciones ni análisis reales."}
+          "Las sesiones de ejemplo son simuladas. No proceden de grabaciones ni análisis reales."}
       </span>
     </div>
   );

@@ -56,6 +56,7 @@ export function Senior({
   openSession,
   openLibrary,
   onSave,
+  openLiveCall,
 }: {
   state: CallState;
   dispatch: Dispatch<CallEvent>;
@@ -63,6 +64,7 @@ export function Senior({
   openSession: (id: string) => void;
   openLibrary: () => void;
   onSave: (title: string) => void;
+  openLiveCall: () => void;
 }) {
   const [consentOpen, setConsentOpen] = useState(false);
   const [consent, setConsent] = useState(false);
@@ -84,6 +86,16 @@ export function Senior({
           </p>
         </div>
         <span className="date-label">Tu espacio de senior</span>
+      </div>
+      <div className="real-call-entry">
+        <p>
+          <strong>¿Listo para compartir con tu equipo?</strong>Usa voz, cámara o
+          pantalla en una sala real.
+        </p>
+        <button className="button primary" onClick={openLiveCall}>
+          <Phone size={17} />
+          Abrir videollamada
+        </button>
       </div>
       <div className="senior-layout">
         <section
@@ -142,7 +154,7 @@ export function Senior({
                 }}
               >
                 <Phone size={18} />
-                Iniciar llamada
+                Iniciar demo
                 <ArrowUpRight size={17} />
               </button>
               <div className="idle-note">

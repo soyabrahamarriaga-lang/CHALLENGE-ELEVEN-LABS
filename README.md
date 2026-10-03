@@ -2,7 +2,7 @@
 
 Proyecto para el Challenge 01 del 7th Global AI Hackathon (Hack-Nation × ElevenLabs): aprender el criterio de un experto mientras trabaja, construir un Work Map verificable y enseñar a otra persona en un caso nuevo.
 
-**Estado:** prototipo frontend navegable en React + TypeScript, con perfiles senior e intern. Las llamadas, escenas, personas y procesos son ejemplos sintéticos. El Capture → Map → Teach real del challenge todavía requiere integración. El harness de contexto y colaboración sigue operativo.
+**Estado:** UserHelper en React + TypeScript, con perfiles senior/intern de demostración y una sección de videollamada mediante LiveKit. La biblioteca, escenas y procesos siguen siendo ejemplos sintéticos. El agente y Capture → Map → Teach todavía requieren integración. El harness de contexto y colaboración sigue operativo.
 
 ## Ejecutar el prototipo
 
@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Abre `http://127.0.0.1:5173`. Cambia de perfil desde «Explorar como». El botón «Demo interactiva» permite probar conexión y estados de biblioteca. Las sesiones guardadas permanecen únicamente en el navegador de esa computadora. No se solicita acceso al micrófono ni a la pantalla.
+Abre `http://127.0.0.1:5173`. Cambia de perfil desde «Explorar como». El botón «Demo interactiva» permite probar conexión y estados de biblioteca. Las sesiones guardadas permanecen únicamente en el navegador de esa computadora. Los recorridos de demostración no solicitan dispositivos. La sección Videollamada tiene consentimiento y controles propios.
 
 ```sh
 npm test
@@ -21,6 +21,10 @@ npm run build
 ```
 
 El build queda en `dist/` y no se versiona. El contrato, recorrido de prueba y puntos de integración están en [FRONTEND-PROTOTYPE.md](docs/FRONTEND-PROTOTYPE.md); la decisión de alcance está en [ADR-0008](context/decisions/ADR-0008.md).
+
+## Videollamadas reales
+
+Completar `.env` con la URL y credenciales de LiveKit, sala y código de equipo. Ejecutar `npm run dev:token` en otra terminal junto a `npm run dev`. Entrar por **Videollamada**; cámara, micrófono y pantalla comienzan apagados. Consulta [LIVEKIT.md](docs/LIVEKIT.md) para la configuración completa, trabajo desde otras computadoras y límites de la integración.
 
 ## Leer primero
 - [Roadmap hasta las 06:00 del 4 de octubre](docs/ROADMAP-15H.md): problema, opciones, mapas, hitos y reparto entre tres personas.

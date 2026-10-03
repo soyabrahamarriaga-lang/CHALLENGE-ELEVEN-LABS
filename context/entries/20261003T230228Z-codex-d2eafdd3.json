@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "id": "20261003T230228Z-codex-d2eafdd3",
+  "at": "2026-10-03T23:02:28.293579Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "livekit-video-calls",
+  "summary": "Integrar salas LiveKit con audio, video, pantalla y backend de tokens",
+  "result": "Acceso autenticado a LiveKit Cloud y dos clientes conectados a la misma sala con presencia mutua; configuración local lista y guía para otros clones. Transmisión de medios entre computadoras pendiente de prueba con sus operadores.",
+  "files": [
+    ".env.example",
+    "DESIGN.md",
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-0009.md",
+    "context/ontology.json",
+    "docs/FRONTEND-PROTOTYPE.md",
+    "docs/LIVEKIT.md",
+    "docs/READINESS.md",
+    "package-lock.json",
+    "package.json",
+    "server/livekit.mjs",
+    "server/livekit.test.mjs",
+    "src/App.tsx",
+    "src/components/Shared.tsx",
+    "src/features/LiveCall.css",
+    "src/features/LiveCall.tsx",
+    "src/features/Senior.tsx",
+    "src/services/liveCall.test.ts",
+    "src/services/liveCall.ts",
+    "vite.config.ts"
+  ],
+  "decisions": [
+    "Usar livekit-client y livekit-server-sdk; claves solo en backend, token temporal de una sala y código de equipo para la fase hackathon.",
+    "Separar captura de publicación para descartar permisos tardíos antes de enviar medios. Pausa, salida e interrupción detienen pistas; continuar y reconectar no las reactivan.",
+    "Mantener independiente el transporte de la simulación, la presencia de IA, las grabaciones y el Work Map."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0009.md"
+  ],
+  "ontology_review": "Añadir sala RTC y pista multimedia; transportar pantalla no es interpretar eventos ni conservar evidencia. Se mantiene schema version 1.",
+  "validation": [
+    "npm test: 28 pruebas pasan; npm run build: TypeScript y Vite pasan, aviso por chunk diferido LiveKit de aproximadamente 539 kB.",
+    "python3 -m unittest discover -s tests -q: 28 pruebas pasan.",
+    "Navegador: dos clientes Cloud, consentimiento obligatorio, dispositivos apagados, pausa/continuación y salida reflejada en el otro cliente. Escritorio 1280 px y móvil 390 px sin desbordamiento horizontal; consola final sin errores ni avisos.",
+    "Consulta autenticada LiveKit listRooms correcta; ninguna credencial ni token incluido en logs o fuente."
+  ],
+  "next_steps": [
+    "Verificar audio/video/pantalla entre dos computadoras con permisos de sus operadores; preparar hosting HTTPS con proxy si compartirán una única URL.",
+    "Conectar el aprendiz ElevenLabs, visión, debrief y Map/Teach según el roadmap existente."
+  ]
+}

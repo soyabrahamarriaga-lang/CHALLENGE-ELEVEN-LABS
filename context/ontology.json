@@ -148,6 +148,20 @@
       "definition": "Camino alternativo explicado por condiciones distintas; su diferencia no implica por sí misma un error.",
       "status": "confirmed",
       "evidence": "Solicitud frontend del usuario; ADR-0008."
+    },
+    {
+      "id": "rtc_room",
+      "name": "Sala de comunicación",
+      "definition": "Espacio de transporte en tiempo real con participantes humanos o agentes; su conexión no implica observación ni validación de conocimiento.",
+      "status": "confirmed",
+      "evidence": "Solicitud de integración LiveKit del usuario; ADR-0009."
+    },
+    {
+      "id": "media_track",
+      "name": "Pista multimedia",
+      "definition": "Flujo de micrófono, cámara o pantalla publicado con activación explícita; no es por sí mismo evidencia persistida ni evento visual interpretado.",
+      "status": "confirmed",
+      "evidence": "Solicitud de integración LiveKit del usuario; ADR-0009."
     }
   ],
   "relations": [
@@ -252,6 +266,12 @@
       "type": "may_have",
       "to": "process_variant",
       "meaning": "Un paso puede presentar una alternativa y su contexto."
+    },
+    {
+      "type": "transports",
+      "to": "media_track",
+      "meaning": "La sala distribuye las pistas activadas a los participantes suscritos.",
+      "from": "rtc_room"
     }
   ],
   "invariants": [
@@ -263,7 +283,10 @@
     "Debe poder retirarse contenido del registro y protegerse la información personal; el diseño concreto está pendiente.",
     "Conexión establecida no implica autorización ni inicio de sesión.",
     "Una demostración sintética se identifica como tal y no sustituye evidencia del experto.",
-    "Marcar un recorrido como revisado no acredita dominio de una tarea."
+    "Marcar un recorrido como revisado no acredita dominio de una tarea.",
+    "Conectar a una sala no activa dispositivos ni demuestra presencia del AI Apprentice.",
+    "Pausar, salir o interrumpirse la conexión detiene la captura local; reconectar no la reactiva automáticamente.",
+    "Transportar pantalla no equivale a interpretar eventos visuales, conservar evidencia ni generar un Work Map."
   ],
   "open_questions": [
     "¿Qué flujo y casos se usarán para demostrar transferencia?",
