@@ -1,8 +1,26 @@
-# The AI Apprentice — CHALLENGE-ELEVEN-LABS
+# UserHelper — CHALLENGE-ELEVEN-LABS
 
 Proyecto para el Challenge 01 del 7th Global AI Hackathon (Hack-Nation × ElevenLabs): aprender el criterio de un experto mientras trabaja, construir un Work Map verificable y enseñar a otra persona en un caso nuevo.
 
-**Estado:** infraestructura de contexto y colaboración. La aplicación Capture → Map → Teach todavía no está implementada. El flujo de trabajo de la demo y el stack siguen pendientes de decisión.
+**Estado:** prototipo frontend navegable en React + TypeScript, con perfiles senior e intern. Las llamadas, escenas, personas y procesos son ejemplos sintéticos. El Capture → Map → Teach real del challenge todavía requiere integración. El harness de contexto y colaboración sigue operativo.
+
+## Ejecutar el prototipo
+
+Se necesita Node.js 22.12 o posterior (CI utiliza Node 24), npm, Git y Python 3.9+.
+
+```sh
+npm ci
+npm run dev
+```
+
+Abre `http://127.0.0.1:5173`. Cambia de perfil desde «Explorar como». El botón «Demo interactiva» permite probar conexión y estados de biblioteca. Las sesiones guardadas permanecen únicamente en el navegador de esa computadora. No se solicita acceso al micrófono ni a la pantalla.
+
+```sh
+npm test
+npm run build
+```
+
+El build queda en `dist/` y no se versiona. El contrato, recorrido de prueba y puntos de integración están en [FRONTEND-PROTOTYPE.md](docs/FRONTEND-PROTOTYPE.md); la decisión de alcance está en [ADR-0008](context/decisions/ADR-0008.md).
 
 ## Leer primero
 - [Roadmap hasta las 06:00 del 4 de octubre](docs/ROADMAP-15H.md): problema, opciones, mapas, hitos y reparto entre tres personas.

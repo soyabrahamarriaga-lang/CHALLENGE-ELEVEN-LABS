@@ -24,6 +24,16 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Test guard behavior
         run: python3 -m unittest discover -s tests -v
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Test frontend domain and persistence
+        run: npm test
+      - name: Build frontend with strict TypeScript
+        run: npm run build
       - name: Validate pull request and intermediate commits
         if: github.event_name == 'pull_request'
         env:
