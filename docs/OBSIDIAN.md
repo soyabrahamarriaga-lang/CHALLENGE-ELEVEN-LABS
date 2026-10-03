@@ -1,0 +1,58 @@
+# Bóveda Obsidian
+
+Las transcripciones y notas que genera el agente se guardan como Markdown en una **bóveda privada de Obsidian**, fuera de este repo público. Decisión: [ADR-0011](../context/decisions/ADR-0011.md).
+
+## Preparar una computadora
+
+1. Instalar Obsidian (`brew install --cask obsidian` o obsidian.md).
+2. Clonar la bóveda privada fuera de este repo. Requiere invitación al repo:
+   ```sh
+   git clone https://github.com/soyabrahamarriaga-lang/userhelper-vault.git ~/Documents/UserHelper-Vault
+   ```
+3. En Obsidian: **Open folder as vault** → `~/Documents/UserHelper-Vault`.
+4. En `.env` de este repo: `VAULT_PATH=/Users/<tu-usuario>/Documents/UserHelper-Vault` (ruta absoluta). `ELEVENLABS_API_KEY` es la misma del agente.
+5. `npm run dev:token` (ahora arranca `server/main.mjs`: LiveKit + agente + bóveda) y `npm run dev`. Al arrancar, el servidor avisa qué variable falta, sin mostrar valores.
+6. Para compartir con el equipo: `./sync.sh` dentro de la bóveda (commit + pull + push).
+
+## Qué se escribe
+
+```
+UserHelper-Vault/
+├─ Inicio.md
+├─ Sesiones/<AAAA-MM-DD>-<conversation_id>/
+│   ├─ transcripcion.md   ← ElevenLabs, al terminar la conversación
+│   ├─ eventos.md         ← pantalla, preguntas, guardrails (API lista; falta conectar visión/client tools)
+│   └─ work-map.md · debrief.md · teach-back.md
+├─ Guardrails/            ← una nota por regla confirmada
+└─ Plantillas/
+```
+
+`transcripcion.md` lleva frontmatter (`tipo`, `conversacion`, `agente`, `estado`, `inicio` ISO UTC, `duracion_s`, `resultado`, `tags`) y una línea por turno: `**[03:12] Persona:** …`. Los eventos usan `` - `03:12` **guardrail** — texto ^ref `` para poder enlazarlos desde el Work Map con `[[eventos#^ref]]`.
+
+## Flujo
+
+1. La persona termina la conversación en `#senior/agent`.
+2. La app llama `POST /api/vault/conversations/:id/import`; el backend pide la conversación a ElevenLabs y la escribe. Reintenta mientras ElevenLabs responde `processing`.
+3. La pantalla muestra «Transcripción guardada en la bóveda: …». Sin `VAULT_PATH`, no muestra nada.
+
+Alternativa sin la app abierta: webhook post-llamada de ElevenLabs a `POST /api/elevenlabs/webhook` con `ELEVENLABS_WEBHOOK_SECRET`. Necesita URL HTTPS pública (túnel o despliegue).
+
+## Endpoints
+
+| Método y ruta | Uso |
+|---|---|
+| `GET /api/vault/status` | `{configured, canImport}` |
+| `GET /api/vault/sessions` | Lista de sesiones con su frontmatter |
+| `POST /api/vault/conversations/:id/import` | Trae y guarda la transcripción de ElevenLabs |
+| `POST /api/vault/sessions/:id/events` | `{kind, text, at?, ref?}`; `kind` ∈ screen, question, answer, guardrail, decision, note |
+| `POST /api/vault/sessions/:id/notes/:name` | `{markdown}`; `name` ∈ work-map, debrief, teach-back |
+| `POST /api/elevenlabs/webhook` | Webhook firmado `post_call_transcription` |
+
+Todas excepto el webhook exigen el origen exacto de `APP_ORIGIN` y JSON.
+
+## Límites
+
+- Privado: no copiar notas de la bóveda a este repo, issues ni capturas públicas.
+- Sin redacción automática de datos personales ni botón de retiro todavía. Retirar = borrar la nota y revisar qué Work Map la cita.
+- La firma del webhook no se ha probado con un envío real de ElevenLabs.
+- La sesión `ejemplo_sintetico_demo` de la bóveda es sintética, creada para verificar la escritura; se puede borrar.

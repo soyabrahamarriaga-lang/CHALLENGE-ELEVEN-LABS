@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "20261003T234620Z-claude-6b2e4eab",
+  "at": "2026-10-03T23:46:20.778585Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "obsidian-vault",
+  "summary": "Conectar una bóveda Obsidian privada como almacén de transcripciones y notas del agente ElevenLabs",
+  "result": "server/vault.mjs escribe Markdown en VAULT_PATH; server/main.mjs lo monta junto a LiveKit/agente; la vista del agente importa la transcripción al terminar. Bóveda creada en repo privado userhelper-vault y Obsidian instalado. Sin conversación real del agente probada en esta máquina (no hay .env con credenciales aquí).",
+  "files": [
+    ".env.example",
+    "context/STATE.md",
+    "context/decisions/ADR-0011.md",
+    "docs/ELEVENLABS.md",
+    "docs/OBSIDIAN.md",
+    "package.json",
+    "server/main.mjs",
+    "server/vault.mjs",
+    "server/vault.test.mjs",
+    "src/features/AgentConversation.css",
+    "src/features/AgentConversation.tsx",
+    "src/services/vault.test.ts",
+    "src/services/vault.ts",
+    "vite.config.ts"
+  ],
+  "decisions": [
+    "Bóveda fuera del repo público, sincronizada con repo privado aparte; el backend es el único escritor y Obsidian solo visualiza (ADR-0011). Elegido por el usuario.",
+    "main.mjs enruta solo /api/vault/* y /api/elevenlabs/webhook a la bóveda para no interceptar /api/elevenlabs/status y /session de ADR-0010.",
+    "El aviso de consentimiento del agente se corrige: informa la copia en la bóveda si está activa."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0011.md"
+  ],
+  "ontology_review": "Sin cambio en ontology.json: la bóveda almacena session, evidence y work_map existentes; una transcripción guardada no es razón validada ni Work Map confirmado.",
+  "validation": [
+    "npm test: 8 archivos, 53 pruebas pasaron (incluye 10 nuevas de bóveda servidor/cliente).",
+    "npm run build: TypeScript y Vite completados.",
+    "Escritura real con createVault en ~/Documents/UserHelper-Vault: sesión ejemplo_sintetico_demo con transcripcion.md y eventos.md, marcada como sintética."
+  ],
+  "next_steps": [
+    "Probar con una conversación real del agente en la máquina que tiene ELEVENLABS_API_KEY y VAULT_PATH.",
+    "Conectar visión/client tools a POST /api/vault/sessions/:id/events y generar work-map.md desde transcripción + eventos.",
+    "Invitar a Matziaz y rogermg2077-svg al repo privado userhelper-vault si el usuario lo aprueba."
+  ]
+}
