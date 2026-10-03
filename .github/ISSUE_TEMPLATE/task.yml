@@ -1,0 +1,32 @@
+name: Tarea de colaboración
+description: Definir un aporte verificable y su responsable
+title: "[Tarea] "
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Resultado esperado
+      description: Comportamiento observable y requisito del challenge que cubre.
+    validations:
+      required: true
+  - type: input
+    id: owner
+    attributes:
+      label: Responsable y herramienta
+      placeholder: Abraham / Claude, o Abraham / Codex
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptación y comprobación
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Archivos previstos, dependencias y límites
+  - type: textarea
+    id: ontology
+    attributes:
+      label: Conceptos, relaciones, dudas y decisiones a resolver

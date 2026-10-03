@@ -1,0 +1,43 @@
+name: Repository integrity
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integrity-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  context-integrity:
+    name: context-integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Test guard behavior
+        run: python3 -m unittest discover -s tests -v
+      - name: Validate pull request and intermediate commits
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          BASE=$(git merge-base "$BASE" "$HEAD")
+          python3 scripts/harness.py check --base "$BASE" --head "$HEAD"
+      - name: Validate pushed commits
+        if: github.event_name == 'push'
+        env:
+          BASE: ${{ github.event.before }}
+          HEAD: ${{ github.sha }}
+        run: python3 scripts/harness.py check --base "$BASE" --head "$HEAD"
+      - name: Validate full history on manual run
+        if: github.event_name == 'workflow_dispatch'
+        run: python3 scripts/harness.py check

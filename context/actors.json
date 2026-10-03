@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "actors": [
+    {"id": "abraham", "name": "Abraham Arriaga", "kind": "human", "github": "soyabrahamarriaga-lang"},
+    {"id": "codex", "name": "Codex", "kind": "agent", "github": null},
+    {"id": "claude", "name": "Claude", "kind": "agent", "github": null}
+  ],
+  "note": "Atribución declarada de aportes; la identidad autenticada de GitHub y la del agente son distintas. No presupone acceso directo entre chats."
+}

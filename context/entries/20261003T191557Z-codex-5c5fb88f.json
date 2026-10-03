@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "20261003T191557Z-codex-5c5fb88f",
+  "at": "2026-10-03T19:15:57.016097Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "bootstrap-context",
+  "summary": "Crear el harness compartido y analizar íntegramente el challenge",
+  "result": "Base local implementada; 20 pruebas pasan. La aplicación Capture, Map y Teach queda pendiente.",
+  "files": [
+    ".gitattributes",
+    ".githooks/pre-commit",
+    ".githooks/pre-push",
+    ".github/CODEOWNERS",
+    ".github/ISSUE_TEMPLATE/task.yml",
+    ".github/pull_request_template.md",
+    ".github/workflows/integrity.yml",
+    ".gitignore",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "context/STATE.md",
+    "context/actors.json",
+    "context/decisions/ADR-0001.md",
+    "context/decisions/ADR-0002.md",
+    "context/decisions/ADR-0003.md",
+    "context/ontology.json",
+    "context/templates/ADR.md",
+    "docs/CHALLENGE.md",
+    "scripts/harness.py",
+    "tests/test_harness.py"
+  ],
+  "decisions": [
+    "Usar entradas inmutables por aporte, atribución de agente y operador, ADRs y ontología con evidencia; evita depender de chats separados.",
+    "Versionar fuente y contexto UTF-8 juntos; comprobar índice, historial y árbol limpio, con CI obligatorio en main.",
+    "Conservar el PDF original fuera del repositorio y compartir su análisis completo en texto; distinguir mínimos, ejemplos e interpretación.",
+    "Inicializar main una sola vez porque el repositorio está vacío; después exigir PR y checks para toda integración."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0001.md",
+    "context/decisions/ADR-0002.md",
+    "context/decisions/ADR-0003.md"
+  ],
+  "ontology_review": "Se definieron 18 conceptos del brief y sus relaciones, invariantes y preguntas abiertas; no se fijó todavía el esquema técnico de la aplicación.",
+  "validation": [
+    "python3 -m unittest discover -s tests -v: 20 pruebas pasaron en Python 3.9.",
+    "Compilación Python con caché en /private/tmp: scripts y tests válidos. El primer intento de py_compile falló por la ubicación de caché restringida; se corrigió la ubicación.",
+    "Extracción de texto y revisión visual de las 8 páginas del PDF; tablas, cifras, requisitos y apéndice incluidos en docs/CHALLENGE.md."
+  ],
+  "next_steps": [
+    "Publicar la base, observar CI y activar/verificar protección de main.",
+    "Elegir con Abraham el flujo de demo y el stack antes de construir la aplicación."
+  ]
+}

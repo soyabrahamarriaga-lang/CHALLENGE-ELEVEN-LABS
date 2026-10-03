@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "scope": "Modelo conceptual inicial del AI Apprentice, no esquema técnico definitivo. Fuente: brief aportado por el usuario; análisis en docs/CHALLENGE.md.",
+  "entities": [
+    {"id":"expert","name":"Experto","definition":"Persona que ejecuta una tarea y explica el criterio que usa.","status":"confirmed","evidence":"Brief, pp. 2–4."},
+    {"id":"learner","name":"Aprendiz humano","definition":"Persona que aprende y resuelve un caso nuevo en su propia pantalla.","status":"confirmed","evidence":"Brief, p. 4, Teach."},
+    {"id":"apprentice","name":"AI Apprentice","definition":"Sistema que observa, pregunta, valida conocimiento y lo enseña por voz.","status":"confirmed","evidence":"Brief, pp. 2–3."},
+    {"id":"task","name":"Tarea","definition":"Trabajo de escritorio con decisiones, límites y excepciones.","status":"confirmed","evidence":"Brief, pp. 3 y 7."},
+    {"id":"case","name":"Caso","definition":"Instancia concreta de una tarea; el caso de prueba no fue mostrado por el experto.","status":"confirmed","evidence":"Brief, p. 4, requisito Teach."},
+    {"id":"session","name":"Sesión de captura","definition":"Ejecución de tarea observada en pantalla con conversación contextual.","status":"confirmed","evidence":"Brief, p. 3, Capture."},
+    {"id":"screen_event","name":"Evento visual","definition":"Cambio significativo derivado de los frames, con contexto temporal.","status":"confirmed","evidence":"Brief, pp. 3 y 5."},
+    {"id":"decision","name":"Decisión","definition":"Elección realizada en un punto del proceso, distinta del clic que la ejecuta.","status":"confirmed","evidence":"Brief, pp. 2–4."},
+    {"id":"reason","name":"Razón del experto","definition":"Explicación del criterio en palabras del experto; no una inferencia silenciosa del modelo.","status":"confirmed","evidence":"Brief, pp. 3–4, Work Map."},
+    {"id":"guardrail","name":"Límite o condición de seguridad","definition":"Regla, excepción, umbral o condición para detenerse y escalar.","status":"confirmed","evidence":"Brief, pp. 2–4."},
+    {"id":"evidence","name":"Evidencia vinculada","definition":"Momento de pantalla y palabras del experto que sustentan un paso o regla.","status":"confirmed","evidence":"Brief, p. 4, requisito Map."},
+    {"id":"debrief","name":"Revisión oral de cierre","definition":"Preguntas nuevas que resuelven vacíos después de ejecutar la tarea.","status":"confirmed","evidence":"Brief, pp. 3–4."},
+    {"id":"teach_back","name":"Explicación de vuelta","definition":"El sistema explica el proceso completo y el experto confirma o corrige su comprensión.","status":"confirmed","evidence":"Brief, pp. 3–4."},
+    {"id":"work_map","name":"Work Map","definition":"Timeline navegable de pasos, decisiones, razones, guardrails y sus evidencias.","status":"confirmed","evidence":"Brief, pp. 3–4."},
+    {"id":"step","name":"Paso","definition":"Unidad del Work Map vinculada a una situación de pantalla, decisión y fundamento.","status":"confirmed","evidence":"Brief, p. 4, ejemplo de paso."},
+    {"id":"tutor","name":"Tutor de voz","definition":"Rol del agente que usa el Work Map para enseñar y prevenir decisiones erróneas.","status":"confirmed","evidence":"Brief, pp. 4–5."},
+    {"id":"intervention","name":"Intervención preventiva","definition":"Aviso o actuación antes de que se guarde una decisión errónea, explicado con el criterio del experto.","status":"confirmed","evidence":"Brief, p. 4, requisito Teach."},
+    {"id":"learning_result","name":"Resultado de aprendizaje","definition":"Evidencia de qué domina la persona y qué debe practicar después.","status":"confirmed","evidence":"Brief, p. 4, Teach."}
+  ],
+  "relations": [
+    {"from":"expert","type":"performs","to":"task","meaning":"El experto ejecuta trabajo real durante la captura."},
+    {"from":"case","type":"instantiates","to":"task","meaning":"Cada caso concreta la tarea con datos propios."},
+    {"from":"session","type":"observes","to":"screen_event","meaning":"La captura registra cambios visibles contextualizados."},
+    {"from":"apprentice","type":"conducts","to":"debrief","meaning":"El aprendiz artificial pregunta por los vacíos pendientes."},
+    {"from":"debrief","type":"ends_with","to":"teach_back","meaning":"El cierre requiere explicación de vuelta confirmada por el experto."},
+    {"from":"work_map","type":"contains","to":"step","meaning":"El mapa organiza pasos navegables."},
+    {"from":"step","type":"records","to":"decision","meaning":"Un paso distingue lo decidido de la interacción visual."},
+    {"from":"decision","type":"justified_by","to":"reason","meaning":"La elección conserva el fundamento verbal del experto."},
+    {"from":"step","type":"bounded_by","to":"guardrail","meaning":"Los pasos tienen límites y condiciones para detenerse."},
+    {"from":"step","type":"grounded_in","to":"evidence","meaning":"Cada paso enlaza pantalla y palabras del experto."},
+    {"from":"guardrail","type":"grounded_in","to":"evidence","meaning":"Cada regla es trazable a su evidencia."},
+    {"from":"tutor","type":"uses","to":"work_map","meaning":"La enseñanza se fundamenta en el conocimiento validado."},
+    {"from":"learner","type":"solves","to":"case","meaning":"El aprendiz humano trabaja un caso nuevo en su pantalla."},
+    {"from":"tutor","type":"makes","to":"intervention","meaning":"El tutor previene errores antes del guardado."},
+    {"from":"tutor","type":"assesses","to":"learning_result","meaning":"La sesión termina mostrando dominio y práctica pendiente."}
+  ],
+  "invariants": [
+    "Observación visual no equivale a intención: las razones se preguntan y se atribuyen.",
+    "Cada paso y guardrail del Work Map enlaza momento visual y palabras del experto.",
+    "El debrief cierra con teach-back confirmado, no solo con un resumen generado.",
+    "La prueba de Teach usa un caso que el experto no mostró.",
+    "La intervención requerida ocurre antes del guardado de una decisión errónea.",
+    "Debe poder retirarse contenido del registro y protegerse la información personal; el diseño concreto está pendiente."
+  ],
+  "open_questions": [
+    "¿Qué flujo y casos se usarán para demostrar transferencia?",
+    "¿Qué señal distingue una pausa o lectura de una oportunidad para preguntar?",
+    "¿Cómo se representa la incertidumbre y se decide que el debrief terminó?",
+    "¿Qué mecanismo permite intervenir antes del guardado en la interfaz elegida?",
+    "¿Cómo se retira evidencia y se actualizan mapas/tutores derivados de ella?",
+    "¿Qué límites y excepciones no quedan cubiertos por una sola sesión?"
+  ]
+}

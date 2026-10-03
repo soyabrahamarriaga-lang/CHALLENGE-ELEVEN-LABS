@@ -1,0 +1,26 @@
+# Secretos locales
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+# Dependencias y resultados reconstruibles
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.next/
+dist/
+build/
+coverage/
+.pytest_cache/
+# Archivos locales y sesiones privadas
+.DS_Store
+.idea/
+.vscode/
+.claude/settings.local.json
+.codex/
+tmp/
+work/
