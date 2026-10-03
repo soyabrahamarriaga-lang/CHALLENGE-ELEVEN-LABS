@@ -24,3 +24,8 @@ coverage/
 .codex/
 tmp/
 work/
+# Herramientas y capturas locales; documentación de diseño sí se versiona
+*.tsbuildinfo
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/live/

@@ -1,6 +1,6 @@
 # Roadmap: de problema entendido a entrega el 4 de octubre a las 06:00
 
-**Solicitud vigente:** definir primero el problema, explorar/pivotear ideas, cerrar un mapa y después ejecutar. La aplicación todavía no se ha empezado. Este documento es el plan de ejecución, no una declaración de progreso completado.
+**Plan base:** entender el problema, explorar/pivotear ideas, cerrar un mapa y ejecutar. El usuario posteriormente autorizó un prototipo frontend directo: UserHelper en React + TypeScript ya permite revisar la experiencia con datos sintéticos (ADR-0008; docs/FRONTEND-PROTOTYPE.md). La integración real sigue pendiente. La tabla conserva las ventanas previstas; no declara que esos hitos estén completados.
 
 **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC).** Esta precisión sustituye el cálculo inicial de 15 horas. T0 registrado se conserva: **3 de octubre de 2026, 13:41:57 local** (19:41:57 UTC). El presupuesto total es **16 h 18 min 3 s**. No se reinicia el reloj. La tabla conserva el plan base de 15 horas con objetivo interno de entrega a las 04:42; el margen adicional queda para verificación y contingencias, con la última hora protegida de **05:00 a 06:00**. El nombre de archivo conserva el enlace del plan original. Falta conocer el canal oficial y contrastar las bases del evento; no hay automatización programada.
 
@@ -69,7 +69,7 @@ flowchart TD
 
 **Estados mínimos de interfaz:** sin permiso, capturando, pausa/silencio, pregunta, debrief, pendiente de confirmación, mapa confirmado, enseñanza, intervención y cierre. Debe existir forma de pausar y retirar contenido; el diseño de sus efectos se cierra antes de integrar datos.
 
-**Contrato conceptual preliminar, sin stack fijado:**
+**Contrato conceptual preliminar de la integración real (frontend ya fijado: React + TypeScript):**
 - `ScreenEvent`: identificador, sesión, timestamp, qué cambió y referencia visual.
 - `ExpertStatement`: autor, texto, timestamp, referencia a evidencia y estado de exclusión.
 - `Decision`: contexto, elección, razón atribuida y evidencias.

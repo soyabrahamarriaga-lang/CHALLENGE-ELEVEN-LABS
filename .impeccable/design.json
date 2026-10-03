@@ -1,0 +1,443 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T22:16:42.838624+00:00",
+  "title": "Design System: UserHelper",
+  "extensions": {
+    "colorMeta": {
+      "green": {
+        "role": "primary",
+        "displayName": "Verde bosque",
+        "tonalRamp": [
+          "oklch(15% 0.0612 164.97)",
+          "oklch(26.43% 0.0612 164.97)",
+          "oklch(37.86% 0.0612 164.97)",
+          "oklch(49.29% 0.0612 164.97)",
+          "oklch(60.71% 0.0612 164.97)",
+          "oklch(72.14% 0.0612 164.97)",
+          "oklch(83.57% 0.0612 164.97)",
+          "oklch(95% 0.0612 164.97)"
+        ]
+      },
+      "green-deep": {
+        "role": "primary",
+        "displayName": "Bosque profundo",
+        "tonalRamp": [
+          "oklch(15% 0.0513 165.56)",
+          "oklch(26.43% 0.0513 165.56)",
+          "oklch(37.86% 0.0513 165.56)",
+          "oklch(49.29% 0.0513 165.56)",
+          "oklch(60.71% 0.0513 165.56)",
+          "oklch(72.14% 0.0513 165.56)",
+          "oklch(83.57% 0.0513 165.56)",
+          "oklch(95% 0.0513 165.56)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta vegetal",
+        "tonalRamp": [
+          "oklch(15% 0.0226 168.36)",
+          "oklch(26.43% 0.0226 168.36)",
+          "oklch(37.86% 0.0226 168.36)",
+          "oklch(49.29% 0.0226 168.36)",
+          "oklch(60.71% 0.0226 168.36)",
+          "oklch(72.14% 0.0226 168.36)",
+          "oklch(83.57% 0.0226 168.36)",
+          "oklch(95% 0.0226 168.36)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Texto secundario",
+        "tonalRamp": [
+          "oklch(15% 0.0218 157.41)",
+          "oklch(26.43% 0.0218 157.41)",
+          "oklch(37.86% 0.0218 157.41)",
+          "oklch(49.29% 0.0218 157.41)",
+          "oklch(60.71% 0.0218 157.41)",
+          "oklch(72.14% 0.0218 157.41)",
+          "oklch(83.57% 0.0218 157.41)",
+          "oklch(95% 0.0218 157.41)"
+        ]
+      },
+      "operational-secondary": {
+        "role": "neutral",
+        "displayName": "Texto operativo secundario",
+        "tonalRamp": [
+          "oklch(15% 0.0252 157.88)",
+          "oklch(26.43% 0.0252 157.88)",
+          "oklch(37.86% 0.0252 157.88)",
+          "oklch(49.29% 0.0252 157.88)",
+          "oklch(60.71% 0.0252 157.88)",
+          "oklch(72.14% 0.0252 157.88)",
+          "oklch(83.57% 0.0252 157.88)",
+          "oklch(95% 0.0252 157.88)"
+        ]
+      },
+      "workspace": {
+        "role": "neutral",
+        "displayName": "Mesa clara",
+        "tonalRamp": [
+          "oklch(15% 0.0034 145.55)",
+          "oklch(26.43% 0.0034 145.55)",
+          "oklch(37.86% 0.0034 145.55)",
+          "oklch(49.29% 0.0034 145.55)",
+          "oklch(60.71% 0.0034 145.55)",
+          "oklch(72.14% 0.0034 145.55)",
+          "oklch(83.57% 0.0034 145.55)",
+          "oklch(95% 0.0034 145.55)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "tonalRamp": [
+          "oklch(15% 0.0000 0.00)",
+          "oklch(26.43% 0.0000 0.00)",
+          "oklch(37.86% 0.0000 0.00)",
+          "oklch(49.29% 0.0000 0.00)",
+          "oklch(60.71% 0.0000 0.00)",
+          "oklch(72.14% 0.0000 0.00)",
+          "oklch(83.57% 0.0000 0.00)",
+          "oklch(95% 0.0000 0.00)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Línea",
+        "tonalRamp": [
+          "oklch(15% 0.0103 145.49)",
+          "oklch(26.43% 0.0103 145.49)",
+          "oklch(37.86% 0.0103 145.49)",
+          "oklch(49.29% 0.0103 145.49)",
+          "oklch(60.71% 0.0103 145.49)",
+          "oklch(72.14% 0.0103 145.49)",
+          "oklch(83.57% 0.0103 145.49)",
+          "oklch(95% 0.0103 145.49)"
+        ]
+      },
+      "sage": {
+        "role": "primary",
+        "displayName": "Salvia de selección",
+        "tonalRamp": [
+          "oklch(15% 0.0109 149.86)",
+          "oklch(26.43% 0.0109 149.86)",
+          "oklch(37.86% 0.0109 149.86)",
+          "oklch(49.29% 0.0109 149.86)",
+          "oklch(60.71% 0.0109 149.86)",
+          "oklch(72.14% 0.0109 149.86)",
+          "oklch(83.57% 0.0109 149.86)",
+          "oklch(95% 0.0109 149.86)"
+        ]
+      },
+      "illustration-sage": {
+        "role": "secondary",
+        "displayName": "Salvia de ilustración",
+        "tonalRamp": [
+          "oklch(15% 0.0130 141.81)",
+          "oklch(26.43% 0.0130 141.81)",
+          "oklch(37.86% 0.0130 141.81)",
+          "oklch(49.29% 0.0130 141.81)",
+          "oklch(60.71% 0.0130 141.81)",
+          "oklch(72.14% 0.0130 141.81)",
+          "oklch(83.57% 0.0130 141.81)",
+          "oklch(95% 0.0130 141.81)"
+        ]
+      },
+      "illustration-blue": {
+        "role": "secondary",
+        "displayName": "Azul de ilustración",
+        "tonalRamp": [
+          "oklch(15% 0.0121 247.95)",
+          "oklch(26.43% 0.0121 247.95)",
+          "oklch(37.86% 0.0121 247.95)",
+          "oklch(49.29% 0.0121 247.95)",
+          "oklch(60.71% 0.0121 247.95)",
+          "oklch(72.14% 0.0121 247.95)",
+          "oklch(83.57% 0.0121 247.95)",
+          "oklch(95% 0.0121 247.95)"
+        ]
+      },
+      "illustration-sand": {
+        "role": "secondary",
+        "displayName": "Arena de ilustración",
+        "tonalRamp": [
+          "oklch(15% 0.0194 90.55)",
+          "oklch(26.43% 0.0194 90.55)",
+          "oklch(37.86% 0.0194 90.55)",
+          "oklch(49.29% 0.0194 90.55)",
+          "oklch(60.71% 0.0194 90.55)",
+          "oklch(72.14% 0.0194 90.55)",
+          "oklch(83.57% 0.0194 90.55)",
+          "oklch(95% 0.0194 90.55)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Verde de foco",
+        "tonalRamp": [
+          "oklch(15% 0.0758 162.65)",
+          "oklch(26.43% 0.0758 162.65)",
+          "oklch(37.86% 0.0758 162.65)",
+          "oklch(49.29% 0.0758 162.65)",
+          "oklch(60.71% 0.0758 162.65)",
+          "oklch(72.14% 0.0758 162.65)",
+          "oklch(83.57% 0.0758 162.65)",
+          "oklch(95% 0.0758 162.65)"
+        ]
+      },
+      "end-background": {
+        "role": "secondary",
+        "displayName": "Terracota de cierre: fondo",
+        "tonalRamp": [
+          "oklch(15% 0.0121 43.28)",
+          "oklch(26.43% 0.0121 43.28)",
+          "oklch(37.86% 0.0121 43.28)",
+          "oklch(49.29% 0.0121 43.28)",
+          "oklch(60.71% 0.0121 43.28)",
+          "oklch(72.14% 0.0121 43.28)",
+          "oklch(83.57% 0.0121 43.28)",
+          "oklch(95% 0.0121 43.28)"
+        ]
+      },
+      "end-text": {
+        "role": "secondary",
+        "displayName": "Terracota de cierre: texto",
+        "tonalRamp": [
+          "oklch(15% 0.1102 34.48)",
+          "oklch(26.43% 0.1102 34.48)",
+          "oklch(37.86% 0.1102 34.48)",
+          "oklch(49.29% 0.1102 34.48)",
+          "oklch(60.71% 0.1102 34.48)",
+          "oklch(72.14% 0.1102 34.48)",
+          "oklch(83.57% 0.1102 34.48)",
+          "oklch(95% 0.1102 34.48)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Título de página",
+        "purpose": "Jerarquía principal de escritorio; responsive en Layout."
+      },
+      "title": {
+        "displayName": "Título de sección",
+        "purpose": "Encabezados de bloques."
+      },
+      "card-title": {
+        "displayName": "Título de sesión",
+        "purpose": "Identificar una experiencia de biblioteca."
+      },
+      "body": {
+        "displayName": "Explicación",
+        "purpose": "Acción y propósito del paso."
+      },
+      "button": {
+        "displayName": "Control",
+        "purpose": "Texto del botón base."
+      },
+      "navigation": {
+        "displayName": "Navegación",
+        "purpose": "Filas del espacio de trabajo."
+      }
+    },
+    "shadows": [
+      {
+        "name": "dialog",
+        "value": "0 24px 85px #1e332b30",
+        "purpose": "Separar el diálogo del espacio de trabajo."
+      },
+      {
+        "name": "toast",
+        "value": "0 6px 30px #19332229",
+        "purpose": "Aviso flotante por encima del contenido."
+      },
+      {
+        "name": "mobile-drawer",
+        "value": "10px 0 45px #192f281c",
+        "purpose": "Cajón de navegación móvil abierto."
+      },
+      {
+        "name": "thumbnail-play",
+        "value": "0 3px 12px #30492a1a",
+        "purpose": "Affordance de reproducción sobre una miniatura."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Curva de entrada y salida del cajón móvil; --ease."
+      },
+      {
+        "name": "drawer",
+        "value": "transform 0.28s var(--ease)",
+        "purpose": "Navegación móvil."
+      },
+      {
+        "name": "button-state",
+        "value": "background 0.18s, color 0.18s, border-color 0.18s",
+        "purpose": "Estados de botones."
+      },
+      {
+        "name": "card-border",
+        "value": "border-color 0.2s",
+        "purpose": "Hover de tarjeta."
+      },
+      {
+        "name": "connection-spinner",
+        "value": "rotate 1.1s linear infinite",
+        "purpose": "Solo conexión pendiente."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none !important; transition: none !important; scroll-behavior: auto !important",
+        "purpose": "Aplicar bajo prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-min",
+        "value": "1500px"
+      },
+      {
+        "name": "compact-desktop-max",
+        "value": "1200px"
+      },
+      {
+        "name": "tablet-max",
+        "value": "1000px"
+      },
+      {
+        "name": "mobile-max",
+        "value": "700px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Acción principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Variante real del control base de UserHelper.",
+      "html": "<button class=\"ds-button-primary\" type=\"button\">Guardar y ver sesión<svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button>",
+      "css": ".ds-button-primary{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:10px 15px;font-size:12px;font-weight:670;border-radius:8px;line-height:1.4;cursor:pointer;transition:background .18s,color .18s,border-color .18s;background:var(--green,#285744);color:#fff;border:1px solid var(--green,#285744);}.ds-button-primary:hover:not(:disabled){background:var(--green-deep,#1e4435);border-color:var(--green-deep,#1e4435);}.ds-button-primary:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-button-primary:disabled{cursor:not-allowed;opacity:.46;}@media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none;}}"
+    },
+    {
+      "name": "Acción secundaria",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Variante real del control base de UserHelper.",
+      "html": "<button class=\"ds-button-secondary\" type=\"button\">Volver</button>",
+      "css": ".ds-button-secondary{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:10px 15px;font-size:12px;font-weight:670;border-radius:8px;line-height:1.4;cursor:pointer;transition:background .18s,color .18s,border-color .18s;background:#fff;color:#435848;border:1px solid #dce4db;}.ds-button-secondary:hover:not(:disabled){background:#f0f5ef;border-color:#a6baa7;}.ds-button-secondary:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-button-secondary:disabled{cursor:not-allowed;opacity:.46;}@media(prefers-reduced-motion:reduce){.ds-button-secondary{transition:none;}}"
+    },
+    {
+      "name": "Finalizar sesión",
+      "kind": "button",
+      "refersTo": "button-end",
+      "description": "Variante real del control base de UserHelper.",
+      "html": "<button class=\"ds-button-end\" type=\"button\">Finalizar</button>",
+      "css": ".ds-button-end{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:10px 15px;font-size:12px;font-weight:670;border-radius:8px;line-height:1.4;cursor:pointer;transition:background .18s,color .18s,border-color .18s;background:#f9efeb;color:#a45441;border:1px solid #efd9d0;}.ds-button-end:hover:not(:disabled){background:#f3e0d7;}.ds-button-end:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-button-end:disabled{cursor:not-allowed;opacity:.46;}@media(prefers-reduced-motion:reduce){.ds-button-end{transition:none;}}"
+    },
+    {
+      "name": "Acción de texto",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Enlaces internos de acción como abrir la biblioteca o avanzar un paso.",
+      "html": "<button class=\"ds-text-button\" type=\"button\">Ver biblioteca<svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button>",
+      "css": ".ds-text-button{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:5px 0;color:var(--green,#285744);font-size:12px;font-weight:730;border-radius:3px;background:none;border:0;cursor:pointer}.ds-text-button:hover:not(:disabled){text-decoration:underline;text-underline-offset:4px}.ds-text-button:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-text-button:disabled{cursor:not-allowed;opacity:.46}"
+    },
+    {
+      "name": "Búsqueda",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "Campo de búsqueda con foco aplicado al contenedor.",
+      "html": "<label class=\"ds-search\"><svg aria-hidden=\"true\" width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input type=\"search\" aria-label=\"Buscar sesiones\" placeholder=\"Buscar una experiencia…\"/></label>",
+      "css": ".ds-search{font-family:\"Manrope Variable\",Manrope,sans-serif;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #dbe3d7;padding:0 13px;border-radius:9px;min-height:45px;max-width:600px;color:#7d8d77}.ds-search:focus-within{border-color:#588064;outline:2px solid #cee3d0;outline-offset:1px}.ds-search input{font-family:\"Manrope Variable\",Manrope,sans-serif;border:0;padding:12px 0;background:none;min-width:0;width:100%;font-size:12px;color:#3b4d35;outline:none;caret-color:var(--green,#285744)}.ds-search input::placeholder{color:#73816e}"
+    },
+    {
+      "name": "Navegación lateral",
+      "kind": "nav",
+      "refersTo": "navigation-selected",
+      "description": "Fila seleccionada y fila neutra del espacio de trabajo.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Espacio de trabajo\"><button type=\"button\" class=\"ds-selected\" aria-current=\"page\"><svg aria-hidden=\"true\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M3 3v7h7V3zM14 3v7h7V3zM3 14v7h7v-7zM14 14v7h7v-7z\"/></svg>Mi espacio</button><button type=\"button\"><svg aria-hidden=\"true\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M4 4h6a2 2 0 0 1 2 2v15a3 3 0 0 0-3-3H4zM20 4h-6a2 2 0 0 0-2 2v15a3 3 0 0 1 3-3h5z\"/></svg>Biblioteca</button></nav>",
+      "css": ".ds-nav{display:grid;gap:5px;width:220px}.ds-nav button{font-family:\"Manrope Variable\",Manrope,sans-serif;display:flex;align-items:center;gap:12px;padding:13px;width:100%;text-align:left;border:0;border-radius:9px;font-size:12px;font-weight:580;color:#66716b;background:none;cursor:pointer;transition:background .15s}.ds-nav button:hover{background:#f4f6f3;color:var(--ink,#26352f)}.ds-nav button.ds-selected{background:var(--sage,#eaf1eb);color:var(--green,#285744);font-weight:740}.ds-nav button:focus-visible{outline:3px solid #437e63;outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-nav button{transition:none}}"
+    },
+    {
+      "name": "Filtros de biblioteca",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Chips de filtro en estado neutro y seleccionado.",
+      "html": "<div class=\"ds-filters\"><button class=\"ds-filter ds-selected\" type=\"button\" aria-pressed=\"true\">Todas</button><button class=\"ds-filter\" type=\"button\" aria-pressed=\"false\">Soporte</button></div>",
+      "css": ".ds-filters{display:flex;gap:8px;flex-wrap:wrap}.ds-filter{font-family:\"Manrope Variable\",Manrope,sans-serif;border:1px solid #dde5d8;border-radius:7px;padding:8px 13px;font-size:11px;font-weight:600;background:#fff;color:#70806a;cursor:pointer}.ds-filter.ds-selected{background:#e7efe3;color:#3d6535;border-color:#c3d6b8}.ds-filter:hover{background:#edf3e9}.ds-filter:focus-visible{outline:3px solid #437e63;outline-offset:4px;}"
+    },
+    {
+      "name": "Tarjeta de sesión",
+      "kind": "card",
+      "refersTo": "session-card",
+      "description": "Contenedor de una experiencia sintética, con miniatura y metadatos.",
+      "html": "<button class=\"ds-session\" type=\"button\"><span class=\"ds-art\" aria-hidden=\"true\"><span class=\"ds-window\"><span class=\"ds-window-top\">Soporte · ejemplo</span><span class=\"ds-flow\"><i></i><b></b><i></i><b></b><i></i></span></span><span class=\"ds-art-play\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"m8 5 12 7-12 7z\"/></svg></span><span class=\"ds-duration\">06:40</span></span><span class=\"ds-session-body\"><span class=\"ds-category\">Soporte · ejemplo</span><strong>Resolver una incidencia de acceso</strong><span class=\"ds-description\">Una decisión y sus razones, en contexto.</span><span class=\"ds-author\"><span class=\"ds-avatar\">MT</span><span><b>María Torres</b><small>Senior de ejemplo</small></span></span></span></button>",
+      "css": ".ds-session{font-family:\"Manrope Variable\",Manrope,sans-serif;display:block;background:#fff;border:1px solid #e0e7de;border-radius:12px;overflow:hidden;text-align:left;width:280px;padding:0;cursor:pointer;color:var(--ink,#26352f);transition:border-color .2s}.ds-session:hover{border-color:#8ea78c}.ds-session:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-art{height:143px;position:relative;overflow:hidden;background:#e8efe7;display:flex;align-items:flex-end;justify-content:center;padding:20px 38px 0}.ds-window{display:block;width:185px;height:121px;background:rgba(255,255,255,.83);border:1px solid rgba(68,99,67,.14);border-radius:8px 8px 0 0;transform:translateY(4px)}.ds-window-top{display:block;border-bottom:1px solid rgba(68,99,67,.11);padding:9px 8px;font-size:6px;color:#6c806d;text-align:right}.ds-flow{display:flex;align-items:center;justify-content:center;padding:19px 14px 10px}.ds-flow i{height:25px;width:25px;border:1px solid #ccdacb;border-radius:5px;background:#fff}.ds-flow b{width:19px;border-top:1px dashed #b3c8b3}.ds-flow i:nth-of-type(2){background:#edf4e7;transform:rotate(45deg)}.ds-art-play{position:absolute;top:50%;left:50%;margin:-15px 0 0 -15px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#45634d;box-shadow:0 3px 12px #30492a1a;opacity:0;transition:opacity .15s}.ds-session:hover .ds-art-play,.ds-session:focus-visible .ds-art-play{opacity:1}.ds-duration{position:absolute;right:9px;bottom:9px;color:#fff;background:#344b3dda;padding:3px 6px;border-radius:4px;font-size:8px;font-variant-numeric:tabular-nums}.ds-session-body{display:block;padding:16px 16px 14px}.ds-category{display:block;font-size:10px;color:#547658;margin-bottom:7px}.ds-session-body>strong{display:block;font-size:14px;font-weight:670;line-height:1.6;letter-spacing:-.17px;min-height:44px}.ds-description{display:block;font-size:12px;color:var(--muted,#65736a);line-height:1.8;margin:8px 0 20px}.ds-author{display:flex;align-items:center;gap:8px;margin-top:13px}.ds-avatar{width:29px;height:29px;display:grid;place-items:center;border-radius:50%;font-size:9px;font-weight:750;background:#e5ede6;color:#3c614b}.ds-author b{display:block;font-size:11px;font-weight:650}.ds-author small{display:block;font-size:10px;color:var(--muted,#65736a);margin-top:3px}@media(prefers-reduced-motion:reduce){.ds-session,.ds-art-play{transition:none}}"
+    },
+    {
+      "name": "Paso del proceso",
+      "kind": "custom",
+      "refersTo": "timeline-current",
+      "description": "Selección del proceso con título, tipo y tiempo operativos.",
+      "html": "<button class=\"ds-timeline\" type=\"button\" aria-current=\"step\"><span class=\"ds-node\">2</span><span class=\"ds-timeline-content\"><span class=\"ds-kind\">Paso habitual</span><strong>Revisar el historial</strong><span class=\"ds-time\">01:20</span></span></button>",
+      "css": ".ds-timeline{font-family:\"Manrope Variable\",Manrope,sans-serif;display:flex;align-items:flex-start;gap:11px;padding:12px 8px;text-align:left;width:270px;border-radius:8px;position:relative;border:1px solid #d5e4c8;background:#edf4e5;cursor:pointer}.ds-timeline:hover{background:#edf4e5}.ds-timeline:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-node{width:23px;height:23px;border:1px solid #527744;border-radius:50%;background:#527744;display:grid;place-items:center;color:#fff;font-size:9px;flex-shrink:0}.ds-timeline-content{flex:1;display:block}.ds-kind{display:block;font-size:9px;color:#526258;margin-bottom:5px;font-weight:500}.ds-timeline-content>strong{font-size:12px;font-weight:630;display:block;line-height:1.7;color:#546446}.ds-time{font-size:10px;font-variant-numeric:tabular-nums;color:#526258;margin-top:7px;display:block}"
+    },
+    {
+      "name": "Tipo de paso",
+      "kind": "chip",
+      "refersTo": "step-badge",
+      "description": "Etiqueta informativa colocada después del título, con forma e icono además de tono.",
+      "html": "<span class=\"ds-step-badge\"><svg aria-hidden=\"true\" width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><circle cx=\"12\" cy=\"12\" r=\"10\"/></svg>Paso habitual</span>",
+      "css": ".ds-step-badge{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;gap:5px;color:#61764e;background:#eaf0e3;padding:4px 7px;border-radius:5px;font-size:10px;font-weight:650}"
+    }
+  ],
+  "narrative": {
+    "northStar": "La sala de edición compartida",
+    "overview": "UserHelper se siente como una mesa de trabajo luminosa: superficies blancas, fondo apenas verde y controles de bosque oscuro. La identidad acompaña una tarea en curso y la lectura posterior de sus decisiones. La densidad es operativa, con aire entre grupos y detalles compactos dentro de cada herramienta.\n\nManrope une navegación, contenido y datos temporales. Los diagramas de ventanas, conexiones y pasos son ilustraciones construidas con CSS y SVG; el logotipo combina una U abierta con un trazo central. La personalidad es profesional, clara y respetuosa. El registro de demostración permanece visible en los recorridos sintéticos.",
+    "keyCharacteristics": [
+      "Superficies claras separadas por bordes suaves y cambios de tono.",
+      "Verde oscuro para acciones principales y selección; azul y arena para distinguir ejemplos.",
+      "Tipografía única, títulos compactos y párrafos con interlineado generoso.",
+      "Pasos, tiempos y razones conectados por una misma selección.",
+      "Movimiento breve de estado y navegación, con reducción de movimiento respetada."
+    ],
+    "rules": [
+      {
+        "name": "The State Has Words Rule",
+        "body": "Una conexión, pausa, decisión o variante se reconoce por texto y, cuando corresponde, icono o forma; el color nunca carga solo con su significado.",
+        "section": "colors"
+      },
+      {
+        "name": "The Reading Before Ornament Rule",
+        "body": "La información que permite operar y comprender conserva la escala final de lectura; las pequeñas ventanas de ejemplo siguen siendo ilustraciones.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Work Surface Rule",
+        "body": "Los paneles de trabajo descansan sobre tono y borde; la elevación marca una superposición, no cada contenedor.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** conservar la relación entre superficie blanca, borde suave y fondo vegetal claro.",
+      "**Do** usar verde oscuro para acciones principales y selección reconocible por más de una señal.",
+      "**Do** conservar texto operativo legible, cifras tabulares y foco de teclado visible.",
+      "**Do** colocar el título del paso antes de su tipo y posición, y mantener acción, propósito y razón juntos.",
+      "**Do** mantener el significado del proceso cuando pase de columna a fila desplazable.",
+      "**Do** identificar las escenas y sesiones sintéticas como ejemplos en los recorridos de demostración."
+    ],
+    "donts": [
+      "**Don't** extender las sombras de diálogo a todas las tarjetas del espacio de trabajo.",
+      "**Don't** usar solo un cambio de color para comunicar conexión, pausa, selección o variante.",
+      "**Don't** convertir la microtipografía de las ilustraciones en texto operativo de nuevas pantallas.",
+      "**Don't** añadir una fuente ornamental que rompa la jerarquía única de Manrope.",
+      "**Don't** mostrar controles del cajón móvil en el escritorio ni dejar interactivo su contenido cuando esté cerrado.",
+      "**Don't** representar una variante como un paso habitual sin contexto, etiqueta ni distinción de forma."
+    ]
+  }
+}

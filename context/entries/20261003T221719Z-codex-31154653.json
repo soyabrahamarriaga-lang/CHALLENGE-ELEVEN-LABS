@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "id": "20261003T221719Z-codex-31154653",
+  "at": "2026-10-03T22:17:19.171072Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "frontend-userhelper-prototype",
+  "summary": "Construir UserHelper con perfiles senior e intern y recorridos simulados",
+  "result": "Prototipo navegable con consentimiento, llamada demo, biblioteca y mapa; sistema visual documentado; pendiente publicar y verificar CI remoto",
+  "files": [
+    ".github/workflows/integrity.yml",
+    ".gitignore",
+    ".impeccable/design.json",
+    ".impeccable/settings.json",
+    "DESIGN.md",
+    "PRODUCT.md",
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-0008.md",
+    "context/ontology.json",
+    "docs/FRONTEND-PROTOTYPE.md",
+    "docs/READINESS.md",
+    "docs/ROADMAP-15H.md",
+    "index.html",
+    "package-lock.json",
+    "package.json",
+    "public/favicon.svg",
+    "src/App.tsx",
+    "src/components/Shared.tsx",
+    "src/data/sessions.ts",
+    "src/domain/callMachine.test.ts",
+    "src/domain/callMachine.ts",
+    "src/domain/types.ts",
+    "src/features/Library.tsx",
+    "src/features/Senior.tsx",
+    "src/features/SessionDetail.tsx",
+    "src/main.tsx",
+    "src/services/sessionRepository.test.ts",
+    "src/services/sessionRepository.ts",
+    "src/services/useDemoAgent.ts",
+    "src/styles.css",
+    "tsconfig.json",
+    "vite.config.ts"
+  ],
+  "decisions": [
+    "React y TypeScript y nombre UserHelper confirmados por usuario; Vite y estructura modular elegidos para una fase exclusivamente frontend",
+    "Conexión independiente de sesión, guardar datos sintéticos localmente y excluir fragmentos del mapa; IA y captura reales permanecen pendientes",
+    "CI incorpora pruebas frontend y build al check protegido existente; revisión y documentación visual realizadas por subagentes Codex de impeccable"
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0008.md"
+  ],
+  "ontology_review": "Se añaden conexión de agente, sesión de demostración y variante contextual. Conectar no autoriza grabar; una muestra no equivale a evidencia; revisar no acredita dominio.",
+  "validation": [
+    "npm test: 11 pruebas pasaron; npm run build: TypeScript estricto y Vite correctos; contrato seed6b1fc1a2 presente en dist/index.html",
+    "python3 -m unittest discover -s tests -v: 28 pruebas pasaron",
+    "Navegador: consentimiento, pausa/error/reconexión, finalizar/guardar/excluir, mapa sincronizado, búsqueda/filtros/orden, vacío/error/recuperación, marcadores, reproducción y pestañas por teclado; escritorio/tablet/móvil",
+    "Revisión visual independiente: ship; contraste, controles móviles y jerarquía del paso resueltos, sin hallazgos materiales abiertos; detector una pasada sin hallazgos"
+  ],
+  "next_steps": [
+    "Publicar PR y verificar context-integrity en GitHub",
+    "Elegir caso real e integrar agente, voz, pantalla, debrief/teach-back y enseñanza en caso nuevo antes de las 06:00 del 4 de octubre"
+  ]
+}

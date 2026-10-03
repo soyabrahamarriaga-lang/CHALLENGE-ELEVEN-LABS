@@ -10,13 +10,14 @@ Actualizado: 2026-10-03. Esta hoja contiene estado operativo; nunca claves, toke
 | ElevenLabs y tokens | Declarado disponible por usuario | No se han inspeccionado valores de credenciales |
 | Sesión para inspección | Verificada en Chrome | Sesión autenticada y plataforma ElevenAgents accesible; el usuario solicitó continuar mediante acceso directo |
 | Agente(s) existente(s) | Lista visible vacía | ElevenAgents mostró que no había agentes en la vista consultada; falta contrastar por MCP el workspace y el alcance de la lista |
-| MCP directo | Registrado; OAuth pendiente | Servidor oficial remoto configurado en Codex; primer intento con scope convai_read expiró esperando consentimiento. No se ha comprobado una llamada autenticada |
+| MCP directo | Registrado; almacenamiento OAuth bloqueado | Servidor oficial remoto configurado. El último intento con scope convai_read recibió un fallo de permisos al adquirir el bloqueo local de credenciales. No se ha comprobado una llamada autenticada |
 | Modelo LLM del agente | Sin verificar | Revisar configuración del agente, sin modificarla |
 | Voz y modelo de voz | Sin verificar | Identificar opciones configuradas y disponibilidad para conversación |
 | Transcripción / Scribe | Sin verificar | Distinguir lo configurado para el agente de una API de transcripción separada |
 | Tools / base de conocimiento | Sin verificar | Identificar cómo se incorporan eventos de pantalla y conocimiento validado |
 | Permisos y capacidad de uso | Sin verificar | Comprobar capacidades necesarias; no publicar credenciales ni detalles privados de facturación |
 | Visión | Sin verificar | Un agente conversacional no demuestra que tengamos un modelo de visión operativo |
+| Frontend | Implementado como prototipo local | UserHelper, React + TypeScript; datos y llamadas simulados; ver docs/FRONTEND-PROTOTYPE.md |
 | Entrega / hosting | Sin verificar | Confirmar portal del evento y probar entorno de demo con margen |
 
 ## Inspección autorizada

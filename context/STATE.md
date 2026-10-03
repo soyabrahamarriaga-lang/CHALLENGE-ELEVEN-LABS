@@ -10,16 +10,18 @@ Construir el AI Apprentice del brief de ocho páginas de ElevenLabs × Hack-Nati
 - Hooks, workflow de GitHub, plantillas de issue/PR y CODEOWNERS.
 - El estado efectivo de pruebas/publicación está en las entradas de la bitácora y los checks de GitHub, no se presupone por existir estos archivos.
 
-## Todavía no implementado
-Aplicación web, pantalla compartida, visión, agente ElevenLabs, debrief, Work Map, tutor, sandbox, privacidad de sesiones, pruebas funcionales y demo. No hay stack de aplicación decidido ni credenciales de ElevenLabs configuradas.
+## Prototipo disponible y límites
+UserHelper tiene frontend React + TypeScript con perfiles senior e intern, llamada simulada con consentimiento/pausa, biblioteca, reproducción visual de muestra y mapa navegable. Los datos son sintéticos; el almacenamiento es local al navegador. Las pruebas y el contrato están en `docs/FRONTEND-PROTOTYPE.md`. Decisión: ADR-0008.
+
+Todavía faltan captura real de pantalla, visión, agente ElevenLabs, debrief, teach-back validado, Work Map generado desde evidencia, tutor e intervención en un caso nuevo. El prototipo no demuestra todavía los mínimos Capture → Map → Teach del challenge.
 
 ## Prioridad actual del usuario
 
-Antes de construir la aplicación: entender el problema, comparar/pivotear ideas y cerrar el mapa. **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC)**. T0 del 3 de octubre a las 13:41:57 se conserva: el presupuesto total pasa a 16 h 18 min 3 s; no se reinicia el reloj. Equipo de tres personas. Se verificó sesión de ElevenLabs en Chrome y una lista visible sin agentes. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con autorización OAuth de lectura pendiente. No requiere API key para ese acceso.
+Construir directamente un prototipo frontend para revisar la experiencia senior/intern; mantener el mapa y el roadmap como guía de la integración posterior. **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC)**. T0 del 3 de octubre a las 13:41:57 se conserva: el presupuesto total pasa a 16 h 18 min 3 s; no se reinicia el reloj. Equipo de tres personas. Se verificó sesión de ElevenLabs en Chrome y una lista visible sin agentes. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con acceso MCP autenticado todavía sin verificar. El intento de guardar autorización falló por permisos del almacén local; no bloquea el frontend simulado. No requiere API key para ese acceso.
 
 Plan vigente: `docs/ROADMAP-15H.md`; método: `docs/WORKFLOW.md`; acceso: `docs/READINESS.md`. La ampliación v2 del harness (issue #2) se conservó localmente y queda diferida; la base estable sigue operativa.
 
-## Próximo trabajo tras cerrar el mapa
+## Próximo trabajo después del prototipo
 1. Elegir el flujo de 5–10 minutos y un caso nuevo para evaluar transferencia.
 2. Definir entidades/evidencia del Work Map y criterios observables de cierre del debrief.
 3. Probar primero voz + una pantalla + eventos visuales en el contexto del agente.
