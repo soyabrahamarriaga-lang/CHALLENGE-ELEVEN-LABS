@@ -11,6 +11,10 @@ Fuente: solicitud directa del usuario en Texto pegado.txt, 2026-10-03. Sustituye
 - Datos y servicio de simulación separados de componentes para integración posterior.
 - Límite vigente: 4 de octubre de 2026, 06:00 America/Mexico_City.
 
+## Ampliación posterior: videollamada real
+
+La solicitud posterior de integrar LiveKit amplía el límite «solo frontend» con un backend de tokens y una vista independiente. Este documento conserva el contrato y las pruebas del prototipo sintético original. La configuración, controles de captura y límites actuales están en [LIVEKIT.md](LIVEKIT.md) y ADR-0009. Los recorridos de biblioteca y el agente de demostración no pasan a ser reales por añadir transporte.
+
 ## Contrato mínimo
 
 ConnectionStatus es independiente de SessionStatus. Connect solo modifica la primera. Start requiere conexión y consentimiento explícito de demo. Pause congela duración y preguntas. Disconnect/error detiene la actividad y conserva un borrador. Resume exige conexión. Finish impide nuevos eventos; guardar produce una sesión marcada como ejemplo, sin afirmar una transcripción real.

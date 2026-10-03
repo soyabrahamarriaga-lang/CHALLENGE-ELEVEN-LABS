@@ -256,3 +256,7 @@ El diálogo blanco usa radio de escenario, relleno de (28px) en escritorio y (22
 - **Don't** añadir una fuente ornamental que rompa la jerarquía única de Manrope.
 - **Don't** mostrar controles del cajón móvil en el escritorio ni dejar interactivo su contenido cuando esté cerrado.
 - **Don't** representar una variante como un paso habitual sin contexto, etiqueta ni distinción de forma.
+
+## Extensión de videollamada
+
+La sala LiveKit mantiene tipografía, superficies claras y acentos verdes existentes. «Videollamada real» identifica el recorrido; el estado de conexión, el aviso de transmisión y la ausencia/presencia de agente son visibles por separado. El lobby explica acceso y consentimiento; al conectar, los participantes y pantallas sustituyen el formulario. Dispositivos apagados por defecto, controles con estado textual, pausa y salida siempre accesibles. La biblioteca conserva sus indicaciones de datos sintéticos.

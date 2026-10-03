@@ -17,7 +17,8 @@ Actualizado: 2026-10-03. Esta hoja contiene estado operativo; nunca claves, toke
 | Tools / base de conocimiento | Sin verificar | Identificar cómo se incorporan eventos de pantalla y conocimiento validado |
 | Permisos y capacidad de uso | Sin verificar | Comprobar capacidades necesarias; no publicar credenciales ni detalles privados de facturación |
 | Visión | Sin verificar | Un agente conversacional no demuestra que tengamos un modelo de visión operativo |
-| Frontend | Implementado como prototipo local | UserHelper, React + TypeScript; datos y llamadas simulados; ver docs/FRONTEND-PROTOTYPE.md |
+| Frontend | Prototipo más transporte real | UserHelper, React + TypeScript; biblioteca sintética y sección LiveKit independiente; ver docs/LIVEKIT.md |
+| LiveKit Cloud | Proyecto creado y credenciales autenticadas | Consulta autenticada y entrada de dos clientes con presencia mutua verificadas; pruebas de medios entre dos computadoras pendientes |
 | Entrega / hosting | Sin verificar | Confirmar portal del evento y probar entorno de demo con margen |
 
 ## Inspección autorizada
