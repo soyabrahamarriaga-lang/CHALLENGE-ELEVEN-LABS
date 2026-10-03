@@ -1,15 +1,33 @@
 # The AI Apprentice — CHALLENGE-ELEVEN-LABS
 
-Proyecto para el Challenge 01 del 7th Global AI Hackathon (Hack-Nation × ElevenLabs): aprender el criterio de un experto mientras trabaja, construir un Work Map verificable y enseñar a otra persona en un caso nuevo.
+## Descripcion del proyecto
+
+The AI Apprentice es un MVP para preservar conocimiento operativo que normalmente vive en la experiencia de una persona. Un aprendiz de IA con voz observa a un experto mientras trabaja, pregunta por que toma decisiones en pausas oportunas, registra limites y excepciones, y convierte esas respuestas en un Work Map verificable. Despues usa ese mapa para ensenar el flujo a otra persona en un caso nuevo, interviniendo antes de que guarde una decision incorrecta.
+
+El reto exige conectar tres momentos: **Capture** (observar y preguntar), **Map** (organizar razones, guardrails y evidencia) y **Teach** (transferir el criterio y comprobar aprendizaje). La aplicacion todavia no esta implementada; el repositorio contiene la base de contexto, colaboracion y validacion para construirla sin perder trazabilidad.
 
 **Estado:** infraestructura de contexto y colaboración. La aplicación Capture → Map → Teach todavía no está implementada. El flujo de trabajo de la demo y el stack siguen pendientes de decisión.
 
 ## Leer primero
-- [Análisis completo del challenge](docs/CHALLENGE.md): requisitos, ejemplos, cifras, recursos y ambigüedades.
-- [Estado y relevo](context/STATE.md): qué existe, qué falta y siguiente trabajo.
-- [Ontología](context/ontology.json): conceptos, relaciones, evidencia y dudas.
-- [Decisiones](context/decisions/ADR-0001.md) y [bitácora por aporte](context/entries/).
-- [Flujo de colaboración](CONTRIBUTING.md), [instrucciones para agentes](AGENTS.md) y [Claude](CLAUDE.md).
+- [Onboarding para desarrolladores](docs/ONBOARDING.md): recorrido de 15 minutos, reglas del producto y como aportar.
+- [Guia de trabajo agile](docs/AGILE.md): backlog, entregables, criterios de terminado y ciclo issue-PR.
+- [Analisis completo del challenge](docs/CHALLENGE.md): requisitos, ejemplos, cifras, recursos y ambiguedades.
+- [Estado y relevo](context/STATE.md): que existe, que falta y siguiente trabajo.
+- [Ontologia](context/ontology.json): conceptos, relaciones, evidencia y dudas.
+- [Decisiones](context/decisions/ADR-0001.md) y [bitacora por aporte](context/entries/).
+- [Flujo de colaboracion](CONTRIBUTING.md), [instrucciones para agentes](AGENTS.md) y [Claude](CLAUDE.md).
+
+## Estructura del repositorio
+
+```text
+docs/                 Producto, challenge y forma de trabajo
+context/              Estado, ontologia, ADRs y bitacora inmutable
+scripts/              Harness de integridad y automatizacion local
+tests/                Pruebas del harness y futuras pruebas del producto
+.github/              Issues, PRs, CODEOWNERS y CI
+```
+
+La implementacion de la aplicacion se agregara cuando se elijan el flujo de demo y el stack. Hasta entonces no se crean carpetas `frontend/` o `backend/` vacias: cada directorio debe tener un proposito y una tarea que lo use.
 
 ## Preparar otra computadora
 Se necesita Git, Python 3.9+ y acceso a este repositorio. El harness no requiere paquetes externos.

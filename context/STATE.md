@@ -7,6 +7,7 @@ Construir el AI Apprentice del brief de ocho páginas de ElevenLabs × Hack-Nati
 - Harness Python sin dependencias, instrucciones compartidas Claude/Codex y bitácora por aporte.
 - Ontología inicial basada en el brief; ADRs para las decisiones de colaboración.
 - Análisis íntegro del challenge en `docs/CHALLENGE.md`.
+- Onboarding y guía agile en `docs/ONBOARDING.md` y `docs/AGILE.md`.
 - Hooks, workflow de GitHub, plantillas de issue/PR y CODEOWNERS.
 - El estado efectivo de pruebas/publicación está en las entradas de la bitácora y los checks de GitHub, no se presupone por existir estos archivos.
 
@@ -14,7 +15,7 @@ Construir el AI Apprentice del brief de ocho páginas de ElevenLabs × Hack-Nati
 Aplicación web, pantalla compartida, visión, agente ElevenLabs, debrief, Work Map, tutor, sandbox, privacidad de sesiones, pruebas funcionales y demo. No hay stack de aplicación decidido ni credenciales de ElevenLabs configuradas.
 
 ## Próximo trabajo
-1. Elegir el flujo de 5–10 minutos y un caso nuevo para evaluar transferencia.
+1. Abrir una tarea para elegir el flujo de 5–10 minutos y un caso nuevo para evaluar transferencia.
 2. Definir entidades/evidencia del Work Map y criterios observables de cierre del debrief.
 3. Probar primero voz + una pantalla + eventos visuales en el contexto del agente.
 4. Implementar Map y Teach, intervención previa al guardado y controles de privacidad.

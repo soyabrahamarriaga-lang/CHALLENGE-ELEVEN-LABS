@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "id": "20261003T194605Z-codex-1503b379",
+  "at": "2026-10-03T19:46:05.885275Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "agile-project-structure",
+  "summary": "Ordenar la documentacion del proyecto y preparar el onboarding agile",
+  "result": "Se agregaron guias de onboarding y trabajo agile, se describio el producto y se actualizo el relevo compartido.",
+  "files": [
+    "README.md",
+    "context/STATE.md",
+    "docs/AGILE.md",
+    "docs/ONBOARDING.md"
+  ],
+  "decisions": [
+    "Separar la documentacion de producto y proceso en docs/ sin crear carpetas de implementacion vacias; mantener context/ como memoria y trazabilidad."
+  ],
+  "adr_refs": [],
+  "ontology_review": "Sin cambio de ontologia: se aclara el flujo Capture, Map y Teach para desarrolladores, pero no se agregan entidades ni relaciones del producto.",
+  "validation": [
+    "py -m unittest discover -s tests -v: 18 pruebas pasaron; 1 fallo por python3 no disponible en Windows y 1 error por privilegios de symlink."
+  ],
+  "next_steps": [
+    "Abrir una tarea para elegir el flujo de demo y el stack antes de crear frontend o backend."
+  ]
+}
