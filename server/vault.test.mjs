@@ -6,13 +6,15 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   clock,
+  createVault,
   createVaultHandler,
+  syncAgentConversations,
   readVaultConfig,
   transcriptToMarkdown,
   vaultProblems,
   verifyWebhookSignature,
 } from "./vault.mjs";
-import { createAppHandler } from "./main.mjs";
+import { createAppHandler, startAgentSync } from "./main.mjs";
 
 const cleanup = [];
 afterEach(async () => {
@@ -215,5 +217,90 @@ describe("combined backend", () => {
     ])
       handler({ url }, {});
     expect(seen).toEqual(["vault", "vault", "livekit", "livekit", "livekit", "livekit"]);
+  });
+});
+
+describe("agent conversation sync", () => {
+  async function vaultIn() {
+    const dir = await mkdtemp(join(tmpdir(), "vault-sync-"));
+    cleanup.push(() => rm(dir, { recursive: true, force: true }));
+    const config = readVaultConfig({
+      VAULT_PATH: dir,
+      ELEVENLABS_API_KEY: "only-a-test-key",
+      ELEVENLABS_AGENT_ID: "agent_test",
+    });
+    return { dir, config, vault: createVault(config) };
+  }
+  function fakeElevenLabs(pages) {
+    const urls = [];
+    const fetcher = async (url, init) => {
+      urls.push(url);
+      expect(init.headers["xi-api-key"]).toBe("only-a-test-key");
+      if (url.includes("/conversations?")) return new Response(JSON.stringify(pages.shift()), { status: 200 });
+      const id = url.split("/").pop();
+      return new Response(JSON.stringify({ ...conversation, conversation_id: id }), { status: 200 });
+    };
+    return { fetcher, urls };
+  }
+
+  it("imports finished conversations across pages, skips saved ones and counts pending", async () => {
+    const { dir, config, vault } = await vaultIn();
+    await vault.saveConversation({ ...conversation, conversation_id: "conv_old" });
+    const { fetcher, urls } = fakeElevenLabs([
+      {
+        conversations: [
+          { conversation_id: "conv_old", status: "done" },
+          { conversation_id: "conv_new", status: "done" },
+          { conversation_id: "conv_live", status: "in-progress" },
+        ],
+        has_more: true,
+        next_cursor: "c2",
+      },
+      { conversations: [{ conversation_id: "conv_fail", status: "failed" }, { conversation_id: "../x", status: "done" }], has_more: false },
+    ]);
+    const result = await syncAgentConversations(config, vault, { fetch: fetcher });
+    expect(result.skipped).toBe(1);
+    expect(result.pending).toBe(1);
+    expect(result.imported).toHaveLength(2);
+    expect(urls[0]).toContain("agent_id=agent_test");
+    expect(urls.some((u) => u.includes("cursor=c2"))).toBe(true);
+    expect(urls.some((u) => u.includes("conv_old") && !u.includes("?"))).toBe(false);
+    const folders = (await readdir(join(dir, "Sesiones"))).sort();
+    expect(folders.map((f) => f.replace(/^.*?-conv_/, "conv_"))).toEqual(["conv_fail", "conv_new", "conv_old"]);
+    const again = await syncAgentConversations(config, vault, {
+      fetch: fakeElevenLabs([{ conversations: [{ conversation_id: "conv_new", status: "done" }], has_more: false }]).fetcher,
+    });
+    expect(again).toEqual({ imported: [], skipped: 1, pending: 0 });
+  });
+
+  it("refuses to sync without an agent and surfaces ElevenLabs errors", async () => {
+    const { vault } = await vaultIn();
+    await expect(syncAgentConversations(readVaultConfig({ VAULT_PATH: "/tmp", ELEVENLABS_API_KEY: "k" }), vault)).rejects.toThrow(
+      "agent-not-configured",
+    );
+    const { config } = await vaultIn();
+    const denied = async () => new Response("{}", { status: 401 });
+    await expect(syncAgentConversations(config, vault, { fetch: denied })).rejects.toMatchObject({ status: 401 });
+  });
+
+  it("starts the periodic sync only when vault, key and agent are configured, and logs failures", async () => {
+    const off = startAgentSync(readVaultConfig({ VAULT_PATH: "/tmp" }), { log: { info() {}, error() {} } });
+    expect(off).toBeNull();
+    const { config } = await vaultIn();
+    const messages = [];
+    const log = { info: (m) => messages.push(m), error: (...m) => messages.push(m.join(" ")) };
+    let calls = 0;
+    const sync = async () => {
+      calls++;
+      if (calls === 2) throw new Error("elevenlabs-500");
+      return { imported: ["Sesiones/x/transcripcion.md"], skipped: 0, pending: 0 };
+    };
+    const job = startAgentSync(config, { log, sync });
+    await job.first;
+    await job.run();
+    job.stop();
+    expect(calls).toBe(2);
+    expect(messages.join("\n")).toContain("transcripción guardada: Sesiones/x/transcripcion.md");
+    expect(messages.join("\n")).toContain("sincronización con ElevenLabs falló: elevenlabs-500");
   });
 });

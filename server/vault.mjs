@@ -14,7 +14,9 @@ export function readVaultConfig(env = process.env) {
   return {
     path,
     origin: env.APP_ORIGIN || "http://127.0.0.1:5173",
-    apiKey: env.ELEVENLABS_API_KEY || "",
+    apiKey: (env.ELEVENLABS_API_KEY || "").trim(),
+    agentId: (env.ELEVENLABS_AGENT_ID || "").trim(),
+    syncMinutes: Number(env.VAULT_SYNC_MINUTES || 2),
     apiBase: env.ELEVENLABS_API_BASE || "https://api.elevenlabs.io",
     webhookSecret: env.ELEVENLABS_WEBHOOK_SECRET || "",
     ready: Boolean(path && isAbsolute(path)),
@@ -27,7 +29,8 @@ export function vaultProblems(config) {
   if (!config.path) problems.push("VAULT_PATH vacío: bóveda desactivada");
   else if (!isAbsolute(config.path)) problems.push("VAULT_PATH debe ser una ruta absoluta");
   if (!config.apiKey) problems.push("ELEVENLABS_API_KEY vacío: no se pueden importar conversaciones");
-  if (!config.webhookSecret) problems.push("ELEVENLABS_WEBHOOK_SECRET vacío: webhook desactivado");
+  if (!config.agentId) problems.push("ELEVENLABS_AGENT_ID vacío: sincronización automática desactivada");
+  if (!config.webhookSecret) problems.push("ELEVENLABS_WEBHOOK_SECRET vacío: webhook desactivado (opcional)");
   return problems;
 }
 
@@ -118,6 +121,46 @@ export function verifyWebhookSignature(rawBody, header, secret, nowSecs = Math.f
   return given.length === wanted.length && timingSafeEqual(given, wanted);
 }
 
+export async function fetchConversation(config, conversationId, fetchImpl = fetch) {
+  const response = await fetchImpl(
+    `${config.apiBase}/v1/convai/conversations/${encodeURIComponent(conversationId)}`,
+    { headers: { "xi-api-key": config.apiKey }, signal: AbortSignal.timeout(15000) },
+  );
+  if (!response.ok)
+    throw Object.assign(new Error("elevenlabs-" + response.status), { status: response.status });
+  return response.json();
+}
+
+// Copies every finished conversation of the configured agent that the vault does not have yet.
+export async function syncAgentConversations(config, vault, { fetch: fetchImpl = fetch, maxPages = 5 } = {}) {
+  if (!config.apiKey || !ID.test(config.agentId || "")) throw new Error("agent-not-configured");
+  const result = { imported: [], skipped: 0, pending: 0 };
+  let cursor = "";
+  for (let page = 0; page < maxPages; page++) {
+    const query = new URLSearchParams({ agent_id: config.agentId, page_size: "100" });
+    if (cursor) query.set("cursor", cursor);
+    const response = await fetchImpl(`${config.apiBase}/v1/convai/conversations?${query}`, {
+      headers: { "xi-api-key": config.apiKey },
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!response.ok)
+      throw Object.assign(new Error("elevenlabs-" + response.status), { status: response.status });
+    const body = await response.json();
+    for (const item of body.conversations || []) {
+      if (!ID.test(item.conversation_id || "")) continue;
+      if (!["done", "failed"].includes(item.status)) result.pending++;
+      else if (await vault.hasTranscript(item.conversation_id)) result.skipped++;
+      else {
+        const saved = await vault.saveConversation(await fetchConversation(config, item.conversation_id, fetchImpl));
+        result.imported.push(saved.file);
+      }
+    }
+    if (!body.has_more || !body.next_cursor) break;
+    cursor = body.next_cursor;
+  }
+  return result;
+}
+
 export function createVault(config) {
   const root = resolve(config.path);
   const inside = (...parts) => {
@@ -146,6 +189,11 @@ export function createVault(config) {
   }
   return {
     root,
+    async hasTranscript(conversationId) {
+      const folder = await findFolder(conversationId);
+      if (!folder) return false;
+      return stat(inside("Sesiones", folder, "transcripcion.md")).then(() => true, () => false);
+    },
     async saveConversation(conversation) {
       if (!conversation || !ID.test(conversation.conversation_id || "")) throw new Error("invalid-id");
       const folder =
@@ -223,16 +271,6 @@ export function createVaultHandler(config = readVaultConfig(), options = {}) {
   const sameOrigin = (req) =>
     req.headers.origin === config.origin && req.headers["sec-fetch-site"] !== "cross-site";
 
-  async function fetchConversation(conversationId) {
-    const response = await fetchImpl(
-      `${config.apiBase}/v1/convai/conversations/${encodeURIComponent(conversationId)}`,
-      { headers: { "xi-api-key": config.apiKey }, signal: AbortSignal.timeout(15000) },
-    );
-    if (!response.ok)
-      throw Object.assign(new Error("elevenlabs-" + response.status), { status: response.status });
-    return response.json();
-  }
-
   return async (req, res) => {
     const path = (req.url || "").split("?")[0];
     try {
@@ -276,7 +314,7 @@ export function createVaultHandler(config = readVaultConfig(), options = {}) {
 
       if (collection === "conversations" && action === "import" && parts.length === 5) {
         if (!config.apiKey) return send(res, 503, { error: "api_key_missing" });
-        const conversation = await fetchConversation(id);
+        const conversation = await fetchConversation(config, id, fetchImpl);
         if (conversation.status && !["done", "failed"].includes(conversation.status))
           return send(res, 409, { error: "not_ready", status: conversation.status });
         return send(res, 200, await vault.saveConversation(conversation));

@@ -31,6 +31,10 @@ UserHelper-Vault/
 
 ## Flujo
 
+**Automático (principal):** con `VAULT_PATH`, `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID`, `npm run dev:token` copia a la bóveda cada `VAULT_SYNC_MINUTES` (2 por defecto) todas las conversaciones terminadas del agente que falten, incluidas las iniciadas fuera de UserHelper (panel de ElevenLabs, otra computadora). No necesita URL pública. Ya guardadas = se omiten.
+
+**Inmediato desde la app:**
+
 1. La persona termina la conversación en `#senior/agent`.
 2. La app llama `POST /api/vault/conversations/:id/import`; el backend pide la conversación a ElevenLabs y la escribe. Reintenta mientras ElevenLabs responde `processing`.
 3. La pantalla muestra «Transcripción guardada en la bóveda: …». Sin `VAULT_PATH`, no muestra nada.
@@ -55,4 +59,5 @@ Todas excepto el webhook exigen el origen exacto de `APP_ORIGIN` y JSON.
 - Privado: no copiar notas de la bóveda a este repo, issues ni capturas públicas.
 - Sin redacción automática de datos personales ni botón de retiro todavía. Retirar = borrar la nota y revisar qué Work Map la cita.
 - La firma del webhook no se ha probado con un envío real de ElevenLabs.
+- Verificado con una conversación real del agente (46 s, 2026-10-03) importada por la sincronización; una segunda pasada la omitió.
 - La sesión `ejemplo_sintetico_demo` de la bóveda es sintética, creada para verificar la escritura; se puede borrar.

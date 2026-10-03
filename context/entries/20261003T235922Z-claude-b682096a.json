@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "id": "20261003T235922Z-claude-b682096a",
+  "at": "2026-10-03T23:59:22.951086Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "obsidian-vault",
+  "summary": "Sincronizar automáticamente todas las conversaciones del agente ElevenLabs con la bóveda Obsidian",
+  "result": "El backend copia cada VAULT_SYNC_MINUTES las conversaciones terminadas del agente que falten en la bóveda. Probado con la conversación real existente del agente: importada a Sesiones/; segunda pasada la omitió.",
+  "files": [
+    ".env.example",
+    "context/decisions/ADR-0011.md",
+    "docs/OBSIDIAN.md",
+    "server/main.mjs",
+    "server/vault.mjs",
+    "server/vault.test.mjs"
+  ],
+  "decisions": [
+    "Sincronización periódica como mecanismo principal (sin URL pública, cubre conversaciones fuera de la app); importación desde la vista del agente y webhook quedan como vías inmediatas/opcionales. Ampliado en ADR-0011."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0011.md"
+  ],
+  "ontology_review": "Sin cambio: misma entidad session/evidence almacenada; una transcripción sincronizada no es razón validada.",
+  "validation": [
+    "npm test: 8 archivos, 56 pruebas pasaron (3 nuevas de sincronización).",
+    "npm run build completado.",
+    "Llamada real a ElevenLabs: 1 conversación done del agente importada; segunda ejecución imported=0 skipped=1. No se registraron valores de credenciales."
+  ],
+  "next_steps": [
+    "Integrar la rama a main por PR para que npm run dev:token sincronice en la copia que ejecuta la app.",
+    "Generar work-map.md a partir de transcripción + eventos."
+  ]
+}
