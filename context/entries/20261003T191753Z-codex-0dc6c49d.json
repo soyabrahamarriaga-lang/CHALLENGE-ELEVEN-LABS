@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "id": "20261003T191753Z-codex-0dc6c49d",
+  "at": "2026-10-03T19:17:53.139998Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "verify-collaboration",
+  "summary": "Registrar publicación y protección de la base de colaboración",
+  "result": "Primer workflow remoto exitoso y main protegido; se comprueba ahora el recorrido por PR.",
+  "files": [
+    "context/STATE.md"
+  ],
+  "decisions": [
+    "Exigir el check de la app GitHub Actions identificada como 15368, base actualizada y conversaciones resueltas; mantener cero aprobaciones externas mientras solo hay una cuenta confirmada."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0002.md"
+  ],
+  "ontology_review": "Sin cambio conceptual: esta entrada aporta evidencia operativa del harness, distinta del aprendizaje de expertos del producto.",
+  "validation": [
+    "GitHub Actions run 37147285207 finalizó success: tests e integridad del historial.",
+    "API de protección de main confirmó strict=true, enforce_admins=true, context-integrity/app15368, allow_force_pushes=false y allow_deletions=false.",
+    "Hooks pre-commit y pre-push permitieron el bootstrap completo después de validar fuente y contexto."
+  ],
+  "next_steps": [
+    "Comprobar que el PR de verificación pase el check e integrarlo por el flujo protegido.",
+    "Seleccionar el flujo de demostración con Abraham; la aplicación sigue pendiente."
+  ]
+}
