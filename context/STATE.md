@@ -29,3 +29,10 @@ Aplicación web, pantalla compartida, visión, agente ElevenLabs, debrief, Work 
 
 ## Relevo
 Leer la bitácora reciente y el issue/PR antes de tomar una tarea. Una entrada nueva debe dejar resultado, pruebas y siguiente paso. El chat con Claude no se sincroniza automáticamente con este chat.
+
+## Verificación de la base (2026-10-03)
++- Publicado el commit inicial `0db71639beb7ac83c8ad12736727e71b6c07fbc5`.
++- [Primer check de GitHub Actions](https://github.com/soyabrahamarriaga-lang/CHALLENGE-ELEVEN-LABS/actions/runs/37147285207): éxito; pruebas del harness y validación del historial ejecutadas.
++- Protección de `main` confirmada por API: PR obligatorio, `context-integrity` de GitHub Actions requerido, rama actualizada, protección aplicable a administradores, conversaciones resueltas, sin force push ni borrado.
++- Hay cero aprobaciones de otra cuenta obligatorias por ahora; esto no elimina el PR ni el check requerido. Se configurará revisión por otra persona cuando exista otro revisor.
++- Hooks instalados en este clon. Cada otra computadora debe instalarlos por separado.
