@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "id": "20261004T093802Z-codex-be34c88d",
+  "at": "2026-10-04T09:38:02.853443Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "agent-background-voices",
+  "summary": "Configurar escucha automática que ignora voces de fondo ajenas a la tarea",
+  "result": "Configuración remota aplicada y releída: filtro de voces de fondo, prompt y skip_turn, respuestas sin interrupción acústica inmediata conservando transcripción, timeout de silencio 30 s. Voz principal respondida y frase ajena ignorada automáticamente en prueba real con audio sintético.",
+  "files": [
+    "config/observer-audio.json",
+    "config/observer-prompt.txt",
+    "context/STATE.md",
+    "context/decisions/ADR-agent-background-voices.md",
+    "docs/ELEVENLABS.md",
+    "docs/VISION.md"
+  ],
+  "decisions": [
+    "El usuario pidió detección automática. Combinar filtrado acústico y descarte semántico, completar la frase del agente antes de evaluar otra intervención y evitar avisos por silencio. El usuario también espera al final de la frase para obtener respuesta."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-agent-background-voices.md"
+  ],
+  "ontology_review": "Sin entidades nuevas. Detección de habla, intención e identidad son distintas; el audio de fondo puede conservarse y una voz pertinente puede confundirse con el experto.",
+  "validation": [
+    "API PATCH HTTP 200 y GET posteriores; comparación de campos: solo VAD, prompt, skip_turn y alias tools, eventos, transcripción y timeout de turno. Modelo y configuración de plataforma conservados.",
+    "Ensayos PCM 16 kHz reales: filtro solo transcribió otra voz 20 dB inferior; configuración final respondió a voz principal, usó skip_turn sin hablar ante voz ajena, retomó la tarea y pasó 35 s de silencio sin aviso de presencia. JSON y git diff --check correctos; no cambia runtime frontend."
+  ],
+  "next_steps": [
+    "Probar una conversación nueva con micrófono y televisión/personas reales. No garantiza identificar al experto ni excluir voces de fondo de la transcripción."
+  ]
+}

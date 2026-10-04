@@ -31,6 +31,14 @@ Intern usa `ELEVENLABS_TUTOR_AGENT_ID` y las rutas equivalentes bajo `/api/eleve
 
 No se implementan herramientas de cliente. Una llamada a una herramienta de cliente desconocida detiene la conversación con error visible; las solicitudes de aprobación MCP se rechazan. Esto no desactiva herramientas de servidor que alguien configure posteriormente en ElevenLabs: revisar su alcance antes de habilitarlas. La integración no modifica el prompt, la voz ni la configuración remota.
 
+## Voces de otras personas o televisión — 2026-10-04
+
+El observador de Mi espacio mantiene escucha automática: filtro `vad.background_voice_detection`, instrucciones para descartar contenido ajeno y herramienta de sistema `skip_turn` sin respuesta ni sonido. Para evitar que una voz de fondo corte el audio antes de clasificarla, las respuestas se completan sin interrupción acústica inmediata; las intervenciones se siguen transcribiendo y se evalúan después. Esto también hace que una intervención legítima espere al final de la frase. El timeout de reactivación por silencio pasa de 3 a 30 s; las entradas de silencio deben usar `skip_turn`, sin avisos de presencia.
+
+Perfil en [observer-audio.json](../config/observer-audio.json), [prompt](../config/observer-prompt.txt) y [ADR-agent-background-voices](../context/decisions/ADR-agent-background-voices.md). Ya se aplicaron en ElevenLabs; no necesitan build ni despliegue del frontend. Cerrar la conversación anterior e iniciar una nueva para probarlos. El tutor no se modifica.
+
+El filtro no reconoce exclusivamente la voz del experto. Las pruebas sintéticas mostraron que otras voces podían transcribirse; `skip_turn` permitió ignorar el contenido ajeno y retomar después. El audio o texto de fondo puede seguir conservado por el proveedor. No se garantiza distinguir otra persona que hable de la misma tarea. Falta probar con el micrófono y ambiente reales.
+
 ## Estado observado del agente — 2026-10-03
 
 La API autenticó y devolvió el agente **Observador de procesos**, idioma español, LLM `qwen35-397b-a17b`, voz asignada y formatos PCM de 16 kHz. No tenía tools ni documentos de conocimiento; emitía eventos de respuesta y transcripción y admitía la opción de conversación solo texto. No se versionan el ID, prompt, voz privada ni credenciales.

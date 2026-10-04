@@ -1,0 +1,37 @@
+{
+  "conversation_config": {
+    "vad": {
+      "background_voice_detection": true
+    },
+    "agent": {
+      "prompt": {
+        "built_in_tools": {
+          "skip_turn": {
+            "type": "system",
+            "name": "skip_turn",
+            "description": "Guarda silencio ante una intervención ajena a la tarea sin intención de dirigirse al agente (televisión, anuncios, conversación entre terceros), un fragmento ininteligible o una petición de esperar. No hables antes ni después. No lo uses ante preguntas directas, respuestas breves o explicaciones de la tarea. Úsala también ante entrada vacía, puntos suspensivos (...) o timeout de silencio; nunca preguntes si sigue ahí por estos eventos.",
+            "pre_tool_speech": "off",
+            "params": {
+              "system_tool_type": "skip_turn",
+              "wait_timeout_secs": -1
+            }
+          }
+        }
+      }
+    },
+    "turn": {
+      "transcribe_on_disabled_interruptions": true,
+      "turn_timeout": 30
+    },
+    "conversation": {
+      "client_events": [
+        "audio",
+        "agent_response",
+        "user_transcript",
+        "agent_response_correction",
+        "agent_tool_response",
+        "vad_score"
+      ]
+    }
+  }
+}

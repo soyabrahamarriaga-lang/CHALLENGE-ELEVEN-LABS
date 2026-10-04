@@ -16,6 +16,8 @@ Decisiones: [ADR-0012](../context/decisions/ADR-0012.md), [ADR-0013](../context/
 
 Observador: `gemini-3.5-flash-lite`, `reasoning_effort: minimal`, `max_tokens: 256`, [prompt versionado](../config/observer-prompt.txt). File input habilitado, 10 archivos por conversación, 1 en memoria. Los eventos del observador y del tutor incluyen `vad_score`; conservar los otros eventos al configurarlos. El prompt y modelo del tutor no se cambian.
 
+El observador también ignora contenido de fondo mediante VAD y `skip_turn`; completa sus frases sin interrupción acústica inmediata y mantiene transcripción durante ellas. Ver [ADR-agent-background-voices](../context/decisions/ADR-agent-background-voices.md) para los límites y la configuración actual de turnos.
+
 Estos ajustes viven en ElevenLabs. El build no aplica configuración remota; al reproducirla, leer el agente actual y preservar todos los campos ajenos al cambio. Analysis/Data collection ya está configurado para extracción de procedimientos; ver [PROCESS-MAPS.md](PROCESS-MAPS.md).
 
 ## Probar
