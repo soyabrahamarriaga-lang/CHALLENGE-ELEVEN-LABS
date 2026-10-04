@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { initialAvailability, parseAvailability } from "./agentAvailability";
 import type { AgentAvailability } from "./agentAvailability";
+import type { Role } from "../domain/types";
+import { agentProfiles } from "./agentProfiles";
 
-export function useAgentAvailability(enabled = true) {
+export function useAgentAvailability(enabled = true, role: Role = "senior") {
   const [status, setStatus] = useState<AgentAvailability>(initialAvailability);
   const [online, setOnline] = useState(() => navigator.onLine);
   const [refreshing, setRefreshing] = useState(false);
@@ -17,7 +19,7 @@ export function useAgentAvailability(enabled = true) {
     const started = Date.now();
     setRefreshing(true);
     try {
-      const response = await fetch("/api/elevenlabs/availability", {
+      const response = await fetch(agentProfiles[role].apiBase + "/availability", {
         cache: "no-store", signal: controller.signal,
       });
       if (!response.ok) throw new Error("backend_unreachable");
@@ -37,7 +39,7 @@ export function useAgentAvailability(enabled = true) {
         setRefreshing(false);
       }
     }
-  }, [enabled]);
+  }, [enabled, role]);
   useEffect(() => {
     const invalidate = () => {
       generation.current++;

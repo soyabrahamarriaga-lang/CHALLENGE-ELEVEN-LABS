@@ -32,6 +32,8 @@ import type { ArchiveResult } from "../services/vault";
 import { AgentStatus } from "../components/AgentStatus";
 import { canStartAgent } from "../services/agentAvailability";
 import type { AgentAvailabilityControl } from "../services/useAgentAvailability";
+import { agentProfiles } from "../services/agentProfiles";
+import type { Role } from "../domain/types";
 import "./AgentConversation.css";
 type FrameSession = { key: string; mode: AgentMode; access: AgentAccess };
 const accessErrors: Record<number, string> = {
@@ -41,10 +43,13 @@ const accessErrors: Record<number, string> = {
   503: "El agente aún no está configurado. Revisa la configuración de ElevenLabs.",
   502: "ElevenLabs no pudo autorizar la conversación. Revisa la clave, el agente y su disponibilidad.",
 };
-export default function AgentConversation({ health, onPhaseChange }: {
+export default function AgentConversation({ health, onPhaseChange, role = "senior" }: {
   health: AgentAvailabilityControl;
   onPhaseChange: (phase: AgentPhase) => void;
+  role?: Role;
 }) {
+  const profile = agentProfiles[role];
+  const persistEvidence = profile.persistEvidence;
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => { headingRef.current?.focus(); }, []);
   const [state, setState] = useState<AgentState>(initialAgentState);
@@ -84,7 +89,7 @@ export default function AgentConversation({ health, onPhaseChange }: {
   }, [health.online, active]);
   // Copy the finished conversation into the private Obsidian vault, when enabled.
   useEffect(() => {
-    if (state.phase !== "ended" || !state.conversationId) return;
+    if (!persistEvidence || state.phase !== "ended" || !state.conversationId) return;
     const abort = new AbortController();
     setArchive("saving");
     archiveConversation(state.conversationId, { signal: abort.signal }).then(
@@ -93,7 +98,7 @@ export default function AgentConversation({ health, onPhaseChange }: {
       },
     );
     return () => abort.abort();
-  }, [state.phase, state.conversationId]);
+  }, [state.phase, state.conversationId, persistEvidence]);
   useEffect(() => {
     if (state.phase === "authorizing") setArchive(null);
   }, [state.phase]);
@@ -121,7 +126,7 @@ export default function AgentConversation({ health, onPhaseChange }: {
       framesSent.current++;
       const label = `[PANTALLA ${clock(ready.at)}]`;
       post({ type: "screen", frame: ready.item, label });
-      void logVaultEvent(conversationId, {
+      if (persistEvidence) void logVaultEvent(conversationId, {
         kind: "note",
         text: `captura enviada al agente ${label}`,
         at: ready.at,
@@ -129,7 +134,7 @@ export default function AgentConversation({ health, onPhaseChange }: {
       setScreen((previous) => ({ ...previous, frames: framesSent.current }));
     }, 300);
     return () => clearInterval(timer);
-  }, [state.phase, state.conversationId, screen.status]);
+  }, [state.phase, state.conversationId, screen.status, persistEvidence]);
   useEffect(() => {
     const receive = (event: MessageEvent) => {
       const current = frameSession.current;
@@ -205,13 +210,13 @@ export default function AgentConversation({ health, onPhaseChange }: {
     setState({ ...initialAgentState, phase: "authorizing", mode });
     setDraft("");
     try {
-      const response = await fetch("/api/elevenlabs/session", {
+      const response = await fetch(profile.apiBase + "/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         cache: "no-store",
         signal: abort.signal,
         body: JSON.stringify({
-          displayName: "Experto",
+          displayName: profile.displayName,
           joinCode: code,
           consent,
           mode,
@@ -297,7 +302,7 @@ export default function AgentConversation({ health, onPhaseChange }: {
               type: "context",
               text: `[OCR ${clock(event.at)}] ${event.text}`,
             });
-            void logVaultEvent(conversationId, {
+            if (persistEvidence) void logVaultEvent(conversationId, {
               kind: "screen",
               text: event.text,
               at: event.at,
@@ -346,8 +351,8 @@ export default function AgentConversation({ health, onPhaseChange }: {
     <div className="agent-page">
       <div className="page-heading">
         <div>
-          <h1 tabIndex={-1} ref={headingRef}>Conversación con el agente</h1>
-          <p>Una conversación individual con tu agente de ElevenLabs.</p>
+          <h1 tabIndex={-1} ref={headingRef}>{profile.title}</h1>
+          <p>{profile.description}</p>
         </div>
       </div>
       <AgentStatus health={health} phase={state.phase} />
@@ -356,8 +361,8 @@ export default function AgentConversation({ health, onPhaseChange }: {
         <p>
           <strong>Tú decides cuándo empezar.</strong> Tu voz y tus mensajes se
           envían a ElevenLabs, que puede conservar audio y transcripciones según
-          la configuración del agente. Si la bóveda privada está activada, al
-          terminar se guarda una copia de la transcripción en ella.
+          la configuración del agente.
+          {persistEvidence && " Si la bóveda privada está activada, al terminar se guarda una copia de la transcripción en ella."}
         </p>
       </div>
       {archive && (archive === "saving" || archive.status !== "disabled") && (
@@ -397,14 +402,16 @@ export default function AgentConversation({ health, onPhaseChange }: {
                 : state.mode === "voice"
                   ? "Te está escuchando"
                   : "Conversemos por texto"
-              : "La experiencia empieza contigo"}
+              : role === "intern" ? "¿Qué te gustaría aprender?" : "La experiencia empieza contigo"}
           </h2>
           <p>
             {state.phase === "connected"
               ? state.mode === "voice"
                 ? "El micrófono está activo. Al terminar, se cierra la conversación y se libera el dispositivo."
                 : "El micrófono está apagado. Escribe para conversar con el mismo agente."
-              : "Explica una tarea, sus decisiones y lo que has aprendido al realizarla."}
+              : role === "intern"
+                ? "Cuéntale qué necesitas aprender y pregúntale por el siguiente paso."
+                : "Explica una tarea, sus decisiones y lo que has aprendido al realizarla."}
           </p>
           {!active && (
             <>

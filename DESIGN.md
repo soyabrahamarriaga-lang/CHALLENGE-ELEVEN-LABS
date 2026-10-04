@@ -314,6 +314,8 @@ El diálogo blanco usa radio de escenario, relleno de (28px) en escritorio y (22
 
 ## Mi espacio: conversación individual
 
+En Intern, Mi aprendizaje empieza con «Aprende con tu tutor», una breve descripción, el indicador de estado y «Iniciar conversación con el tutor». Las sesiones de ejemplo continúan debajo, separadas por una línea. Al abrir el tutor, la conversación ocupa la vista; al terminar se puede volver a Mi aprendizaje. El encabezado identifica «Tutor de procesos» y no presenta la conexión real como una demo sin grabación.
+
 El botón de inicio lleva encima un indicador compacto con icono y texto: agente accesible, conexión activa, comprobación, error o estado sin confirmar. Debajo se muestra el alcance de la comprobación, su hora y «Volver a comprobar». Verde significa respuesta autenticada del agente o conversación confirmada, siempre diferenciadas con texto. La lectura del agente no se presenta como una reserva de cupo para una llamada. Los estados desconocidos y errores no conservan verde. El mismo componente acompaña la conversación; el inicio permanece deshabilitado sin acceso vigente. No se añaden tarjetas ni métricas.
 
 La entrada senior queda reducida a un botón primario centrado: «Iniciar conversación con el agente», sin tarjetas de llamada del equipo, llamada simulada, eslogan ni sesiones recientes. Conserva Manrope, verde bosque y el fondo claro; botón de 56px de alto, texto de 14px y foco visible. En móvil conserva el menú en cajón y ajusta el texto sin ensanchar el documento.

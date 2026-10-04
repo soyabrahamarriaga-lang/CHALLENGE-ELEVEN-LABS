@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "id": "20261004T045252Z-codex-1df81e48",
+  "at": "2026-10-04T04:52:52.120574Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "intern-tutor",
+  "summary": "Integrar el Tutor de procesos en Mi aprendizaje",
+  "result": "Intern conecta con el segundo agente indicado por el usuario, con controles de voz/texto y estado real propios; Senior conserva su agente. La prueba real por texto recibió saludo, respuesta a una pregunta y cerró la sesión.",
+  "files": [
+    ".env.example",
+    "DESIGN.md",
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-intern-tutor.md",
+    "docs/ELEVENLABS.md",
+    "server/elevenlabs.mjs",
+    "server/livekit.mjs",
+    "server/tutor.test.mjs",
+    "src/App.tsx",
+    "src/domain/navigation.test.ts",
+    "src/domain/navigation.ts",
+    "src/features/AgentConversation.tsx",
+    "src/features/AgentSpace.tsx",
+    "src/features/Library.tsx",
+    "src/features/Senior.css",
+    "src/features/Senior.tsx",
+    "src/services/agentProfiles.ts",
+    "src/services/useAgentAvailability.ts"
+  ],
+  "decisions": [
+    "Resolver IDs fijos del servidor mediante ELEVENLABS_AGENT_ID y ELEVENLABS_TUTOR_AGENT_ID; no aceptar IDs arbitrarios ni sustituir un tutor ausente por el experto.",
+    "Compartir UI y controles de acceso con cachés separadas; desmontar sesión y estado al cambiar de perfil.",
+    "Conservar el contenido didáctico existente del tutor; no importar prácticas ni eventos de Intern a la bóveda de evidencia del experto desde esta UI.",
+    "Continuar sobre el PR #15 en una rama nueva codex/intern-tutor, conservando main y el checkout de mapas."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-intern-tutor.md"
+  ],
+  "ontology_review": "Se preservan tutor, learner y agent_conversation; conversación de práctica no implica dominio ni conocimiento experto validado. Detalles en ADR-intern-tutor.",
+  "validation": [
+    "Lectura autenticada real: el ID aportado corresponde a Tutor de procesos, no archivado, con voz habilitada; configuración local guardada en .env ignorado.",
+    "Navegador: conexión real por texto, saludo, pregunta y respuesta del tutor, cierre, regreso con foco al encabezado y cambio Senior/Intern sin conservar iframe; sin activar micrófono o pantalla.",
+    "El tutor solicitó material de referencia para enseñar el proceso concreto; no se modificaron instrucciones ni fuentes remotas.",
+    "npm test: 117 pruebas aprobadas en 17 archivos; cubren aislamiento de IDs/cachés, origen, consentimiento, código, modo, falta de tutor y límite compartido.",
+    "npm run build correcto; aviso existente de tamaño del SDK. git diff --check correcto. Revisión a 390 y 1280 px sin desbordamiento; sin errores de consola durante la prueba."
+  ],
+  "next_steps": [
+    "Revisar e integrar después del PR #15. Para otra computadora, configurar ELEVENLABS_TUTOR_AGENT_ID en su .env. Voz física y contenido didáctico requieren prueba del operador."
+  ]
+}

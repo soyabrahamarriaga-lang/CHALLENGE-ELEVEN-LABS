@@ -30,6 +30,10 @@ La entrada principal es **Mi espacio → Iniciar conversación con el agente**. 
 
 Completar `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` en `.env` y reiniciar `npm run dev:token`. Abrir **Mi espacio**, pulsar **Iniciar conversación con el agente**, aceptar el aviso e iniciar por voz o texto. La clave permanece en el backend. La conversación individual puede compartir pantalla con OCR y conserva transcripciones en la bóveda; el Work Map validado sigue pendiente. Configuración, privacidad y resultados: [ELEVENLABS.md](docs/ELEVENLABS.md).
 
+## Tutor para Intern
+
+Configura `ELEVENLABS_TUTOR_AGENT_ID` en `.env` con el agente tutor y reinicia el backend. Usa la misma clave de ElevenLabs con acceso a ambos agentes. En **Explorar como → Intern → Mi aprendizaje**, pulsa **Iniciar conversación con el tutor** y elige voz o texto. El indicador comprueba ese agente por separado; si falta su ID, no lo sustituye por el agente de Senior. Las instrucciones y conocimientos proceden de la configuración del tutor en ElevenLabs. Las prácticas no se importan a la bóveda del experto desde esta vista. Detalles: [ADR-intern-tutor](context/decisions/ADR-intern-tutor.md).
+
 ## Diagramas de tus procesos
 
 **Mapas de procesos** muestra las conversaciones de la bóveda privada como diagramas con zoom, navegación por pasos y evidencia. Cada transcripción archivada genera también un Canvas de Obsidian. Para sesiones anteriores: `npm run maps:backfill`. Los mapas son borradores; sus decisiones y reglas requieren revisión. Alcance, formatos y configuración: [PROCESS-MAPS.md](docs/PROCESS-MAPS.md).

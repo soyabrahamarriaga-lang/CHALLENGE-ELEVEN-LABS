@@ -1,5 +1,9 @@
 # Estado compartido
 
+## Tutor de procesos en Intern (2026-10-03)
+
+Intern → Mi aprendizaje tiene conversación real por voz o texto con el segundo agente proporcionado por el usuario, configurado localmente mediante ELEVENLABS_TUTOR_AGENT_ID. Senior conserva su agente. Indicadores y cachés separados, cierre de sesión al cambiar de perfil y controles de acceso compartidos. Se comprobó la lectura autenticada y una conversación real por texto con saludo, respuesta a una pregunta y cierre. El tutor pidió material del proceso; no se modificaron sus conocimientos ni se conectó automáticamente la bóveda. Ver ADR-intern-tutor.md.
+
 ## Disponibilidad real del agente (2026-10-03)
 
 Mi espacio consulta el agente real en ElevenLabs en modo lectura, sin generar tokens ni reservar sesiones; presenta hora, caducidad y recuperación. «Agente accesible» confirma respuesta del servicio, sin prometer capacidad para la siguiente llamada. Conectado depende exclusivamente del evento real del SDK; las variables locales ya no se presentan como prueba de disponibilidad. Se validó una conexión real por texto y su cierre sin usar micrófono ni pantalla. Ver ADR-agent-availability.md y la bitácora de agent-availability. El aporte se publica en `codex/mi-espacio-agente`, sobre el commit de mapas `64af4c3` del PR #14; su revisión mantiene separados los cambios de Mi espacio y del estado del agente. Las dos bitácoras anteriores conservan la evidencia de desarrollo local.

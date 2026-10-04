@@ -4,7 +4,7 @@
   place-items: center;
 }
 
-.personal-space .personal-space-start {
+.personal-space-start {
   min-height: 56px;
   max-width: 100%;
   padding: 16px 24px;
@@ -26,6 +26,22 @@
 }
 .personal-space-entry .agent-health {
   justify-content: center;
+}
+.tutor-entry {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+.tutor-entry .personal-space-entry {
+  justify-items: start;
+  justify-content: start;
+  text-align: left;
+}
+.tutor-entry .agent-health {
+  justify-content: start;
+}
+.tutor-back {
+  margin-top: 24px;
 }
 
 @media (max-width: 700px) {
