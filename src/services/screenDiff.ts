@@ -103,6 +103,19 @@ export function describe(diff: LineDiff, max = 600): string {
   return text.length > max ? text.slice(0, max - 1) + "…" : text;
 }
 
+// Scrolling or opening another view changes many lines at once; pairing them row by row
+// produces nonsense, so report the new content instead.
+export function summarize(before: OcrLine[], after: OcrLine[], massChange = 6, max = 600): string {
+  const diff = diffLines(before, after);
+  const total = diff.changed.length + diff.added.length + diff.removed.length;
+  if (total <= massChange) return describe(diff, max);
+  const seen = new Set(before.map((line) => clean(line.text)));
+  const fresh = after.map((line) => clean(line.text)).filter((text) => meaningful(text) && !seen.has(text));
+  if (!fresh.length) return "";
+  const text = "vista nueva o desplazamiento: " + fresh.slice(0, 8).join(" | ");
+  return text.length > max ? text.slice(0, max - 1) + "…" : text;
+}
+
 // A pause = the screen changed and then stayed still for `stillSeconds`.
 export class PauseDetector {
   private dirty = false;

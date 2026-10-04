@@ -3,12 +3,11 @@
 import {
   PauseDetector,
   changedBox,
-  describe,
-  diffLines,
   grayGrid,
   grow,
   meaningful,
   overlaps,
+  summarize,
 } from "./screenDiff";
 import type { Box, OcrLine } from "./screenDiff";
 import type { Worker } from "tesseract.js";
@@ -140,7 +139,7 @@ export async function startScreenWatch(stream: MediaStream, handlers: Handlers, 
             .slice(0, 25)
             .join(" | ")
             .slice(0, 900)
-        : describe(diffLines(before, after));
+        : summarize(before, after);
       if (text) handlers.onEvent({ at, text: first ? `pantalla inicial: ${text}` : text });
       first = false;
     } catch {

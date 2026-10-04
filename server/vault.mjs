@@ -53,6 +53,11 @@ export function clock(seconds) {
   return `${m}:${s}`;
 }
 
+// Expressive TTS tags ("[slow]", "[laughs]") are lowercase; our own markers ("[PANTALLA 00:45]") are not.
+export function stripVoiceTags(text) {
+  return String(text ?? "").replace(/\[[a-z][a-z \-]{0,30}\]\s*/g, "");
+}
+
 function clean(text, max = 2000) {
   return String(text ?? "")
     .replace(/[\u0000-\u0008\u000b-\u001f\u007f]/g, "")
@@ -87,7 +92,7 @@ export function transcriptToMarkdown(conversation) {
   body.push("## Conversación", "");
   for (const turn of conversation.transcript || []) {
     const who = turn.role === "agent" ? "Agente" : "Persona";
-    const text = clean(turn.message);
+    const text = clean(stripVoiceTags(turn.message));
     if (text) body.push(`**[${clock(turn.time_in_call_secs)}] ${who}:** ${text}`, "");
     for (const call of turn.tool_calls || [])
       body.push(`> [${clock(turn.time_in_call_secs)}] herramienta \`${clean(call.tool_name, 80)}\``, "");

@@ -22,7 +22,7 @@ const ID = /^[A-Za-z0-9_-]{1,80}$/;
 // ElevenLabs keeps a finished conversation in "processing" for a few seconds; retry on 409.
 export async function archiveConversation(
   conversationId: string,
-  { fetcher = fetch, wait = sleep, attempts = 6, delayMs = 4000, signal }: Options = {},
+  { fetcher = fetch, wait = sleep, attempts = 15, delayMs = 4000, signal }: Options = {},
 ): Promise<ArchiveResult> {
   if (!ID.test(conversationId)) return { status: "failed", reason: "invalid_id" };
   for (let attempt = 1; attempt <= attempts; attempt++) {

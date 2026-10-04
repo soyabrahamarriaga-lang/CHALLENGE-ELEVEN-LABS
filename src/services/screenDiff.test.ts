@@ -9,6 +9,7 @@ import {
   grow,
   meaningful,
   overlaps,
+  summarize,
 } from "./screenDiff";
 
 const line = (text: string, y: number, x = 360) => ({ text, box: { x, y, w: 540, h: 36 } });
@@ -82,3 +83,25 @@ suite("screen transcription text", () => {
     expect(clock(185)).toBe("03:05");
   });
 });
+
+suite("scroll and whole-view changes", () => {
+  it("summarizes many changed lines as new content instead of pairing them", () => {
+    const before = Array.from({ length: 10 }, (_, i) => line(`Mensaje anterior número ${i}`, 100 + i * 40));
+    const after = [
+      ...before.slice(5).map((l, i) => ({ ...l, box: { ...l.box, y: 100 + i * 40 } })),
+      ...Array.from({ length: 5 }, (_, i) => line(`Orden de compra OC-${100 + i}`, 300 + i * 40)),
+    ];
+    const text = summarize(before, after);
+    expect(text.startsWith("vista nueva o desplazamiento: Orden de compra OC-100 | Orden de compra OC-101")).toBe(true);
+    expect(text).not.toContain("Mensaje anterior");
+    expect(text).not.toContain("cambió");
+  });
+  it("keeps the precise field change when only a few lines change", () => {
+    expect(summarize([line("Centro de costos 4711", 440)], [line("Centro de costos 0400", 440)])).toBe(
+      "cambió «Centro de costos 4711» → «Centro de costos 0400»",
+    );
+    const same = Array.from({ length: 10 }, (_, i) => line(`Fila ${i} igual`, i * 40));
+    expect(summarize(same, same)).toBe("");
+  });
+});
+
