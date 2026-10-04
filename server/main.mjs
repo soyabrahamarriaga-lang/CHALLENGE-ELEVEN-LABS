@@ -8,6 +8,7 @@ import {
   vaultProblems,
 } from "./vault.mjs";
 import { syncTutorKnowledge } from "./tutorKnowledge.mjs";
+import { syncTutorConversations } from "./tutorSessions.mjs";
 
 // One local backend: LiveKit tokens plus the private Obsidian vault.
 export function createAppHandler(handlers = {}) {
@@ -52,6 +53,7 @@ export function startAgentSync(
     sync = syncAgentConversations,
     tutorAgentId = process.env.ELEVENLABS_TUTOR_AGENT_ID,
     syncTutor = syncTutorKnowledge,
+    syncTutorSessions = syncTutorConversations,
   } = {},
 ) {
   if (!config.ready || !config.apiKey || !config.agentId || !(config.syncMinutes > 0)) return null;
@@ -73,6 +75,13 @@ export function startAgentSync(
             log.info(`[tutor] conocimiento actualizado desde la bóveda: ${tutor.processes.length} procesos`);
         } catch (error) {
           log.error("[tutor] no se pudo actualizar su base de conocimiento:", error?.message || error);
+        }
+        // Lessons are kept in Tutorias/, apart from the expert's Sesiones/ (ADR-0017).
+        try {
+          const lessons = await syncTutorSessions(config, tutorAgentId);
+          for (const file of lessons.imported) log.info(`[tutor] tutoría guardada: ${file}`);
+        } catch (error) {
+          log.error("[tutor] no se pudieron guardar sus conversaciones:", error?.message || error);
         }
       }
     } catch (error) {
