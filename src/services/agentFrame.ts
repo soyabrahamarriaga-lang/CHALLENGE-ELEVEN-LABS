@@ -59,6 +59,7 @@ window.addEventListener("message", async (event) => {
     const access = data.access;
     if (
       !["voice", "text"].includes(mode) ||
+      (data.overrideLanguage !== undefined && !["es", "en"].includes(data.overrideLanguage)) ||
       !access ||
       (mode === "voice"
         ? typeof access.conversationToken !== "string"
@@ -80,6 +81,7 @@ window.addEventListener("message", async (event) => {
               signedUrl: access.signedUrl,
               connectionType: "websocket" as const,
             }),
+        ...(data.overrideLanguage ? { overrides: { agent: { language: data.overrideLanguage } } } : {}),
         textOnly: mode === "text",
         useWakeLock: false,
         clientTools: {},

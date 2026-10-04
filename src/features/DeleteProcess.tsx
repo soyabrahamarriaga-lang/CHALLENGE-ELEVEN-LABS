@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 import { useEffect, useRef, useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { deleteProcess, type ProcessDeletion } from '../services/processFlow';
@@ -29,25 +30,25 @@ export default function DeleteProcess({ id, title, compact = false, onDeleted }:
   };
   return <>
     <button className={compact ? 'icon-button collection-delete' : 'text-button process-delete'}
-      aria-label={'Eliminar proceso: ' + title} title="Eliminar proceso"
+      aria-label={t("Eliminar proceso: ") + title} title={t("Eliminar proceso")}
       onClick={() => { setError(''); setOpen(true); }}>
-      <Trash2 size={17}/>{!compact && 'Eliminar proceso'}
+      <Trash2 size={17}/>{!compact && t("Eliminar proceso")}
     </button>
     <dialog ref={dialog} className="delete-process-dialog" aria-labelledby={'delete-title-' + id}
       aria-describedby={'delete-description-' + id} onCancel={(event) => { if (busy) event.preventDefault(); else setOpen(false); }}
       onClose={() => setOpen(false)}>
       <span className="delete-process-symbol"><Trash2 size={23}/></span>
-      <h2 id={'delete-title-' + id}>¿Eliminar este proceso?</h2>
+      <h2 id={'delete-title-' + id}>{t("¿Eliminar este proceso?")}</h2>
       <p className="delete-process-name">{title}</p>
       <div id={'delete-description-' + id}>
-        <p>Se quitará de Biblioteca, Guardadas y Mapas para todos los perfiles de esta plataforma.</p>
-        <p>Actualizaremos el material del tutor para nuevas conversaciones. Los archivos originales se conservan en la bóveda y en ElevenLabs.</p>
+        <p>{t("Se quitará de Biblioteca, Guardadas y Mapas para todos los perfiles de esta plataforma.")}</p>
+        <p>{t("Actualizaremos el material del tutor para nuevas conversaciones. Los archivos originales se conservan en la bóveda y en ElevenLabs.")}</p>
       </div>
-      {error && <p className="delete-process-error" role="alert">{error}</p>}
-      {busy && <p role="status">Eliminando y actualizando el tutor…</p>}
+      {error && <p className="delete-process-error" role="alert">{t(error)}</p>}
+      {busy && <p role="status">{t("Eliminando y actualizando el tutor…")}</p>}
       <div className="delete-process-actions">
-        <button autoFocus className="button secondary" disabled={busy} onClick={() => setOpen(false)}>Cancelar</button>
-        <button className="button delete-confirm" disabled={busy} onClick={() => void confirm()}>{busy ? 'Eliminando…' : 'Eliminar proceso'}</button>
+        <button autoFocus className="button secondary" disabled={busy} onClick={() => setOpen(false)}>{t("Cancelar")}</button>
+        <button className="button delete-confirm" disabled={busy} onClick={() => void confirm()}>{busy ? t("Eliminando…") : t("Eliminar proceso")}</button>
       </div>
     </dialog>
   </>;
@@ -66,12 +67,12 @@ export function DeletionNotice({ result, onUpdated, onClose }: {
     finally { setBusy(false); }
   };
   return <div className="process-deletion-notice" role="status">
-    <p><strong>Proceso eliminado de la plataforma.</strong> {result.tutor === 'updated' && 'El material del tutor está actualizado para nuevas conversaciones.'}
-      {result.tutor === 'disabled' && 'El tutor no está configurado en este servidor; su material remoto no se ha actualizado.'}
-      {result.tutor === 'pending' && 'El tutor aún no pudo actualizarse y puede conservar este material. Reintenta la actualización.'}
-      {result.indexes === 'pending' && ' Los índices de la bóveda están pendientes de actualizar.'}</p>
-    {error && <p role="alert">{error}</p>}
-    {pending && <button className="text-button" disabled={busy} onClick={() => void retry()}>{busy ? 'Actualizando…' : 'Reintentar actualización'}</button>}
-    <button className="text-button" disabled={busy} onClick={onClose}>Cerrar aviso</button>
+    <p><strong>{t("Proceso eliminado de la plataforma.")}</strong> {result.tutor === 'updated' && t("El material del tutor está actualizado para nuevas conversaciones.")}
+      {result.tutor === 'disabled' && t("El tutor no está configurado en este servidor; su material remoto no se ha actualizado.")}
+      {result.tutor === 'pending' && t("El tutor aún no pudo actualizarse y puede conservar este material. Reintenta la actualización.")}
+      {result.indexes === 'pending' && t(" Los índices de la bóveda están pendientes de actualizar.")}</p>
+    {error && <p role="alert">{t(error)}</p>}
+    {pending && <button className="text-button" disabled={busy} onClick={() => void retry()}>{busy ? t("Actualizando…") : t("Reintentar actualización")}</button>}
+    <button className="text-button" disabled={busy} onClick={onClose}>{t("Cerrar aviso")}</button>
   </div>;
 }

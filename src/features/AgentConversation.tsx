@@ -1,3 +1,5 @@
+import { AgentLanguage } from "../components/AgentLanguage";
+import { t, dateLocale, language, type Language } from "../i18n";
 import { useEffect, useRef, useState } from "react";
 import {
   AudioLines,
@@ -35,12 +37,12 @@ import { TurnGate } from "../services/turnGate";
 import type { ScreenEvent, WatchStatus } from "../services/screenWatcher";
 import type { ArchiveResult } from "../services/vault";
 import { AgentStatus } from "../components/AgentStatus";
-import { canStartAgent } from "../services/agentAvailability";
+import { canStartAgentInLanguage } from "../services/agentAvailability";
 import type { AgentAvailabilityControl } from "../services/useAgentAvailability";
 import { agentProfiles } from "../services/agentProfiles";
 import type { Role } from "../domain/types";
 import "./AgentConversation.css";
-type FrameSession = { key: string; mode: AgentMode; access: AgentAccess };
+type FrameSession = { key: string; mode: AgentMode; access: AgentAccess; overrideLanguage?: Language };
 const accessErrors: Record<number, string> = {
   401: "El código de acceso no es correcto. Revisa el código e inténtalo de nuevo.",
   403: "Abre la aplicación desde su dirección autorizada.",
@@ -62,6 +64,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
   const requiresCode = health.status.requiresCode;
   const [consent, setConsent] = useState(false);
   const [draft, setDraft] = useState("");
+  const [conversationLanguage, setConversationLanguage] = useState<Language>(language);
   const [frame, setFrame] = useState<FrameSession | null>(null);
   const frameElement = useRef<HTMLIFrameElement>(null);
   const frameSession = useRef<FrameSession | null>(null);
@@ -254,8 +257,12 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
     }));
   };
   const start = async (mode: AgentMode) => {
-    if (active || (requiresCode && !code) || !consent || !health.online || !canStartAgent(health.status, mode))
+    if (active || (requiresCode && !code) || !consent || !health.online || !canStartAgentInLanguage(health.status, mode, language()))
       return;
+    // Snapshot before authorizing: changing the UI language never changes this call.
+    const selectedLanguage = language();
+    const overrideLanguage = selectedLanguage === health.status.defaultLanguage ? undefined : selectedLanguage;
+    setConversationLanguage(selectedLanguage);
     const attempt = ++generation.current;
     gate.current = new TurnGate<Blob>(700, mode === "voice");
     const abort = new AbortController();
@@ -296,6 +303,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
         key: crypto.randomUUID(),
         mode,
         access: data as AgentAccess,
+        overrideLanguage,
       };
       frameSession.current = next;
       setFrame(next);
@@ -497,54 +505,47 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
     <div className="agent-page">
       <div className="page-heading">
         <div>
-          <h1 tabIndex={-1} ref={headingRef}>{profile.title}</h1>
-          <p>{profile.description}</p>
+          <h1 tabIndex={-1} ref={headingRef}>{t(profile.title)}</h1>
+          <p>{t(profile.description)}</p>
         </div>
       </div>
       <AgentStatus health={health} phase={state.phase} />
+      <AgentLanguage status={health.status} activeLanguage={active ? conversationLanguage : undefined} />
       <div className="rtc-disclosure">
         <ShieldCheck size={21} />
         <p>
-          <strong>Tú decides cuándo empezar.</strong> Tu voz y tus mensajes se
-          envían a ElevenLabs, que puede conservar audio y transcripciones según
-          la configuración del agente.
-          {persistEvidence && " Si la bóveda privada está activada, al terminar se guarda una copia de la transcripción en ella."}
+          <strong>{t("Tú decides cuándo empezar.")}</strong>{" "}{t("Tu voz y tus mensajes se envían a ElevenLabs, que puede conservar audio y transcripciones según la configuración del agente.")}{persistEvidence && t(" Si la bóveda privada está activada, al terminar se guarda una copia de la transcripción en ella.")}
         </p>
       </div>
       {archive && (archive === "saving" || archive.status !== "disabled") && (
         <p className="agent-archive" role="status">
           {archive === "saving"
-            ? "Guardando la transcripción en la bóveda…"
+            ? t("Guardando la transcripción en la bóveda…")
             : archive.status === "saved"
-              ? `Transcripción guardada en la bóveda: ${archive.file}`
-              : `No se pudo guardar en la bóveda (${archive.reason}).`}
+              ? t("Transcripción guardada en la bóveda: {{v0}}", { v0: archive.file })
+              : t("No se pudo guardar en la bóveda ({{v0}}).", { v0: archive.reason })}
           {archive !== "saving" && archive.status === "saved" && (
             <>
               {" "}
               {archive.flowStatus === "failed" &&
-                "El diagrama está pendiente; puedes reintentar desde Mapas de procesos. "}
+                t("El diagrama está pendiente; puedes reintentar desde Mapas de procesos. ")}
               <a
                 href={
                   "#senior/library/" +
                   encodeURIComponent(state.conversationId)
                 }
-              >
-                Ver diagrama del proceso
-              </a>
+              >{t("Ver diagrama del proceso")}</a>
             </>
           )}
         </p>
       )}
       {captureWarning && (
-        <p role="status" className="agent-capture-warning">
-          No se pudieron guardar algunas imágenes en la bóveda. Los pasos
-          correspondientes se marcarán sin imagen.
-        </p>
+        <p role="status" className="agent-capture-warning">{t("No se pudieron guardar algunas imágenes en la bóveda. Los pasos correspondientes se marcarán sin imagen.")}</p>
       )}
       {state.error && (
         <div className="rtc-alert" role="alert">
           <CircleAlert size={20} />
-          <p>{state.error}</p>
+          <p>{t(state.error)}</p>
         </div>
       )}
       <div className="agent-layout">
@@ -559,33 +560,31 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
             {state.phase === "connected"
               ? state.speaking
                 ? state.mode === "voice"
-                  ? "Tu agente está hablando"
-                  : "Tu agente está respondiendo"
+                  ? t("Tu agente está hablando")
+                  : t("Tu agente está respondiendo")
                 : state.mode === "voice"
-                  ? "Te está escuchando"
-                  : "Conversemos por texto"
-              : role === "intern" ? "¿Qué te gustaría aprender?" : "La experiencia empieza contigo"}
+                  ? t("Te está escuchando")
+                  : t("Conversemos por texto")
+              : role === "intern" ? t("¿Qué te gustaría aprender?") : t("La experiencia empieza contigo")}
           </h2>
           <p>
             {state.phase === "connected"
               ? state.mode === "voice"
-                ? "El micrófono está activo. Al terminar, se cierra la conversación y se libera el dispositivo."
-                : "El micrófono está apagado. Escribe para conversar con el mismo agente."
+                ? t("El micrófono está activo. Al terminar, se cierra la conversación y se libera el dispositivo.")
+                : t("El micrófono está apagado. Escribe para conversar con el mismo agente.")
               : role === "intern"
-                ? "Cuéntale qué necesitas aprender y pregúntale por el siguiente paso."
-                : "Explica una tarea, sus decisiones y sus motivos. Al compartir pantalla se guardan capturas de los cambios en la bóveda privada para ilustrar cada paso."}
+                ? t("Cuéntale qué necesitas aprender y pregúntale por el siguiente paso.")
+                : t("Explica una tarea, sus decisiones y sus motivos. Al compartir pantalla se guardan capturas de los cambios en la bóveda privada para ilustrar cada paso.")}
           </p>
           {!active && (
             <>
               {requiresCode && (
-                <label className="agent-code" htmlFor="agent-code">
-                  Código de acceso
-                  <input
+                <label className="agent-code" htmlFor="agent-code">{t("Código de acceso")}<input
                     id="agent-code"
                     type="password"
                     autoComplete="off"
                     maxLength={256}
-                    placeholder="Introduce tu código de acceso"
+                    placeholder={t("Introduce tu código de acceso")}
                     value={code}
                     onChange={(event) => setCode(event.target.value)}
                   />
@@ -596,87 +595,69 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
                   type="checkbox"
                   checked={consent}
                   onChange={(event) => setConsent(event.target.checked)}
-                />
-                Acepto enviar mi voz o mensajes a ElevenLabs para esta
-                conversación.
-              </label>
+                />{t("Acepto enviar mi voz o mensajes a ElevenLabs para esta conversación.")}</label>
               <button
                 className="button primary"
                 disabled={
-                  !health.online || !canStartAgent(health.status, "voice") || (requiresCode && !code) || !consent
+                  !health.online || !canStartAgentInLanguage(health.status, "voice", language()) || (requiresCode && !code) || !consent
                 }
                 onClick={() => {
                   void start("voice");
                 }}
               >
-                <Mic size={18} />
-                Iniciar con micrófono
-              </button>
+                <Mic size={18} />{t("Iniciar con micrófono")}</button>
               <button
                 className="button secondary"
                 disabled={
-                  !health.online || !canStartAgent(health.status, "text") || (requiresCode && !code) || !consent
+                  !health.online || !canStartAgentInLanguage(health.status, "text", language()) || (requiresCode && !code) || !consent
                 }
                 onClick={() => {
                   void start("text");
                 }}
               >
-                <MessageCircle size={18} />
-                Iniciar por texto
-              </button>
+                <MessageCircle size={18} />{t("Iniciar por texto")}</button>
             </>
           )}
           {state.phase === "connected" &&
             (screen.status === "watching" || screen.status === "loading" ? (
               <button className="button secondary" onClick={stopScreen}>
-                <MonitorOff size={18} />
-                Dejar de compartir pantalla
-              </button>
+                <MonitorOff size={18} />{t("Dejar de compartir pantalla")}</button>
             ) : (
               <button
                 className="button secondary"
                 onClick={() => void shareScreen()}
                 disabled={!navigator.mediaDevices?.getDisplayMedia}
               >
-                <MonitorUp size={18} />
-                Compartir pantalla
-              </button>
+                <MonitorUp size={18} />{t("Compartir pantalla")}</button>
             ))}
           {screen.status !== "idle" && (
             <p className="agent-screen-status" role="status">
               {screen.status === "loading"
-                ? "Preparando la lectura de pantalla… la primera vez descarga el OCR."
+                ? t("Preparando la lectura de pantalla… la primera vez descarga el OCR.")
                 : screen.status === "watching"
-                  ? `Leyendo tu pantalla · imágenes enviadas ${screen.frames}/${MAX_SCREEN_FRAMES}`
+                  ? t("Leyendo tu pantalla · imágenes enviadas {{v0}}/{{v1}}", { v0: screen.frames, v1: MAX_SCREEN_FRAMES })
                   : screen.status === "denied"
-                    ? "No se compartió la pantalla."
+                    ? t("No se compartió la pantalla.")
                     : screen.status === "error"
-                      ? "No se pudo leer la pantalla. Deja de compartir y vuelve a intentarlo."
-                      : "Pantalla dejó de compartirse."}
+                      ? t("No se pudo leer la pantalla. Deja de compartir y vuelve a intentarlo.")
+                      : t("Pantalla dejó de compartirse.")}
             </p>
           )}
           {screen.status === "watching" && (
             <>
-              <p className="agent-screen-status" role="status">{screenHint}</p>
+              <p className="agent-screen-status" role="status">{t(screenHint)}</p>
               <button className="button secondary" onClick={() => void sendCurrentScreen()}
-                disabled={uploadsExhausted.current || screen.frames >= MAX_SCREEN_FRAMES}>
-                Enviar esta pantalla ahora
-              </button>
+                disabled={uploadsExhausted.current || screen.frames >= MAX_SCREEN_FRAMES}>{t("Enviar esta pantalla ahora")}</button>
             </>
           )}
           {active && (
             <button className="button end-button" onClick={stop}>
               <PhoneOff size={18} />
-              {busy ? "Cancelar conexión" : "Terminar conversación"}
+              {busy ? t("Cancelar conexión") : t("Terminar conversación")}
             </button>
           )}
-          <p className="agent-scope">
-            Si compartes pantalla, tu navegador la lee cada segundo: el agente recibe el
-            texto que cambia y capturas cuando detectamos una pausa, o cuando las envías con el botón (máx.{" "}
-            {MAX_SCREEN_FRAMES}). Además, se conservan capturas de los cambios
-            en tu bóveda privada para ilustrar el procedimiento. Usa datos
-            ficticios.
-          </p>
+          <p className="agent-scope">{t("Si compartes pantalla, tu navegador la lee cada segundo: el agente recibe el texto que cambia y capturas cuando detectamos una pausa, o cuando las envías con el botón (máx.")}{" "}
+            {MAX_SCREEN_FRAMES}{t("). Además, se conservan capturas de los cambios en tu bóveda privada para ilustrar el procedimiento. Usa datos ficticios.")}</p>
         </section>
         <section
           className="agent-transcript"
@@ -684,7 +665,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
         >
           {screen.events.length > 0 && (
             <div className="agent-screen-log" aria-live="polite">
-              <h3>Lo que pasa en tu pantalla</h3>
+              <h3>{t("Lo que pasa en tu pantalla")}</h3>
               <ol>
                 {screen.events.map((event) => (
                   <li key={`${event.at}-${event.text.slice(0, 20)}`}>
@@ -695,8 +676,8 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
             </div>
           )}
           <div className="agent-transcript-heading">
-            <h2 id="agent-transcript-title">La conversación</h2>
-            <span>Mensajes recientes · temporales</span>
+            <h2 id="agent-transcript-title">{t("La conversación")}</h2>
+            <span>{t("Mensajes recientes · temporales")}</span>
           </div>
           <div
             className="agent-messages"
@@ -712,10 +693,10 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
                 >
                   <div>
                     <strong>
-                      {message.role === "agent" ? "Tu agente" : "Tú"}
+                      {message.role === "agent" ? t("Tu agente") : t("Tú")}
                     </strong>
                     <time dateTime={new Date(message.at).toISOString()}>
-                      {new Date(message.at).toLocaleTimeString("es-MX", {
+                      {new Date(message.at).toLocaleTimeString(dateLocale(), {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
@@ -727,24 +708,19 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
             ) : (
               <div className="agent-empty">
                 <MessageCircle size={32} />
-                <h3>Aquí aparecerán sus palabras.</h3>
-                <p>
-                  Inicia una conversación para ver los mensajes reales del
-                  agente y, si el agente los emite, la transcripción de tu voz.
-                </p>
+                <h3>{t("Aquí aparecerán sus palabras.")}</h3>
+                <p>{t("Inicia una conversación para ver los mensajes reales del agente y, si el agente los emite, la transcripción de tu voz.")}</p>
               </div>
             )}
           </div>
           <form className="agent-compose" onSubmit={send}>
-            <label className="sr-only" htmlFor="agent-message">
-              Mensaje para el agente
-            </label>
+            <label className="sr-only" htmlFor="agent-message">{t("Mensaje para el agente")}</label>
             <textarea
               id="agent-message"
               maxLength={4000}
               rows={2}
               disabled={state.phase !== "connected"}
-              placeholder="También puedes escribirle…"
+              placeholder={t("También puedes escribirle…")}
               value={draft}
               onChange={(event) => {
                 setDraft(event.target.value);
@@ -756,14 +732,9 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
               type="submit"
               disabled={state.phase !== "connected" || !draft.trim()}
             >
-              <Send size={17} />
-              Enviar
-            </button>
+              <Send size={17} />{t("Enviar")}</button>
           </form>
-          <p className="agent-transcript-note">
-            La transcripción puede contener errores. Confirma el criterio antes
-            de usarlo como conocimiento validado.
-          </p>
+          <p className="agent-transcript-note">{t("La transcripción puede contener errores. Confirma el criterio antes de usarlo como conocimiento validado.")}</p>
         </section>
       </div>
       {frame && (
@@ -771,13 +742,13 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
           key={frame.key}
           className="agent-runtime"
           ref={frameElement}
-          title="Conexión individual con ElevenLabs"
+          title={t("Conexión individual con ElevenLabs")}
           aria-hidden="true"
           tabIndex={-1}
           src={import.meta.env.BASE_URL + "agent-session.html"}
           allow="microphone; autoplay"
           onLoad={() =>
-            post({ type: "start", mode: frame.mode, access: frame.access })
+            post({ type: "start", mode: frame.mode, access: frame.access, overrideLanguage: frame.overrideLanguage })
           }
         />
       )}

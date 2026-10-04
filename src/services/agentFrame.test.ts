@@ -30,3 +30,33 @@ describe("conversation iframe delivery integration", () => {
     expect(session.endSession).toHaveBeenCalled();
   });
 });
+
+it.each([
+  ['voice', 'en'], ['text', 'en'], ['voice', 'es'], ['text', 'es'], ['voice', undefined],
+])('starts %s with only the requested language override (%s)', async (mode, overrideLanguage) => {
+  const handlers: Record<string, (event: any) => any> = {};
+  const parent = { postMessage: vi.fn() };
+  vi.stubGlobal('window', { location: { origin: 'http://localhost' }, parent, addEventListener: (type: string, cb: (e: any) => any) => { handlers[type] = cb; } });
+  sdk.startSession.mockResolvedValue({ endSession: vi.fn() });
+  await import('./agentFrame');
+  await handlers.message({ origin: 'http://localhost', source: parent, data: {
+    channel: 'userhelper-elevenlabs-v1', type: 'start', sessionKey: 'language-test', mode,
+    access: { conversationToken: 'test', signedUrl: 'wss://test.invalid' }, overrideLanguage,
+  } });
+  expect(sdk.startSession).toHaveBeenCalledTimes(1);
+  const options = sdk.startSession.mock.calls[0][0];
+  expect(options.overrides).toEqual(overrideLanguage ? { agent: { language: overrideLanguage } } : undefined);
+  expect(options.connectionType).toBe(mode === 'voice' ? 'webrtc' : 'websocket');
+  expect(options.textOnly).toBe(mode === 'text');
+  handlers.pagehide({});
+});
+it('rejects unknown language messages before requesting a session', async () => {
+  const handlers: Record<string, (event: any) => any> = {};
+  const parent = { postMessage: vi.fn() };
+  vi.stubGlobal('window', { location: { origin: 'http://localhost' }, parent, addEventListener: (type: string, cb: (e: any) => any) => { handlers[type] = cb; } });
+  await import('./agentFrame');
+  await handlers.message({ origin: 'http://localhost', source: parent, data: {
+    channel: 'userhelper-elevenlabs-v1', type: 'start', sessionKey: 'invalid', mode: 'voice', access: { conversationToken: 'test' }, overrideLanguage: 'unknown',
+  } });
+  expect(sdk.startSession).not.toHaveBeenCalled();
+});

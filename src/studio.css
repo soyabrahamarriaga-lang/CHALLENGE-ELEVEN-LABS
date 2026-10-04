@@ -201,3 +201,23 @@ input::placeholder, textarea::placeholder { color: #959b91; opacity: 1; }
   .entry-roles label > span { padding: 10px 12px; }
   .entry-demo-note { margin-top: 12px; }
 }
+
+/* The locale switch is always available, including before entering the demo. */
+.language-select { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; color: var(--text, #e2e8d9); font-size: 12px; }
+.language-select select { font: inherit; color: inherit; background: transparent; border: 1px solid #697451; border-radius: 7px; min-height: 36px; padding: 6px 24px 6px 8px; cursor: pointer; }
+.language-select option { background: #1b2016; color: #f0f3eb; }
+.language-select select:focus-visible { outline: 2px solid #c5d67f; outline-offset: 3px; }
+.entry-header > .language-select { margin-left: auto; }
+.topbar > .language-select { margin-left: auto; }
+.agent-language-note { font-size: 13px; line-height: 1.6; color: #aebc9c; margin: 12px 0; }
+@media (max-width: 700px) { .topbar > .real-call-badge, .topbar > .demo-badge { display: none; } .topbar { gap: 8px; } .topbar-left { min-width: 0; } .topbar .breadcrumb { min-width: 0; } .topbar .language-select svg { display: none; } .language-select select { max-width: 102px; } .entry-header { gap: 12px; } }
+
+.agent-language { color: var(--muted, #6b736c); font-size: .84rem; line-height: 1.5; margin: .5rem 0 1rem; }
+.agent-language-warning { max-width: 36rem; padding: 12px 16px; border: 1px solid #bd8b4c66; border-radius: 10px; background: #bd8b4c0d; }
+.agent-language-warning p { margin: 0 0 6px; }
+.agent-language a { color: inherit; text-underline-offset: 3px; }
+.original-language-note { font-size: .85rem; color: var(--muted, #6b736c); margin: 0 0 18px; }
+@media (max-width: 480px) {
+  .entry-header { gap: 8px; }
+  .entry-header .entry-nav-link { display: none; }
+}

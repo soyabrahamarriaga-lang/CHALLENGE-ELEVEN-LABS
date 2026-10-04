@@ -1,3 +1,5 @@
+import { AgentLanguage } from "../components/AgentLanguage";
+import { t, language } from "../i18n";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { VoiceField } from "../components/VoiceField";
@@ -5,7 +7,7 @@ import { AudioLines } from "lucide-react";
 import type { Role } from "../domain/types";
 import { AgentStatus } from "../components/AgentStatus";
 import { useAgentAvailability } from "../services/useAgentAvailability";
-import { canStartAgent } from "../services/agentAvailability";
+import { canStartAgentInLanguage } from "../services/agentAvailability";
 import { agentProfiles } from "../services/agentProfiles";
 import type { AgentPhase } from "../services/agentProtocol";
 import "./Senior.css";
@@ -28,16 +30,14 @@ function ProfileSpace({ role, children }: { role: Role; children?: ReactNode }) 
   const health = useAgentAvailability(!active, role);
   const profile = agentProfiles[role];
   const available = health.online &&
-    (canStartAgent(health.status, "voice") || canStartAgent(health.status, "text"));
+    (canStartAgentInLanguage(health.status, "voice", language()) || canStartAgentInLanguage(health.status, "text", language()));
 
   if (conversationOpen) {
     return (
-      <Suspense fallback={<p role="status">Preparando conversación…</p>}>
+      <Suspense fallback={<p role="status">{t("Preparando conversación…")}</p>}>
         <AgentConversation role={role} health={health} onPhaseChange={setPhase} />
         {!active && role === "intern" && (
-          <button className="text-button tutor-back" onClick={() => setConversationOpen(false)}>
-            Volver a Mi aprendizaje
-          </button>
+          <button className="text-button tutor-back" onClick={() => setConversationOpen(false)}>{t("Volver a Mi aprendizaje")}</button>
         )}
       </Suspense>
     );
@@ -45,18 +45,19 @@ function ProfileSpace({ role, children }: { role: Role; children?: ReactNode }) 
   return (
     <>
       <section className={role === "intern" ? "tutor-entry" : "personal-space"}
-        aria-label={role === "intern" ? "Tutor de procesos" : "Mi espacio"}>
+        aria-label={role === "intern" ? t("Tutor de procesos") : t("Mi espacio")}>
         {role === "intern" ? (
           <div className="page-heading">
-            <div><h1 tabIndex={-1} ref={heading}>Aprende con tu tutor.</h1><p>{profile.description}</p></div>
+            <div><h1 tabIndex={-1} ref={heading}>{t("Aprende con tu tutor.")}</h1><p>{t(profile.description)}</p></div>
           </div>
-        ) : <><VoiceField compact /><h1 className="space-title">Mi espacio<span>de conocimiento.</span></h1></>}
+        ) : <><VoiceField compact /><h1 className="space-title">{t("Mi espacio")}<span>{t("de conocimiento.")}</span></h1></>}
         <div className="personal-space-entry">
           <AgentStatus health={health} />
+          <AgentLanguage status={health.status} />
           <button className="button primary personal-space-start" disabled={!available}
             onClick={() => setConversationOpen(true)}>
             <AudioLines size={22} aria-hidden="true" />
-            {profile.startLabel}
+            {t(profile.startLabel)}
           </button>
         </div>
       </section>

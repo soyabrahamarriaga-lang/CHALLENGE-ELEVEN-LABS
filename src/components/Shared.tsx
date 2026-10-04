@@ -1,3 +1,4 @@
+import { t, dateLocale } from "../i18n";
 import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
 import {
@@ -22,7 +23,7 @@ export function Logo({ small = false }: { small?: boolean }) {
       <svg viewBox="0 0 36 36" aria-hidden="true">
         <path d="M9 8v11a9 9 0 0 0 18 0V8M18 8v10" />
       </svg>
-      {!small && <span>UserHelper</span>}
+      {!small && <span>{t("UserHelper")}</span>}
     </span>
   );
 }
@@ -68,7 +69,7 @@ export function StepBadge({ kind }: { kind: StepKind }) {
   return (
     <span className={"step-badge " + kind}>
       <StepIcon kind={kind} size={13} />
-      {stepLabels[kind]}
+      {t(stepLabels[kind])}
     </span>
   );
 }
@@ -80,7 +81,7 @@ export function SessionArt({ session }: { session: KnowledgeSession }) {
           <span />
           <span />
           <span />
-          <b>{session.category}</b>
+          <b>{t(session.category)}</b>
         </div>
         <div className="art-flow">
           <span className="art-node">
@@ -124,8 +125,8 @@ export function SessionCard({
       <SessionArt session={session} />
       <div className="session-card-body">
         <div className="session-card-category">
-          <span>{session.category}</span>
-          <span>{session.steps.length} pasos</span>
+          <span>{t(session.category)}</span>
+          <span>{t("{{count}} paso", { count: session.steps.length })}</span>
         </div>
         <h3>{session.title}</h3>
         {!compact && <p>{session.description}</p>}
@@ -134,7 +135,7 @@ export function SessionCard({
           <span>
             <strong>{session.senior}</strong>
             <small>
-              {new Date(session.date).toLocaleDateString("es-MX", {
+              {new Date(session.date).toLocaleDateString(dateLocale(), {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
@@ -180,7 +181,7 @@ export function DemoNote({ children }: { children?: ReactNode }) {
       <ShieldCheck size={15} />
       <span>
         {children ||
-          "Las sesiones de ejemplo son simuladas. No proceden de grabaciones ni análisis reales."}
+          t("Las sesiones de ejemplo son simuladas. No proceden de grabaciones ni análisis reales.")}
       </span>
     </div>
   );
@@ -228,7 +229,7 @@ export function Modal({
         <button
           className="icon-button"
           onClick={onClose}
-          aria-label="Cerrar ventana"
+          aria-label={t("Cerrar ventana")}
         >
           <X size={20} />
         </button>
@@ -246,12 +247,10 @@ export function SessionMetadata({ session }: { session: KnowledgeSession }) {
       </span>
       <span>
         <Layers size={15} />
-        {session.steps.length} pasos
-      </span>
+        {t("{{count}} paso", { count: session.steps.length })}</span>
       <span>
         <GitBranch size={15} />
-        {session.steps.filter((s) => s.kind === "decision").length} decisión
-      </span>
+        {session.steps.filter((s) => s.kind === "decision").length}{" "}{t("decisión")}</span>
     </div>
   );
 }

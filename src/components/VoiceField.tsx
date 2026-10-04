@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 
@@ -86,7 +87,7 @@ export function VoiceField({ compact = false }: { compact?: boolean }) {
   return <div className={`voice-field${compact ? " voice-field-compact" : ""}`}>
     <canvas ref={canvasRef} aria-hidden="true" />
     <button className="motion-toggle" onClick={() => setPaused(!paused)}
-      aria-label={paused ? "Reanudar animación de fondo" : "Pausar animación de fondo"}>
+      aria-label={paused ? t("Reanudar animación de fondo") : t("Pausar animación de fondo")}>
       {paused ? <Play size={14} /> : <Pause size={14} />}
     </button>
   </div>;

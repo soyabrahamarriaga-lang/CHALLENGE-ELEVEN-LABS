@@ -91,3 +91,7 @@ Leer la bitácora reciente y el issue/PR antes de tomar una tarea. Una entrada n
 - Protección de `main` confirmada por API: PR obligatorio, `context-integrity` de GitHub Actions requerido, rama actualizada, protección aplicable a administradores, conversaciones resueltas, sin force push ni borrado.
 - Hay cero aprobaciones de otra cuenta obligatorias por ahora; esto no elimina el PR ni el check requerido. Se configurará revisión por otra persona cuando exista otro revisor.
 - Hooks instalados en este clon. Cada otra computadora debe instalarlos por separado.
+
+## Interfaz español / inglés (2026-10-04)
+
+PR #24 (eliminación de procesos) integrado en main. Nueva rama `codex/bilingual-interface`: selector ES/EN en entrada y espacio, preferencia persistida, traducciones de UI/ejemplos/catálogo, fechas y accesibilidad. Los procesos reales conservan su idioma original. El idioma se captura al empezar una conversación; un cambio posterior no la reinicia. Ambos agentes reales todavía tienen únicamente español y no permiten override de idioma; el inicio en inglés se bloquea con explicación hasta habilitarlo. Ver `docs/LANGUAGES.md` y `ADR-bilingual-interface.md`. La configuración remota no se modificó; falta aplicar instrucciones y probar llamadas reales EN en ambos perfiles.
