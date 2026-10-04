@@ -2,6 +2,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
 export default defineConfig({
+  define: {
+    "import.meta.env.VITE_CLOUD_DEMO": JSON.stringify(process.env.VERCEL === "1" || process.env.VITE_CLOUD_DEMO === "true" ? "true" : "false"),
+  },
   plugins: [react()],
   server: {
     port: 5173,

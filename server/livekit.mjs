@@ -59,6 +59,13 @@ function send(res, status, body) {
   res.end(JSON.stringify(body));
 }
 async function readBody(req) {
+  // Vercel may parse JSON before invoking the function; local HTTP uses a stream.
+  if (req.body !== undefined) {
+    const raw = typeof req.body === "string" || Buffer.isBuffer(req.body)
+      ? req.body.toString() : JSON.stringify(req.body);
+    if (Buffer.byteLength(raw) > 4096) throw new Error("body-too-large");
+    return JSON.parse(raw);
+  }
   const chunks = [];
   let size = 0;
   for await (const chunk of req) {

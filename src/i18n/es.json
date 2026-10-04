@@ -641,5 +641,10 @@
   "Rechazos y cancelaciones": "Rechazos y cancelaciones",
   "Condición": "Condición",
   "Actividad clasificada": "Actividad clasificada",
-  "Actividad": "Actividad"
+  "Actividad": "Actividad",
+  "Demo de conversaciones: la biblioteca y el guardado de procesos están desactivados en esta versión.": "Demo de conversaciones: la biblioteca y el guardado de procesos están desactivados en esta versión.",
+  "La biblioteca está disponible en la versión local": "La biblioteca está disponible en la versión local",
+  "Aquí puedes conversar con los agentes y explorar ejemplos. Los procesos de tu bóveda permanecen en tu computadora.": "Aquí puedes conversar con los agentes y explorar ejemplos. Los procesos de tu bóveda permanecen en tu computadora.",
+  "Explica una tarea, sus decisiones y sus motivos. Puedes compartir pantalla para que el agente te acompañe.": "Explica una tarea, sus decisiones y sus motivos. Puedes compartir pantalla para que el agente te acompañe.",
+  "). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.": "). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios."
 }
