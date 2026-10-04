@@ -8,9 +8,11 @@ export class ElevenLabsError extends Error {
   }
 }
 
-export function readElevenLabsConfig(env = process.env) {
+export function readElevenLabsConfig(env = process.env, role = "senior") {
+  if (!["senior", "intern"].includes(role))
+    throw new ElevenLabsError("invalid_agent_role", 400);
   const apiKey = (env.ELEVENLABS_API_KEY || "").trim();
-  const agentId = (env.ELEVENLABS_AGENT_ID || "").trim();
+  const agentId = (env[role === "intern" ? "ELEVENLABS_TUTOR_AGENT_ID" : "ELEVENLABS_AGENT_ID"] || "").trim();
   return {
     apiKey,
     agentId,

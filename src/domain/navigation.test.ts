@@ -2,10 +2,11 @@ import { describe, expect, it } from "vitest";
 import { parseRoute } from "./navigation";
 
 describe("navigation to the personal agent space", () => {
-  it.each(["#senior/agent", "#intern/agent", "#senior/call", "#/intern/call/old-room"])(
-    "redirects the retired route %s to Mi espacio without opening a room",
-    (hash) => {
-      expect(parseRoute(hash)).toEqual({ role: "senior", view: "home", id: "", canonicalHash: "#senior/home" });
+  it.each([["#senior/agent", "senior"], ["#intern/agent", "intern"],
+    ["#senior/call", "senior"], ["#/intern/call/old-room", "intern"]])(
+    "redirects the retired route %s to its own profile without opening a room",
+    (hash, role) => {
+      expect(parseRoute(hash)).toEqual({ role, view: "home", id: "", canonicalHash: "#" + role + "/home" });
     },
   );
 

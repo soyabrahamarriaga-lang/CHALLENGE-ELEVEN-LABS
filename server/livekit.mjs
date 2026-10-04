@@ -72,18 +72,22 @@ async function readBody(req) {
 // Shared room passphrase is a hackathon access gate, not individual user authentication.
 // The signing key and secret never cross this process boundary.
 export function createHandler(config = readConfig(), options = {}) {
-  const agentConfig = options.agentConfig || readElevenLabsConfig();
-  const agentAvailability = options.agentAvailability || createAgentAvailability(agentConfig, {
-    configured: Boolean(agentConfig.ready && (config.openAgent || config.joinCode.length >= 16)),
-    requiresCode: !config.openAgent,
+  const profile = (agentConfig, access, availability) => ({
+    config: agentConfig,
+    availability: availability || createAgentAvailability(agentConfig, {
+      configured: Boolean(agentConfig.ready && (config.openAgent || config.joinCode.length >= 16)),
+      requiresCode: !config.openAgent,
+    }),
+    access: access || ((mode) => getConversationAccess(
+      agentConfig, mode === "voice" ? "webrtc" : "websocket",
+    )),
   });
-  const agentAccess =
-    options.agentAccess ||
-    ((mode) =>
-      getConversationAccess(
-        agentConfig,
-        mode === "voice" ? "webrtc" : "websocket",
-      ));
+  // Two fixed server-side targets with independent health caches. Never accept
+  // an arbitrary agent ID from the browser or fall back from tutor to expert.
+  const expert = profile(options.agentConfig || readElevenLabsConfig(),
+    options.agentAccess, options.agentAvailability);
+  const tutor = profile(options.tutorConfig || readElevenLabsConfig(process.env, "intern"),
+    options.tutorAccess, options.tutorAvailability);
   const attempts = new Map();
   const now = options.now || Date.now;
   const mint =
@@ -111,17 +115,20 @@ export function createHandler(config = readConfig(), options = {}) {
   return async (req, res) => {
     try {
       const path = (req.url || "").split("?")[0];
-      if (path === "/api/elevenlabs/availability") {
+      const isTutor = path.startsWith("/api/elevenlabs/tutor/");
+      const agent = isTutor ? tutor : expert;
+      const agentPath = isTutor ? path.replace("/api/elevenlabs/tutor/", "/api/elevenlabs/") : path;
+      if (agentPath === "/api/elevenlabs/availability") {
         if (req.method !== "GET") return send(res, 405, { error: "method_not_allowed" });
         if (req.headers["sec-fetch-site"] === "cross-site" ||
           (req.headers.origin && req.headers.origin !== config.origin))
           return send(res, 403, { error: "origin_not_allowed" });
-        return send(res, 200, await agentAvailability());
+        return send(res, 200, await agent.availability());
       }
-      if (req.method === "GET" && path === "/api/elevenlabs/status")
+      if (req.method === "GET" && agentPath === "/api/elevenlabs/status")
         return send(res, 200, {
           configured: Boolean(
-            agentConfig.ready &&
+            agent.config.ready &&
             (config.openAgent || config.joinCode.length >= 16),
           ),
           requiresCode: !config.openAgent,
@@ -133,7 +140,7 @@ export function createHandler(config = readConfig(), options = {}) {
         });
         return;
       }
-      const isAgent = path === "/api/elevenlabs/session";
+      const isAgent = agentPath === "/api/elevenlabs/session";
       if (path !== "/api/livekit/token" && !isAgent)
         return send(res, 404, { error: "not_found" });
       if (req.method !== "POST")
@@ -147,7 +154,7 @@ export function createHandler(config = readConfig(), options = {}) {
         return send(res, 415, { error: "json_required" });
       if (
         !(isAgent
-          ? agentConfig.ready &&
+          ? agent.config.ready &&
             (config.openAgent || config.joinCode.length >= 16)
           : config.ready)
       )
@@ -193,7 +200,7 @@ export function createHandler(config = readConfig(), options = {}) {
       if (isAgent) {
         if (!["voice", "text"].includes(body.mode))
           return send(res, 400, { error: "invalid_mode" });
-        return send(res, 200, await agentAccess(body.mode));
+        return send(res, 200, await agent.access(body.mode));
       }
       const participantToken = await mint(displayName);
       send(res, 200, {

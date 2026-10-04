@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AgentSpace } from "./AgentSpace";
 import {
   ArrowRight,
   Search,
@@ -227,11 +228,11 @@ export function InternHome({
 }) {
   const featured = sessions.find((s) => s.id === "accesos") || sessions[0];
   return (
-    <>
+    <AgentSpace role="intern">
       <div className="page-heading">
         <div>
-          <h1>Aprende de quien ya estuvo ahí.</h1>
-          <p>Detrás de cada paso hay una razón. Descúbrela a tu ritmo.</p>
+          <h2>Experiencias para explorar</h2>
+          <p>Sesiones de ejemplo para recorrer a tu ritmo.</p>
         </div>
         <span className="date-label">Tu espacio de {role}</span>
       </div>
@@ -317,6 +318,6 @@ export function InternHome({
         <span>Explorar es el primer paso. La práctica viene después.</span>
       </div>
       <DemoNote />
-    </>
+    </AgentSpace>
   );
 }

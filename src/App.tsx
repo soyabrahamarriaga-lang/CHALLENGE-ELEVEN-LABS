@@ -254,10 +254,10 @@ export default function App() {
           </div>
           {route.view === "processes" ? (
             <span className="real-call-badge"><GitBranch size={16}/>Bóveda privada</span>
-          ) : route.view === "home" && route.role === "senior" ? (
+          ) : route.view === "home" ? (
             <span className="real-call-badge">
               <AudioLines size={16} />
-              Conversación con el agente
+              {route.role === "intern" ? "Tutor de procesos" : "Conversación con el agente"}
             </span>
           ) : (
             <button className="demo-badge" onClick={() => setDemoOpen(true)}>
@@ -411,6 +411,7 @@ export default function App() {
             </p>
             <h3>Si eres intern</h3>
             <p>
+              En Mi aprendizaje puedes conversar con tu tutor por voz o texto.
               Abre la biblioteca, elige una sesión y selecciona sus pasos. La
               escena de ejemplo, las razones y las variantes se muestran juntas
               para mantener el contexto.
