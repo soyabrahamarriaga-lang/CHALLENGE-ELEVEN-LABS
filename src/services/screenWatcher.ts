@@ -17,10 +17,11 @@ export type WatchStatus = "loading" | "watching" | "ended" | "error";
 type Handlers = {
   onEvent: (event: ScreenEvent) => void;
   onPause: (frame: Blob, at: number) => void;
+  onChange?: () => void;
   onCapture?: (frame: Blob, at: number) => void;
   onStatus: (status: WatchStatus) => void;
 };
-type Options = { intervalMs?: number; maxWidth?: number; now?: () => number };
+type Options = { intervalMs?: number; maxWidth?: number; now?: () => number; signal?: AbortSignal };
 const AGENT_FRAME_WIDTH = 1024;
 
 const union = (a: Box, b: Box): Box => {
@@ -59,6 +60,7 @@ export async function startScreenWatch(
     if (stopped) return;
     stopped = true;
     clearInterval(timer);
+    options.signal?.removeEventListener("abort", stop);
     for (const track of stream.getTracks()) track.stop();
     video.srcObject = null;
     void worker?.terminate();
@@ -67,14 +69,22 @@ export async function startScreenWatch(
   for (const track of stream.getVideoTracks())
     track.addEventListener("ended", stop);
 
+  options.signal?.addEventListener("abort", stop, { once: true });
+  if (options.signal?.aborted) {
+    stop();
+    return { stop, captureNow: async () => null };
+  }
   handlers.onStatus("loading");
-  await video.play();
+  try { await video.play(); } catch (error) { stop(); throw error; }
+  if (stopped) return { stop, captureNow: async () => null };
   // Loaded on demand: the OCR engine and Spanish/English data download once and stay cached.
   const { createWorker } = await import("tesseract.js");
-  const ready = await createWorker(["spa", "eng"]);
+  let ready: Worker;
+  try { ready = await createWorker(["spa", "eng"]); }
+  catch (error) { stop(); throw error; }
   if (stopped) {
     void ready.terminate();
-    return { stop };
+    return { stop, captureNow: async () => null };
   }
   worker = ready;
 
@@ -90,6 +100,15 @@ export async function startScreenWatch(
   // vault captures (onCapture) keep full size.
   const agentFrame = document.createElement("canvas");
   const agentFrameContext = agentFrame.getContext("2d");
+
+  async function captureNow(): Promise<Blob | null> {
+    if (stopped || video.readyState < 2 || !video.videoWidth || !agentFrameContext) return null;
+    const scale = Math.min(1, AGENT_FRAME_WIDTH / video.videoWidth);
+    agentFrame.width = Math.round(video.videoWidth * scale);
+    agentFrame.height = Math.round(video.videoHeight * scale);
+    agentFrameContext.drawImage(video, 0, 0, agentFrame.width, agentFrame.height);
+    return new Promise((resolve) => agentFrame.toBlob(resolve, "image/jpeg", 0.7));
+  }
 
   // The region is copied to its own canvas: Tesseract's `rectangle` option misreads wide,
   // short bands of a full screenshot (verified: "o o" instead of the row text).
@@ -149,16 +168,13 @@ export async function startScreenWatch(
       ? changedBox(previous.gray, grid.gray, grid.gridWidth, grid.gridHeight)
       : { x: 0, y: 0, w: grid.gridWidth, h: grid.gridHeight };
     previous = grid;
-    if (pause.feed(Boolean(box) && !first, at)) {
-      const shrink = Math.min(1, AGENT_FRAME_WIDTH / width);
-      agentFrame.width = Math.round(width * shrink);
-      agentFrame.height = Math.round(height * shrink);
-      agentFrameContext!.drawImage(canvas, 0, 0, agentFrame.width, agentFrame.height);
-      agentFrame.toBlob(
-        (blob) => blob && !stopped && handlers.onPause(blob, at),
-        "image/jpeg",
-        0.7,
-      );
+    if (box) handlers.onChange?.();
+    // Initial screen is a change too: it must reach the agent even if the user
+    // starts on a static document and never clicks.
+    if (pause.feed(Boolean(box), at)) {
+      void captureNow().then((frame) => {
+        if (frame && !stopped) handlers.onPause(frame, at);
+      });
     }
     if (box) {
       if (!pending) pendingSince = at;
@@ -221,5 +237,5 @@ export async function startScreenWatch(
   timer = setInterval(() => void tick(), intervalMs);
   handlers.onStatus("watching");
   void tick();
-  return { stop };
+  return { stop, captureNow };
 }

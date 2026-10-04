@@ -8,7 +8,7 @@ export function clock(seconds) {
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 }
 
-// The agent prompt reacts to "[PANTALLA mm:ss]": one short question about the change, or "Mm-hm.".
+// The agent prompt reacts to "[PANTALLA mm:ss]": one short question about a decision; silence for mere navigation.
 export function screenMessage(fileId, seconds) {
   if (typeof fileId !== "string" || !fileId) throw new Error("file_id requerido");
   const file = { type: "file_input", file_id: fileId };

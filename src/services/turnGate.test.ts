@@ -1,38 +1,52 @@
 import { describe, expect, it } from "vitest";
 import { TurnGate } from "./turnGate";
-
-describe("turn gate for pause snapshots", () => {
-  it("sends at once when nobody is speaking", () => {
+describe("safe picture turns", () => {
+  it("can send text-session pictures without microphone data", () => {
     const gate = new TurnGate<string>();
-    gate.offer("frame", 27, 1000);
+    gate.offer("frame", 27);
     expect(gate.poll(1000)).toEqual({ item: "frame", at: 27 });
     expect(gate.poll(1300)).toBeNull();
   });
-  it("waits while the expert talks and 1 s after they stop", () => {
-    const gate = new TurnGate<string>();
-    gate.noteVoice(true, 0);
-    gate.offer("frame", 27, 100);
+  it("waits for a known speech ending plus a quiet gap", () => {
+    const gate = new TurnGate<string>(700, true);
+    gate.offer("frame", 27);
+    expect(gate.status(0)).toBe("voice-unavailable");
+    gate.noteVoice("speech", 0);
     expect(gate.poll(1000)).toBeNull();
-    gate.noteVoice(false, 2000);
-    expect(gate.poll(2900)).toBeNull();
-    expect(gate.poll(3000)).toEqual({ item: "frame", at: 27 });
+    gate.noteVoice("quiet", 2000);
+    expect(gate.poll(2600)).toBeNull();
+    expect(gate.poll(2700)).toEqual({ item: "frame", at: 27 });
   });
-  it("waits while the agent speaks and keeps only the latest pause", () => {
+  it("retains the latest unchanged screen during a 45-second explanation", () => {
+    const gate = new TurnGate<string>(700, true);
+    gate.noteVoice("speech", 0);
+    gate.offer("old", 5);
+    gate.clear();
+    gate.offer("latest", 29);
+    gate.noteVoice("speech", 44000);
+    expect(gate.poll(44000)).toBeNull();
+    gate.noteVoice("quiet", 45000);
+    expect(gate.poll(45700)).toEqual({ item: "latest", at: 29 });
+  });
+  it("invalidates a moving screen and waits for the agent response", () => {
     const gate = new TurnGate<string>();
+    gate.offer("old", 5); gate.clear();
+    expect(gate.poll(9000)).toBeNull();
+    gate.offer("new", 10); gate.noteUserTurn(10000);
+    expect(gate.poll(10500)).toBeNull();
     gate.noteAgentSpeaking(true);
-    gate.offer("old", 10, 0);
-    gate.offer("new", 20, 500);
-    expect(gate.poll(1000)).toBeNull();
+    expect(gate.poll(15000)).toBeNull();
     gate.noteAgentSpeaking(false);
-    expect(gate.poll(1100)).toEqual({ item: "new", at: 20 });
+    expect(gate.poll(15100)?.item).toBe("new");
   });
-  it("drops a snapshot that waited too long", () => {
-    const gate = new TurnGate<string>(1000, 20000);
-    gate.noteVoice(true, 0);
-    gate.offer("frame", 5, 0);
-    expect(gate.waiting).toBe(true);
-    gate.noteVoice(false, 25000);
-    expect(gate.poll(30000)).toBeNull();
-    expect(gate.waiting).toBe(false);
+  it("never interprets a stopped VAD stream as silence", () => {
+    const gate = new TurnGate<string>(700, true);
+    gate.noteVoice("quiet", 1000); gate.offer("image", 2);
+    expect(gate.status(4000)).toBe("voice-unavailable");
+    expect(gate.poll(4000)).toBeNull();
+    gate.noteVoice("unknown", 4100);
+    expect(gate.poll(4200)).toBeNull();
+    gate.noteVoice("quiet", 4500);
+    expect(gate.poll(4500)?.item).toBe("image");
   });
 });

@@ -1,6 +1,8 @@
 // This document exists only while an explicitly started conversation is active.
 // Removing its iframe destroys its browsing context, including pending microphone
 // requests and SDK work, without depending on startSession returning first.
+import { VoiceActivity } from "./voiceActivity";
+import { ScreenDelivery } from "./screenDelivery";
 import { Conversation } from "@elevenlabs/client";
 import type { Conversation as Session } from "@elevenlabs/client";
 import { MAX_SCREEN_FRAMES, SCREEN_LABEL, channel } from "./agentProtocol";
@@ -8,27 +10,20 @@ import type { AgentEvent, AgentMode } from "./agentProtocol";
 let session: Session | null = null;
 let sessionKey = "";
 let started = false;
-let framesSent = 0;
 let voiceTimer: ReturnType<typeof setInterval> | undefined;
-// Microphone level → "the expert is talking" for the snapshot timing (ADR-0015).
-function watchVoice(current: Session) {
-  let active = false;
-  let quietSince = 0;
+let voice = new VoiceActivity();
+let voiceMode = false;
+let agentSpeaking = false;
+let lastSpeech = -Infinity;
+let responseUntil = -Infinity;
+let delivery: ScreenDelivery | null = null;
+function watchVoice() {
   voiceTimer = setInterval(() => {
-    let level = 0;
-    try {
-      level = current.getInputVolume();
-    } catch {
-      return;
-    }
     const now = Date.now();
-    if (level > 0.05) {
-      quietSince = 0;
-      if (!active) emit({ type: "voice", active: (active = true) });
-    } else if (active) {
-      quietSince ||= now;
-      if (now - quietSince >= 400) emit({ type: "voice", active: (active = false) });
-    }
+    const status = voiceMode ? voice.status(now) : "quiet";
+    if (status === "speech") lastSpeech = now;
+    emit({ type: "voice", status });
+    delivery?.flush();
   }, 150);
 }
 const origin = window.location.origin;
@@ -72,6 +67,8 @@ window.addEventListener("message", async (event) => {
       return;
     started = true;
     sessionKey = data.sessionKey;
+    voiceMode = mode === "voice";
+    voice = new VoiceActivity();
     try {
       session = await Conversation.startSession({
         ...(mode === "voice"
@@ -88,19 +85,37 @@ window.addEventListener("message", async (event) => {
         clientTools: {},
         onConversationCreated: (created) => {
           session = created;
+          delivery = new ScreenDelivery({
+            upload: (blob) => created.uploadFile(blob),
+            send: (label, fileId) => {
+              if (session !== created) throw new Error("session-ended");
+              created.sendMultimodalMessage({ text: label, fileIds: [fileId] });
+            },
+            canSend: () => !agentSpeaking && Date.now() >= responseUntil &&
+              (!voiceMode || (voice.status(Date.now()) === "quiet" && Date.now() - lastSpeech >= 700)),
+            emit: (update) => emit({ type: "screen", ...update }),
+            limit: MAX_SCREEN_FRAMES,
+          });
         },
         onConnect: ({ conversationId }) => {
           emit({ type: "connected", conversationId });
-          if (mode === "voice" && session) watchVoice(session);
+          watchVoice();
         },
         onDisconnect: () => {
           clearInterval(voiceTimer);
+          delivery?.cancel();
+          session = null;
           emit({ type: "ended" });
         },
         onError: () => fail(null),
-        onModeChange: ({ mode: activity }) =>
-          emit({ type: "speaking", speaking: activity === "speaking" }),
-        onMessage: (message) =>
+        onVadScore: ({ vadScore }) => voice.score(vadScore, Date.now()),
+        onModeChange: ({ mode: activity }) => {
+          agentSpeaking = activity === "speaking";
+          if (agentSpeaking) responseUntil = -Infinity;
+          emit({ type: "speaking", speaking: agentSpeaking });
+        },
+        onMessage: (message) => {
+          if (message.role === "user" && !SCREEN_LABEL.test(message.message)) responseUntil = Date.now() + 3500;
           emit({
             type: "message",
             message: {
@@ -109,7 +124,8 @@ window.addEventListener("message", async (event) => {
               text: message.message.slice(0, 20000),
               at: Date.now(),
             },
-          }),
+          });
+        },
         onUnhandledClientToolCall: () => {
           emit({ type: "error", code: "tool" });
           void session?.endSession();
@@ -128,6 +144,7 @@ window.addEventListener("message", async (event) => {
     data.text.length <= 4000
   ) {
     try {
+      responseUntil = Date.now() + 3500;
       session.sendUserMessage(data.text.trim());
     } catch (error) {
       fail(error);
@@ -155,18 +172,13 @@ window.addEventListener("message", async (event) => {
     /^image\/(jpeg|png|webp)$/.test(data.frame.type) &&
     typeof data.label === "string" &&
     SCREEN_LABEL.test(data.label) &&
-    framesSent < MAX_SCREEN_FRAMES
+    typeof data.id === "string" && /^[a-zA-Z0-9-]{1,80}$/.test(data.id)
   ) {
-    // Snapshot at a pause: a user turn, so the agent may ask one question (ADR-0012).
-    framesSent++;
-    const current = session;
-    try {
-      const { fileId } = await current.uploadFile(data.frame);
-      current.sendMultimodalMessage({ text: data.label, fileIds: [fileId] });
-      emit({ type: "screen", ok: true });
-    } catch {
-      emit({ type: "screen", ok: false });
-    }
+    void delivery?.offer({ id: data.id, frame: data.frame, label: data.label, manual: data.manual === true });
+  } else if (data.sessionKey === sessionKey && data.type === "send-screen-now" && typeof data.id === "string") {
+    delivery?.sendNow(data.id);
+  } else if (data.sessionKey === sessionKey && data.type === "cancel-screen") {
+    delivery?.cancel();
   } else if (
     data.sessionKey === sessionKey &&
     session &&
@@ -181,5 +193,6 @@ window.addEventListener("message", async (event) => {
 });
 window.addEventListener("pagehide", () => {
   clearInterval(voiceTimer);
+  delivery?.cancel();
   void session?.endSession();
 });
