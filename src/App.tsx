@@ -9,11 +9,15 @@ import {
   HelpCircle,
   Home,
   Menu,
+  LogOut,
   PanelLeftClose,
   Settings2,
   ShieldCheck,
   X,
 } from "lucide-react";
+import { SignIn } from "./features/SignIn";
+import { demoEntryKey, parseDemoEntry, entryDestination } from "./domain/demoEntry";
+import type { DemoEntry } from "./domain/demoEntry";
 import type { LibraryStatus, Role } from "./domain/types";
 import { Logo, Avatar, EmptyState, Modal } from "./components/Shared";
 import { Senior } from "./features/Senior";
@@ -43,6 +47,25 @@ function loadSaved(key = "userhelper.demo.bookmarks"): string[] {
   }
 }
 export default function App() {
+  const [entry, setEntry] = useState<DemoEntry | null>(() => {
+    try { return parseDemoEntry(sessionStorage.getItem(demoEntryKey)); }
+    catch { return null; }
+  });
+  const enter = (next: DemoEntry) => {
+    try { sessionStorage.setItem(demoEntryKey, JSON.stringify(next)); } catch { /* Continue for this visit. */ }
+    window.history.replaceState(null, "", entryDestination(window.location.hash, next.role));
+    setEntry(next);
+  };
+  const exit = () => {
+    try { sessionStorage.removeItem(demoEntryKey); } catch { /* Storage may be unavailable. */ }
+    window.history.replaceState(null, "", "#login");
+    setEntry(null);
+    window.scrollTo({ top: 0 });
+  };
+  return entry ? <Workspace entry={entry} onExit={exit} /> : <SignIn initialRole={readRoute().role} onEnter={enter} />;
+}
+
+function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) {
   const [route, setRoute] = useState(readRoute);
   const [sessions] = useState(() => demoRepository.list());
   const [saved, setSaved] = useState(() => loadSaved());
@@ -56,6 +79,7 @@ export default function App() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [toast, setToast] = useState("");
   const mainRef = useRef<HTMLElement>(null);
+  useEffect(() => { mainRef.current?.focus(); }, []);
   useEffect(() => {
     if (route.canonicalHash) {
       window.history.replaceState(null, "", route.canonicalHash);
@@ -237,15 +261,16 @@ export default function App() {
           </button>
           <div className="profile">
             <Avatar
-              initials={route.role === "senior" ? "MT" : "AL"}
+              initials={entry.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase()}
               color={route.role === "senior" ? "sage" : "blue"}
             />
             <span>
               <strong>
-                {route.role === "senior" ? "Mariana Torres" : "Alex López"}
+                {entry.name}
               </strong>
-              <small>Perfil de demostración</small>
+              <small>Sesión de demostración</small>
             </span>
+            <button className="icon-button sign-out" onClick={onExit} aria-label="Salir de la demo" title="Salir de la demo"><LogOut size={18} /></button>
           </div>
         </div>
       </aside>

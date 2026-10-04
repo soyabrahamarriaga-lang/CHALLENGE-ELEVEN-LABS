@@ -1,1014 +1,418 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-04T05:42:00.508025+00:00",
+  "generatedAt": "2026-10-04T08:21:58.534466+00:00",
   "title": "Design System: UserHelper",
   "extensions": {
     "colorMeta": {
-      "green": {
-        "role": "primary",
-        "displayName": "Verde bosque",
+      "workspace": {
+        "role": "neutral",
+        "displayName": "workspace",
         "tonalRamp": [
-          "oklch(15% 0.0612 164.97)",
-          "oklch(26.43% 0.0612 164.97)",
-          "oklch(37.86% 0.0612 164.97)",
-          "oklch(49.29% 0.0612 164.97)",
-          "oklch(60.71% 0.0612 164.97)",
-          "oklch(72.14% 0.0612 164.97)",
-          "oklch(83.57% 0.0612 164.97)",
-          "oklch(95% 0.0612 164.97)"
-        ]
-      },
-      "green-deep": {
-        "role": "primary",
-        "displayName": "Bosque profundo",
-        "tonalRamp": [
-          "oklch(15% 0.0513 165.56)",
-          "oklch(26.43% 0.0513 165.56)",
-          "oklch(37.86% 0.0513 165.56)",
-          "oklch(49.29% 0.0513 165.56)",
-          "oklch(60.71% 0.0513 165.56)",
-          "oklch(72.14% 0.0513 165.56)",
-          "oklch(83.57% 0.0513 165.56)",
-          "oklch(95% 0.0513 165.56)"
+          "oklch(15.00% 0.0019 196.94)",
+          "oklch(26.43% 0.0019 196.94)",
+          "oklch(37.86% 0.0019 196.94)",
+          "oklch(49.29% 0.0019 196.94)",
+          "oklch(60.71% 0.0019 196.94)",
+          "oklch(72.14% 0.0019 196.94)",
+          "oklch(83.57% 0.0019 196.94)",
+          "oklch(95.00% 0.0019 196.94)"
         ]
       },
       "ink": {
         "role": "neutral",
-        "displayName": "Tinta vegetal",
+        "displayName": "ink",
         "tonalRamp": [
-          "oklch(15% 0.0226 168.36)",
-          "oklch(26.43% 0.0226 168.36)",
-          "oklch(37.86% 0.0226 168.36)",
-          "oklch(49.29% 0.0226 168.36)",
-          "oklch(60.71% 0.0226 168.36)",
-          "oklch(72.14% 0.0226 168.36)",
-          "oklch(83.57% 0.0226 168.36)",
-          "oklch(95% 0.0226 168.36)"
+          "oklch(15.00% 0.0040 106.48)",
+          "oklch(26.43% 0.0040 106.48)",
+          "oklch(37.86% 0.0040 106.48)",
+          "oklch(49.29% 0.0040 106.48)",
+          "oklch(60.71% 0.0040 106.48)",
+          "oklch(72.14% 0.0040 106.48)",
+          "oklch(83.57% 0.0040 106.48)",
+          "oklch(95.00% 0.0040 106.48)"
         ]
       },
       "muted": {
         "role": "neutral",
-        "displayName": "Texto secundario",
+        "displayName": "muted",
         "tonalRamp": [
-          "oklch(15% 0.0218 157.41)",
-          "oklch(26.43% 0.0218 157.41)",
-          "oklch(37.86% 0.0218 157.41)",
-          "oklch(49.29% 0.0218 157.41)",
-          "oklch(60.71% 0.0218 157.41)",
-          "oklch(72.14% 0.0218 157.41)",
-          "oklch(83.57% 0.0218 157.41)",
-          "oklch(95% 0.0218 157.41)"
+          "oklch(15.00% 0.0066 137.78)",
+          "oklch(26.43% 0.0066 137.78)",
+          "oklch(37.86% 0.0066 137.78)",
+          "oklch(49.29% 0.0066 137.78)",
+          "oklch(60.71% 0.0066 137.78)",
+          "oklch(72.14% 0.0066 137.78)",
+          "oklch(83.57% 0.0066 137.78)",
+          "oklch(95.00% 0.0066 137.78)"
         ]
       },
-      "operational-secondary": {
-        "role": "neutral",
-        "displayName": "Texto operativo secundario",
+      "primary": {
+        "role": "primary",
+        "displayName": "primary",
         "tonalRamp": [
-          "oklch(15% 0.0252 157.88)",
-          "oklch(26.43% 0.0252 157.88)",
-          "oklch(37.86% 0.0252 157.88)",
-          "oklch(49.29% 0.0252 157.88)",
-          "oklch(60.71% 0.0252 157.88)",
-          "oklch(72.14% 0.0252 157.88)",
-          "oklch(83.57% 0.0252 157.88)",
-          "oklch(95% 0.0252 157.88)"
+          "oklch(15.00% 0.1338 122.15)",
+          "oklch(26.43% 0.1338 122.15)",
+          "oklch(37.86% 0.1338 122.15)",
+          "oklch(49.29% 0.1338 122.15)",
+          "oklch(60.71% 0.1338 122.15)",
+          "oklch(72.14% 0.1338 122.15)",
+          "oklch(83.57% 0.1338 122.15)",
+          "oklch(95.00% 0.1338 122.15)"
         ]
       },
-      "workspace": {
-        "role": "neutral",
-        "displayName": "Mesa clara",
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "primary hover",
         "tonalRamp": [
-          "oklch(15% 0.0034 145.55)",
-          "oklch(26.43% 0.0034 145.55)",
-          "oklch(37.86% 0.0034 145.55)",
-          "oklch(49.29% 0.0034 145.55)",
-          "oklch(60.71% 0.0034 145.55)",
-          "oklch(72.14% 0.0034 145.55)",
-          "oklch(83.57% 0.0034 145.55)",
-          "oklch(95% 0.0034 145.55)"
+          "oklch(15.00% 0.1420 124.29)",
+          "oklch(26.43% 0.1420 124.29)",
+          "oklch(37.86% 0.1420 124.29)",
+          "oklch(49.29% 0.1420 124.29)",
+          "oklch(60.71% 0.1420 124.29)",
+          "oklch(72.14% 0.1420 124.29)",
+          "oklch(83.57% 0.1420 124.29)",
+          "oklch(95.00% 0.1420 124.29)"
         ]
       },
       "paper": {
         "role": "neutral",
-        "displayName": "Papel",
+        "displayName": "paper",
         "tonalRamp": [
-          "oklch(15% 0.0000 0.00)",
-          "oklch(26.43% 0.0000 0.00)",
-          "oklch(37.86% 0.0000 0.00)",
-          "oklch(49.29% 0.0000 0.00)",
-          "oklch(60.71% 0.0000 0.00)",
-          "oklch(72.14% 0.0000 0.00)",
-          "oklch(83.57% 0.0000 0.00)",
-          "oklch(95% 0.0000 0.00)"
+          "oklch(15.00% 0.0051 145.37)",
+          "oklch(26.43% 0.0051 145.37)",
+          "oklch(37.86% 0.0051 145.37)",
+          "oklch(49.29% 0.0051 145.37)",
+          "oklch(60.71% 0.0051 145.37)",
+          "oklch(72.14% 0.0051 145.37)",
+          "oklch(83.57% 0.0051 145.37)",
+          "oklch(95.00% 0.0051 145.37)"
+        ]
+      },
+      "raised": {
+        "role": "neutral",
+        "displayName": "raised",
+        "tonalRamp": [
+          "oklch(15.00% 0.0064 134.97)",
+          "oklch(26.43% 0.0064 134.97)",
+          "oklch(37.86% 0.0064 134.97)",
+          "oklch(49.29% 0.0064 134.97)",
+          "oklch(60.71% 0.0064 134.97)",
+          "oklch(72.14% 0.0064 134.97)",
+          "oklch(83.57% 0.0064 134.97)",
+          "oklch(95.00% 0.0064 134.97)"
         ]
       },
       "line": {
         "role": "neutral",
-        "displayName": "Línea",
+        "displayName": "line",
         "tonalRamp": [
-          "oklch(15% 0.0103 145.49)",
-          "oklch(26.43% 0.0103 145.49)",
-          "oklch(37.86% 0.0103 145.49)",
-          "oklch(49.29% 0.0103 145.49)",
-          "oklch(60.71% 0.0103 145.49)",
-          "oklch(72.14% 0.0103 145.49)",
-          "oklch(83.57% 0.0103 145.49)",
-          "oklch(95% 0.0103 145.49)"
+          "oklch(15.00% 0.0060 134.92)",
+          "oklch(26.43% 0.0060 134.92)",
+          "oklch(37.86% 0.0060 134.92)",
+          "oklch(49.29% 0.0060 134.92)",
+          "oklch(60.71% 0.0060 134.92)",
+          "oklch(72.14% 0.0060 134.92)",
+          "oklch(83.57% 0.0060 134.92)",
+          "oklch(95.00% 0.0060 134.92)"
         ]
       },
-      "sage": {
-        "role": "primary",
-        "displayName": "Salvia de selección",
-        "tonalRamp": [
-          "oklch(15% 0.0109 149.86)",
-          "oklch(26.43% 0.0109 149.86)",
-          "oklch(37.86% 0.0109 149.86)",
-          "oklch(49.29% 0.0109 149.86)",
-          "oklch(60.71% 0.0109 149.86)",
-          "oklch(72.14% 0.0109 149.86)",
-          "oklch(83.57% 0.0109 149.86)",
-          "oklch(95% 0.0109 149.86)"
-        ]
-      },
-      "illustration-sage": {
-        "role": "secondary",
-        "displayName": "Salvia de ilustración",
-        "tonalRamp": [
-          "oklch(15% 0.0130 141.81)",
-          "oklch(26.43% 0.0130 141.81)",
-          "oklch(37.86% 0.0130 141.81)",
-          "oklch(49.29% 0.0130 141.81)",
-          "oklch(60.71% 0.0130 141.81)",
-          "oklch(72.14% 0.0130 141.81)",
-          "oklch(83.57% 0.0130 141.81)",
-          "oklch(95% 0.0130 141.81)"
-        ]
-      },
-      "illustration-blue": {
-        "role": "secondary",
-        "displayName": "Azul de ilustración",
-        "tonalRamp": [
-          "oklch(15% 0.0121 247.95)",
-          "oklch(26.43% 0.0121 247.95)",
-          "oklch(37.86% 0.0121 247.95)",
-          "oklch(49.29% 0.0121 247.95)",
-          "oklch(60.71% 0.0121 247.95)",
-          "oklch(72.14% 0.0121 247.95)",
-          "oklch(83.57% 0.0121 247.95)",
-          "oklch(95% 0.0121 247.95)"
-        ]
-      },
-      "illustration-sand": {
-        "role": "secondary",
-        "displayName": "Arena de ilustración",
-        "tonalRamp": [
-          "oklch(15% 0.0194 90.55)",
-          "oklch(26.43% 0.0194 90.55)",
-          "oklch(37.86% 0.0194 90.55)",
-          "oklch(49.29% 0.0194 90.55)",
-          "oklch(60.71% 0.0194 90.55)",
-          "oklch(72.14% 0.0194 90.55)",
-          "oklch(83.57% 0.0194 90.55)",
-          "oklch(95% 0.0194 90.55)"
-        ]
-      },
-      "focus": {
-        "role": "primary",
-        "displayName": "Verde de foco",
-        "tonalRamp": [
-          "oklch(15% 0.0758 162.65)",
-          "oklch(26.43% 0.0758 162.65)",
-          "oklch(37.86% 0.0758 162.65)",
-          "oklch(49.29% 0.0758 162.65)",
-          "oklch(60.71% 0.0758 162.65)",
-          "oklch(72.14% 0.0758 162.65)",
-          "oklch(83.57% 0.0758 162.65)",
-          "oklch(95% 0.0758 162.65)"
-        ]
-      },
-      "end-background": {
-        "role": "secondary",
-        "displayName": "Terracota de cierre: fondo",
-        "tonalRamp": [
-          "oklch(15% 0.0121 43.28)",
-          "oklch(26.43% 0.0121 43.28)",
-          "oklch(37.86% 0.0121 43.28)",
-          "oklch(49.29% 0.0121 43.28)",
-          "oklch(60.71% 0.0121 43.28)",
-          "oklch(72.14% 0.0121 43.28)",
-          "oklch(83.57% 0.0121 43.28)",
-          "oklch(95% 0.0121 43.28)"
-        ]
-      },
-      "end-text": {
-        "role": "secondary",
-        "displayName": "Terracota de cierre: texto",
-        "tonalRamp": [
-          "oklch(15% 0.1102 34.48)",
-          "oklch(26.43% 0.1102 34.48)",
-          "oklch(37.86% 0.1102 34.48)",
-          "oklch(49.29% 0.1102 34.48)",
-          "oklch(60.71% 0.1102 34.48)",
-          "oklch(72.14% 0.1102 34.48)",
-          "oklch(83.57% 0.1102 34.48)",
-          "oklch(95% 0.1102 34.48)"
-        ]
-      },
-      "map-decision": {
-        "role": "secondary",
-        "displayName": "Decisión del procedimiento",
-        "tonalRamp": [
-          "oklch(15% 0.0136 92.98)",
-          "oklch(26.43% 0.0136 92.98)",
-          "oklch(37.86% 0.0136 92.98)",
-          "oklch(49.29% 0.0136 92.98)",
-          "oklch(60.71% 0.0136 92.98)",
-          "oklch(72.14% 0.0136 92.98)",
-          "oklch(83.57% 0.0136 92.98)",
-          "oklch(95% 0.0136 92.98)"
-        ]
-      },
-      "map-connection": {
-        "role": "secondary",
-        "displayName": "Conexión entre acciones",
-        "tonalRamp": [
-          "oklch(15% 0.0341 156.76)",
-          "oklch(26.43% 0.0341 156.76)",
-          "oklch(37.86% 0.0341 156.76)",
-          "oklch(49.29% 0.0341 156.76)",
-          "oklch(60.71% 0.0341 156.76)",
-          "oklch(72.14% 0.0341 156.76)",
-          "oklch(83.57% 0.0341 156.76)",
-          "oklch(95% 0.0341 156.76)"
-        ]
-      },
-      "process-image": {
+      "panel": {
         "role": "neutral",
-        "displayName": "Superficie de captura",
+        "displayName": "panel",
         "tonalRamp": [
-          "oklch(15% 0.0079 139.44)",
-          "oklch(26.43% 0.0079 139.44)",
-          "oklch(37.86% 0.0079 139.44)",
-          "oklch(49.29% 0.0079 139.44)",
-          "oklch(60.71% 0.0079 139.44)",
-          "oklch(72.14% 0.0079 139.44)",
-          "oklch(83.57% 0.0079 139.44)",
-          "oklch(95% 0.0079 139.44)"
+          "oklch(15.00% 0.0106 132.74)",
+          "oklch(26.43% 0.0106 132.74)",
+          "oklch(37.86% 0.0106 132.74)",
+          "oklch(49.29% 0.0106 132.74)",
+          "oklch(60.71% 0.0106 132.74)",
+          "oklch(72.14% 0.0106 132.74)",
+          "oklch(83.57% 0.0106 132.74)",
+          "oklch(95.00% 0.0106 132.74)"
         ]
       },
-      "process-reason": {
-        "role": "secondary",
-        "displayName": "Fondo del motivo",
-        "tonalRamp": [
-          "oklch(15% 0.0123 137.78)",
-          "oklch(26.43% 0.0123 137.78)",
-          "oklch(37.86% 0.0123 137.78)",
-          "oklch(49.29% 0.0123 137.78)",
-          "oklch(60.71% 0.0123 137.78)",
-          "oklch(72.14% 0.0123 137.78)",
-          "oklch(83.57% 0.0123 137.78)",
-          "oklch(95% 0.0123 137.78)"
-        ]
-      },
-      "knowledge-topic": {
-        "role": "secondary",
-        "displayName": "Tema o actividad compartida",
-        "tonalRamp": [
-          "oklch(15% 0.0212 127.39)",
-          "oklch(26.43% 0.0212 127.39)",
-          "oklch(37.86% 0.0212 127.39)",
-          "oklch(49.29% 0.0212 127.39)",
-          "oklch(60.71% 0.0212 127.39)",
-          "oklch(72.14% 0.0212 127.39)",
-          "oklch(83.57% 0.0212 127.39)",
-          "oklch(95% 0.0212 127.39)"
-        ]
-      },
-      "knowledge-active": {
-        "role": "secondary",
-        "displayName": "Relación seleccionada",
-        "tonalRamp": [
-          "oklch(15% 0.0622 154.76)",
-          "oklch(26.43% 0.0622 154.76)",
-          "oklch(37.86% 0.0622 154.76)",
-          "oklch(49.29% 0.0622 154.76)",
-          "oklch(60.71% 0.0622 154.76)",
-          "oklch(72.14% 0.0622 154.76)",
-          "oklch(83.57% 0.0622 154.76)",
-          "oklch(95% 0.0622 154.76)"
-        ]
-      },
-      "knowledge-link": {
-        "role": "secondary",
-        "displayName": "Conexión discreta",
-        "tonalRamp": [
-          "oklch(15% 0.0263 134.30)",
-          "oklch(26.43% 0.0263 134.30)",
-          "oklch(37.86% 0.0263 134.30)",
-          "oklch(49.29% 0.0263 134.30)",
-          "oklch(60.71% 0.0263 134.30)",
-          "oklch(72.14% 0.0263 134.30)",
-          "oklch(83.57% 0.0263 134.30)",
-          "oklch(95% 0.0263 134.30)"
-        ]
-      },
-      "collection-select-ink": {
+      "field": {
         "role": "neutral",
-        "displayName": "Texto de selectores",
+        "displayName": "field",
         "tonalRamp": [
-          "oklch(15% 0.0337 146.33)",
-          "oklch(26.43% 0.0337 146.33)",
-          "oklch(37.86% 0.0337 146.33)",
-          "oklch(49.29% 0.0337 146.33)",
-          "oklch(60.71% 0.0337 146.33)",
-          "oklch(72.14% 0.0337 146.33)",
-          "oklch(83.57% 0.0337 146.33)",
-          "oklch(95% 0.0337 146.33)"
+          "oklch(15.00% 0.0068 135.02)",
+          "oklch(26.43% 0.0068 135.02)",
+          "oklch(37.86% 0.0068 135.02)",
+          "oklch(49.29% 0.0068 135.02)",
+          "oklch(60.71% 0.0068 135.02)",
+          "oklch(72.14% 0.0068 135.02)",
+          "oklch(83.57% 0.0068 135.02)",
+          "oklch(95.00% 0.0068 135.02)"
         ]
       },
-      "collection-ink": {
+      "field-border": {
         "role": "neutral",
-        "displayName": "Texto de procesos y nodos",
+        "displayName": "field border",
         "tonalRamp": [
-          "oklch(15% 0.0336 146.35)",
-          "oklch(26.43% 0.0336 146.35)",
-          "oklch(37.86% 0.0336 146.35)",
-          "oklch(49.29% 0.0336 146.35)",
-          "oklch(60.71% 0.0336 146.35)",
-          "oklch(72.14% 0.0336 146.35)",
-          "oklch(83.57% 0.0336 146.35)",
-          "oklch(95% 0.0336 146.35)"
+          "oklch(15.00% 0.0220 127.52)",
+          "oklch(26.43% 0.0220 127.52)",
+          "oklch(37.86% 0.0220 127.52)",
+          "oklch(49.29% 0.0220 127.52)",
+          "oklch(60.71% 0.0220 127.52)",
+          "oklch(72.14% 0.0220 127.52)",
+          "oklch(83.57% 0.0220 127.52)",
+          "oklch(95.00% 0.0220 127.52)"
         ]
       },
-      "collection-bookmark-ink": {
+      "control": {
         "role": "neutral",
-        "displayName": "Marcador de proceso",
+        "displayName": "control",
         "tonalRamp": [
-          "oklch(15% 0.0721 133.78)",
-          "oklch(26.43% 0.0721 133.78)",
-          "oklch(37.86% 0.0721 133.78)",
-          "oklch(49.29% 0.0721 133.78)",
-          "oklch(60.71% 0.0721 133.78)",
-          "oklch(72.14% 0.0721 133.78)",
-          "oklch(83.57% 0.0721 133.78)",
-          "oklch(95% 0.0721 133.78)"
+          "oklch(15.00% 0.0093 113.16)",
+          "oklch(26.43% 0.0093 113.16)",
+          "oklch(37.86% 0.0093 113.16)",
+          "oklch(49.29% 0.0093 113.16)",
+          "oklch(60.71% 0.0093 113.16)",
+          "oklch(72.14% 0.0093 113.16)",
+          "oklch(83.57% 0.0093 113.16)",
+          "oklch(95.00% 0.0093 113.16)"
         ]
       },
-      "collection-muted": {
+      "control-ink": {
         "role": "neutral",
-        "displayName": "Texto secundario de colección",
+        "displayName": "control ink",
         "tonalRamp": [
-          "oklch(15% 0.0359 136.32)",
-          "oklch(26.43% 0.0359 136.32)",
-          "oklch(37.86% 0.0359 136.32)",
-          "oklch(49.29% 0.0359 136.32)",
-          "oklch(60.71% 0.0359 136.32)",
-          "oklch(72.14% 0.0359 136.32)",
-          "oklch(83.57% 0.0359 136.32)",
-          "oklch(95% 0.0359 136.32)"
+          "oklch(15.00% 0.0143 126.55)",
+          "oklch(26.43% 0.0143 126.55)",
+          "oklch(37.86% 0.0143 126.55)",
+          "oklch(49.29% 0.0143 126.55)",
+          "oklch(60.71% 0.0143 126.55)",
+          "oklch(72.14% 0.0143 126.55)",
+          "oklch(83.57% 0.0143 126.55)",
+          "oklch(95.00% 0.0143 126.55)"
         ]
       },
-      "knowledge-label": {
+      "selected": {
         "role": "neutral",
-        "displayName": "Etiquetas del mapa de colección",
+        "displayName": "selected",
         "tonalRamp": [
-          "oklch(15% 0.0403 138.62)",
-          "oklch(26.43% 0.0403 138.62)",
-          "oklch(37.86% 0.0403 138.62)",
-          "oklch(49.29% 0.0403 138.62)",
-          "oklch(60.71% 0.0403 138.62)",
-          "oklch(72.14% 0.0403 138.62)",
-          "oklch(83.57% 0.0403 138.62)",
-          "oklch(95% 0.0403 138.62)"
+          "oklch(15.00% 0.0362 128.05)",
+          "oklch(26.43% 0.0362 128.05)",
+          "oklch(37.86% 0.0362 128.05)",
+          "oklch(49.29% 0.0362 128.05)",
+          "oklch(60.71% 0.0362 128.05)",
+          "oklch(72.14% 0.0362 128.05)",
+          "oklch(83.57% 0.0362 128.05)",
+          "oklch(95.00% 0.0362 128.05)"
         ]
       },
-      "collection-count": {
+      "selected-ink": {
         "role": "neutral",
-        "displayName": "Conteo por departamento",
+        "displayName": "selected ink",
         "tonalRamp": [
-          "oklch(15% 0.0388 135.74)",
-          "oklch(26.43% 0.0388 135.74)",
-          "oklch(37.86% 0.0388 135.74)",
-          "oklch(49.29% 0.0388 135.74)",
-          "oklch(60.71% 0.0388 135.74)",
-          "oklch(72.14% 0.0388 135.74)",
-          "oklch(83.57% 0.0388 135.74)",
-          "oklch(95% 0.0388 135.74)"
+          "oklch(15.00% 0.0641 123.78)",
+          "oklch(26.43% 0.0641 123.78)",
+          "oklch(37.86% 0.0641 123.78)",
+          "oklch(49.29% 0.0641 123.78)",
+          "oklch(60.71% 0.0641 123.78)",
+          "oklch(72.14% 0.0641 123.78)",
+          "oklch(83.57% 0.0641 123.78)",
+          "oklch(95.00% 0.0641 123.78)"
         ]
       },
-      "collection-row-meta": {
+      "error": {
         "role": "neutral",
-        "displayName": "Metadatos de fila",
+        "displayName": "error",
         "tonalRamp": [
-          "oklch(15% 0.0315 135.15)",
-          "oklch(26.43% 0.0315 135.15)",
-          "oklch(37.86% 0.0315 135.15)",
-          "oklch(49.29% 0.0315 135.15)",
-          "oklch(60.71% 0.0315 135.15)",
-          "oklch(72.14% 0.0315 135.15)",
-          "oklch(83.57% 0.0315 135.15)",
-          "oklch(95% 0.0315 135.15)"
+          "oklch(15.00% 0.0901 30.04)",
+          "oklch(26.43% 0.0901 30.04)",
+          "oklch(37.86% 0.0901 30.04)",
+          "oklch(49.29% 0.0901 30.04)",
+          "oklch(60.71% 0.0901 30.04)",
+          "oklch(72.14% 0.0901 30.04)",
+          "oklch(83.57% 0.0901 30.04)",
+          "oklch(95.00% 0.0901 30.04)"
         ]
       },
-      "knowledge-proof-meta": {
+      "warning": {
         "role": "neutral",
-        "displayName": "Campo de origen de evidencia",
+        "displayName": "warning",
         "tonalRamp": [
-          "oklch(15% 0.0422 133.00)",
-          "oklch(26.43% 0.0422 133.00)",
-          "oklch(37.86% 0.0422 133.00)",
-          "oklch(49.29% 0.0422 133.00)",
-          "oklch(60.71% 0.0422 133.00)",
-          "oklch(72.14% 0.0422 133.00)",
-          "oklch(83.57% 0.0422 133.00)",
-          "oklch(95% 0.0422 133.00)"
+          "oklch(15.00% 0.0798 80.81)",
+          "oklch(26.43% 0.0798 80.81)",
+          "oklch(37.86% 0.0798 80.81)",
+          "oklch(49.29% 0.0798 80.81)",
+          "oklch(60.71% 0.0798 80.81)",
+          "oklch(72.14% 0.0798 80.81)",
+          "oklch(83.57% 0.0798 80.81)",
+          "oklch(95.00% 0.0798 80.81)"
         ]
       },
-      "knowledge-minimap-topic": {
-        "role": "secondary",
-        "displayName": "Tema en minimapa",
-        "tonalRamp": [
-          "oklch(15% 0.0630 140.39)",
-          "oklch(26.43% 0.0630 140.39)",
-          "oklch(37.86% 0.0630 140.39)",
-          "oklch(49.29% 0.0630 140.39)",
-          "oklch(60.71% 0.0630 140.39)",
-          "oklch(72.14% 0.0630 140.39)",
-          "oklch(83.57% 0.0630 140.39)",
-          "oklch(95% 0.0630 140.39)"
-        ]
-      },
-      "knowledge-legend-border": {
+      "particle": {
         "role": "neutral",
-        "displayName": "Borde de símbolos de leyenda",
+        "displayName": "particle",
         "tonalRamp": [
-          "oklch(15% 0.0496 132.30)",
-          "oklch(26.43% 0.0496 132.30)",
-          "oklch(37.86% 0.0496 132.30)",
-          "oklch(49.29% 0.0496 132.30)",
-          "oklch(60.71% 0.0496 132.30)",
-          "oklch(72.14% 0.0496 132.30)",
-          "oklch(83.57% 0.0496 132.30)",
-          "oklch(95% 0.0496 132.30)"
+          "oklch(15.00% 0.1360 122.32)",
+          "oklch(26.43% 0.1360 122.32)",
+          "oklch(37.86% 0.1360 122.32)",
+          "oklch(49.29% 0.1360 122.32)",
+          "oklch(60.71% 0.1360 122.32)",
+          "oklch(72.14% 0.1360 122.32)",
+          "oklch(83.57% 0.1360 122.32)",
+          "oklch(95.00% 0.1360 122.32)"
         ]
       },
-      "knowledge-topic-border": {
+      "particle-muted": {
         "role": "neutral",
-        "displayName": "Borde de tema",
+        "displayName": "particle muted",
         "tonalRamp": [
-          "oklch(15% 0.0569 134.98)",
-          "oklch(26.43% 0.0569 134.98)",
-          "oklch(37.86% 0.0569 134.98)",
-          "oklch(49.29% 0.0569 134.98)",
-          "oklch(60.71% 0.0569 134.98)",
-          "oklch(72.14% 0.0569 134.98)",
-          "oklch(83.57% 0.0569 134.98)",
-          "oklch(95% 0.0569 134.98)"
+          "oklch(15.00% 0.0530 121.17)",
+          "oklch(26.43% 0.0530 121.17)",
+          "oklch(37.86% 0.0530 121.17)",
+          "oklch(49.29% 0.0530 121.17)",
+          "oklch(60.71% 0.0530 121.17)",
+          "oklch(72.14% 0.0530 121.17)",
+          "oklch(83.57% 0.0530 121.17)",
+          "oklch(95.00% 0.0530 121.17)"
         ]
       },
-      "knowledge-process-border": {
+      "map-process": {
         "role": "neutral",
-        "displayName": "Borde de proceso",
+        "displayName": "map process",
         "tonalRamp": [
-          "oklch(15% 0.0446 131.10)",
-          "oklch(26.43% 0.0446 131.10)",
-          "oklch(37.86% 0.0446 131.10)",
-          "oklch(49.29% 0.0446 131.10)",
-          "oklch(60.71% 0.0446 131.10)",
-          "oklch(72.14% 0.0446 131.10)",
-          "oklch(83.57% 0.0446 131.10)",
-          "oklch(95% 0.0446 131.10)"
+          "oklch(15.00% 0.0258 131.10)",
+          "oklch(26.43% 0.0258 131.10)",
+          "oklch(37.86% 0.0258 131.10)",
+          "oklch(49.29% 0.0258 131.10)",
+          "oklch(60.71% 0.0258 131.10)",
+          "oklch(72.14% 0.0258 131.10)",
+          "oklch(83.57% 0.0258 131.10)",
+          "oklch(95.00% 0.0258 131.10)"
         ]
       },
-      "collection-field-border": {
+      "map-topic": {
         "role": "neutral",
-        "displayName": "Borde de selectores",
+        "displayName": "map topic",
         "tonalRamp": [
-          "oklch(15% 0.0239 131.18)",
-          "oklch(26.43% 0.0239 131.18)",
-          "oklch(37.86% 0.0239 131.18)",
-          "oklch(49.29% 0.0239 131.18)",
-          "oklch(60.71% 0.0239 131.18)",
-          "oklch(72.14% 0.0239 131.18)",
-          "oklch(83.57% 0.0239 131.18)",
-          "oklch(95% 0.0239 131.18)"
-        ]
-      },
-      "collection-department-line": {
-        "role": "neutral",
-        "displayName": "Divisor de departamento",
-        "tonalRamp": [
-          "oklch(15% 0.0209 131.48)",
-          "oklch(26.43% 0.0209 131.48)",
-          "oklch(37.86% 0.0209 131.48)",
-          "oklch(49.29% 0.0209 131.48)",
-          "oklch(60.71% 0.0209 131.48)",
-          "oklch(72.14% 0.0209 131.48)",
-          "oklch(83.57% 0.0209 131.48)",
-          "oklch(95% 0.0209 131.48)"
-        ]
-      },
-      "knowledge-frame-line": {
-        "role": "neutral",
-        "displayName": "Borde de lienzo e inspector",
-        "tonalRamp": [
-          "oklch(15% 0.0221 130.04)",
-          "oklch(26.43% 0.0221 130.04)",
-          "oklch(37.86% 0.0221 130.04)",
-          "oklch(49.29% 0.0221 130.04)",
-          "oklch(60.71% 0.0221 130.04)",
-          "oklch(72.14% 0.0221 130.04)",
-          "oklch(83.57% 0.0221 130.04)",
-          "oklch(95% 0.0221 130.04)"
-        ]
-      },
-      "knowledge-grid": {
-        "role": "neutral",
-        "displayName": "Puntos del lienzo de colección",
-        "tonalRamp": [
-          "oklch(15% 0.0196 133.09)",
-          "oklch(26.43% 0.0196 133.09)",
-          "oklch(37.86% 0.0196 133.09)",
-          "oklch(49.29% 0.0196 133.09)",
-          "oklch(60.71% 0.0196 133.09)",
-          "oklch(72.14% 0.0196 133.09)",
-          "oklch(83.57% 0.0196 133.09)",
-          "oklch(95% 0.0196 133.09)"
-        ]
-      },
-      "knowledge-selection-ring": {
-        "role": "secondary",
-        "displayName": "Anillo de nodo seleccionado",
-        "tonalRamp": [
-          "oklch(15% 0.0338 131.36)",
-          "oklch(26.43% 0.0338 131.36)",
-          "oklch(37.86% 0.0338 131.36)",
-          "oklch(49.29% 0.0338 131.36)",
-          "oklch(60.71% 0.0338 131.36)",
-          "oklch(72.14% 0.0338 131.36)",
-          "oklch(83.57% 0.0338 131.36)",
-          "oklch(95% 0.0338 131.36)"
-        ]
-      },
-      "knowledge-toolbar-line": {
-        "role": "neutral",
-        "displayName": "Divisor de herramientas",
-        "tonalRamp": [
-          "oklch(15% 0.0215 127.41)",
-          "oklch(26.43% 0.0215 127.41)",
-          "oklch(37.86% 0.0215 127.41)",
-          "oklch(49.29% 0.0215 127.41)",
-          "oklch(60.71% 0.0215 127.41)",
-          "oklch(72.14% 0.0215 127.41)",
-          "oklch(83.57% 0.0215 127.41)",
-          "oklch(95% 0.0215 127.41)"
-        ]
-      },
-      "knowledge-minimap-process": {
-        "role": "secondary",
-        "displayName": "Proceso en minimapa",
-        "tonalRamp": [
-          "oklch(15% 0.0219 130.03)",
-          "oklch(26.43% 0.0219 130.03)",
-          "oklch(37.86% 0.0219 130.03)",
-          "oklch(49.29% 0.0219 130.03)",
-          "oklch(60.71% 0.0219 130.03)",
-          "oklch(72.14% 0.0219 130.03)",
-          "oklch(83.57% 0.0219 130.03)",
-          "oklch(95% 0.0219 130.03)"
-        ]
-      },
-      "knowledge-proof-line": {
-        "role": "neutral",
-        "displayName": "Divisor horizontal de evidencia",
-        "tonalRamp": [
-          "oklch(15% 0.0186 127.16)",
-          "oklch(26.43% 0.0186 127.16)",
-          "oklch(37.86% 0.0186 127.16)",
-          "oklch(49.29% 0.0186 127.16)",
-          "oklch(60.71% 0.0186 127.16)",
-          "oklch(72.14% 0.0186 127.16)",
-          "oklch(83.57% 0.0186 127.16)",
-          "oklch(95% 0.0186 127.16)"
-        ]
-      },
-      "collection-row-line": {
-        "role": "neutral",
-        "displayName": "Divisor de filas",
-        "tonalRamp": [
-          "oklch(15% 0.0144 128.64)",
-          "oklch(26.43% 0.0144 128.64)",
-          "oklch(37.86% 0.0144 128.64)",
-          "oklch(49.29% 0.0144 128.64)",
-          "oklch(60.71% 0.0144 128.64)",
-          "oklch(72.14% 0.0144 128.64)",
-          "oklch(83.57% 0.0144 128.64)",
-          "oklch(95% 0.0144 128.64)"
-        ]
-      },
-      "knowledge-legend-topic": {
-        "role": "secondary",
-        "displayName": "Muestra de tema en leyenda",
-        "tonalRamp": [
-          "oklch(15% 0.0254 126.56)",
-          "oklch(26.43% 0.0254 126.56)",
-          "oklch(37.86% 0.0254 126.56)",
-          "oklch(49.29% 0.0254 126.56)",
-          "oklch(60.71% 0.0254 126.56)",
-          "oklch(72.14% 0.0254 126.56)",
-          "oklch(83.57% 0.0254 126.56)",
-          "oklch(95% 0.0254 126.56)"
-        ]
-      },
-      "collection-bookmark-selected": {
-        "role": "secondary",
-        "displayName": "Fondo de marcador activo",
-        "tonalRamp": [
-          "oklch(15% 0.0167 125.29)",
-          "oklch(26.43% 0.0167 125.29)",
-          "oklch(37.86% 0.0167 125.29)",
-          "oklch(49.29% 0.0167 125.29)",
-          "oklch(60.71% 0.0167 125.29)",
-          "oklch(72.14% 0.0167 125.29)",
-          "oklch(83.57% 0.0167 125.29)",
-          "oklch(95% 0.0167 125.29)"
-        ]
-      },
-      "collection-row-hover": {
-        "role": "secondary",
-        "displayName": "Fila bajo el puntero",
-        "tonalRamp": [
-          "oklch(15% 0.0126 126.37)",
-          "oklch(26.43% 0.0126 126.37)",
-          "oklch(37.86% 0.0126 126.37)",
-          "oklch(49.29% 0.0126 126.37)",
-          "oklch(60.71% 0.0126 126.37)",
-          "oklch(72.14% 0.0126 126.37)",
-          "oklch(83.57% 0.0126 126.37)",
-          "oklch(95% 0.0126 126.37)"
-        ]
-      },
-      "knowledge-canvas": {
-        "role": "neutral",
-        "displayName": "Fondo del mapa de colección",
-        "tonalRamp": [
-          "oklch(15% 0.0082 121.63)",
-          "oklch(26.43% 0.0082 121.63)",
-          "oklch(37.86% 0.0082 121.63)",
-          "oklch(49.29% 0.0082 121.63)",
-          "oklch(60.71% 0.0082 121.63)",
-          "oklch(72.14% 0.0082 121.63)",
-          "oklch(83.57% 0.0082 121.63)",
-          "oklch(95% 0.0082 121.63)"
-        ]
-      },
-      "map-arrow": {
-        "role": "secondary",
-        "displayName": "Flecha del procedimiento individual",
-        "tonalRamp": [
-          "oklch(15% 0.0395 161.48)",
-          "oklch(26.43% 0.0395 161.48)",
-          "oklch(37.86% 0.0395 161.48)",
-          "oklch(49.29% 0.0395 161.48)",
-          "oklch(60.71% 0.0395 161.48)",
-          "oklch(72.14% 0.0395 161.48)",
-          "oklch(83.57% 0.0395 161.48)",
-          "oklch(95% 0.0395 161.48)"
-        ]
-      },
-      "map-link-label": {
-        "role": "neutral",
-        "displayName": "Etiqueta de conexión individual",
-        "tonalRamp": [
-          "oklch(15% 0.0361 157.86)",
-          "oklch(26.43% 0.0361 157.86)",
-          "oklch(37.86% 0.0361 157.86)",
-          "oklch(49.29% 0.0361 157.86)",
-          "oklch(60.71% 0.0361 157.86)",
-          "oklch(72.14% 0.0361 157.86)",
-          "oklch(83.57% 0.0361 157.86)",
-          "oklch(95% 0.0361 157.86)"
+          "oklch(15.00% 0.0514 130.95)",
+          "oklch(26.43% 0.0514 130.95)",
+          "oklch(37.86% 0.0514 130.95)",
+          "oklch(49.29% 0.0514 130.95)",
+          "oklch(60.71% 0.0514 130.95)",
+          "oklch(72.14% 0.0514 130.95)",
+          "oklch(83.57% 0.0514 130.95)",
+          "oklch(95.00% 0.0514 130.95)"
         ]
       }
     },
     "typographyMeta": {
-      "headline": {
-        "displayName": "Título de página",
-        "purpose": "Jerarquía principal de escritorio; responsive en Layout."
-      },
-      "title": {
-        "displayName": "Título de sección",
-        "purpose": "Encabezados de bloques."
-      },
-      "card-title": {
-        "displayName": "Título de sesión",
-        "purpose": "Identificar una experiencia de biblioteca."
-      },
-      "body": {
-        "displayName": "Explicación",
-        "purpose": "Acción y propósito del paso."
-      },
-      "button": {
-        "displayName": "Control",
-        "purpose": "Texto del botón base."
-      },
-      "navigation": {
-        "displayName": "Navegación",
-        "purpose": "Filas del espacio de trabajo."
-      },
-      "map-node-title": {
-        "displayName": "Título de nodo",
-        "purpose": "Acción o momento del proceso; tipo y tiempo son metadatos separados."
-      },
-      "process-step-title": {
-        "displayName": "Título operativo",
-        "purpose": "Encabezar cada acción de la guía antes de actividad, tipo y tiempo."
-      },
-      "process-explanation": {
-        "displayName": "Explicación del paso",
-        "purpose": "Instrucciones, motivos y límites junto a la imagen."
-      },
-      "collection-row-title": {
-        "displayName": "Título del proceso en colección",
-        "purpose": "Filas de Biblioteca y Guardados; descripciones y conteos en segundo nivel."
-      },
-      "collection-department": {
-        "displayName": "Departamento",
-        "purpose": "Primer nivel de agrupación, antes de familias de tarea y procesos."
+      "display": {
+        "displayName": "Titular del estudio",
+        "purpose": "Entrada; reduce escala con altura disponible."
       }
     },
-    "shadows": [
-      {
-        "name": "dialog",
-        "value": "0 24px 85px #1e332b30",
-        "purpose": "Separar el diálogo del espacio de trabajo."
-      },
-      {
-        "name": "toast",
-        "value": "0 6px 30px #19332229",
-        "purpose": "Aviso flotante por encima del contenido."
-      },
-      {
-        "name": "mobile-drawer",
-        "value": "10px 0 45px #192f281c",
-        "purpose": "Cajón de navegación móvil abierto."
-      },
-      {
-        "name": "thumbnail-play",
-        "value": "0 3px 12px #30492a1a",
-        "purpose": "Affordance de reproducción sobre una miniatura."
-      },
-      {
-        "name": "knowledge-selection-ring",
-        "value": "0 0 0 3px #d7e4cd",
-        "purpose": "Anillo de selección del nodo del mapa de colección; sin elevación ni desplazamiento."
-      }
-    ],
+    "shadows": [],
     "motion": [
       {
-        "name": "ease",
+        "name": "ease-standard",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "Curva de entrada y salida del cajón móvil; --ease."
+        "purpose": "Curva heredada; estados de controles."
       },
       {
-        "name": "drawer",
-        "value": "transform 0.28s var(--ease)",
-        "purpose": "Navegación móvil."
-      },
-      {
-        "name": "button-state",
-        "value": "background 0.18s, color 0.18s, border-color 0.18s",
-        "purpose": "Estados de botones."
-      },
-      {
-        "name": "card-border",
-        "value": "border-color 0.2s",
-        "purpose": "Hover de tarjeta."
-      },
-      {
-        "name": "connection-spinner",
-        "value": "rotate 1.1s linear infinite",
-        "purpose": "Solo conexión pendiente."
-      },
-      {
-        "name": "reduced-motion",
-        "value": "animation: none !important; transition: none !important; scroll-behavior: auto !important",
-        "purpose": "Aplicar bajo prefers-reduced-motion: reduce."
-      },
-      {
-        "name": "process-map-step-focus",
-        "value": "duration: 0",
-        "purpose": "Centrar el nodo elegido desde el selector y anterior/siguiente sin transición de cámara."
+        "name": "particle-frame",
+        "value": "32ms",
+        "purpose": "Cadencia acotada del Canvas, con pausa y movimiento reducido."
       }
     ],
     "breakpoints": [
       {
-        "name": "wide-min",
-        "value": "1500px"
-      },
-      {
-        "name": "compact-desktop-max",
-        "value": "1200px"
-      },
-      {
-        "name": "tablet-max",
-        "value": "1000px"
-      },
-      {
-        "name": "mobile-max",
+        "name": "mobile",
         "value": "700px"
       },
       {
-        "name": "process-map-stacked-max",
-        "value": "950px"
+        "name": "compact-desktop",
+        "value": "1000px"
       },
       {
-        "name": "process-map-mobile-max",
-        "value": "580px"
-      },
-      {
-        "name": "process-guide-compact-max",
-        "value": "1100px"
-      },
-      {
-        "name": "knowledge-map-stacked-max",
+        "name": "short-desktop-height",
         "value": "800px"
-      },
-      {
-        "name": "knowledge-collection-mobile-max",
-        "value": "520px"
       }
     ]
   },
   "components": [
     {
-      "name": "Acción principal",
+      "name": "Entrar a mi espacio",
       "kind": "button",
-      "refersTo": "button-primary",
-      "description": "Variante real del control base de UserHelper.",
-      "html": "<button class=\"ds-button-primary\" type=\"button\">Guardar y ver sesión<svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button>",
-      "css": ".ds-button-primary{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:10px 15px;font-size:12px;font-weight:670;border-radius:8px;line-height:1.4;cursor:pointer;transition:background .18s,color .18s,border-color .18s;background:var(--green,#285744);color:#fff;border:1px solid var(--green,#285744);}.ds-button-primary:hover:not(:disabled){background:var(--green-deep,#1e4435);border-color:var(--green-deep,#1e4435);}.ds-button-primary:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-button-primary:disabled{cursor:not-allowed;opacity:.46;}@media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none;}}"
+      "description": "Entrar a mi espacio",
+      "html": "<button class=\"ds-entry\">Entrar a mi espacio →</button>",
+      "css": ".ds-entry{font-family:\"Manrope Variable\",Manrope,sans-serif;font-size:13px;border-radius:7px;background:#f1f2eb;color:#141710;border:0;padding:12px 16px;min-height:44px}.ds-entry:hover{background:#dcfa92}.ds-entry:focus-visible{outline:2px solid #dcfa92;outline-offset:4px}",
+      "refersTo": "entry-button"
+    },
+    {
+      "name": "Acción del espacio",
+      "kind": "button",
+      "description": "Acción del espacio",
+      "html": "<button class=\"ds-primary\">Iniciar conversación</button>",
+      "css": ".ds-primary{font-family:\"Manrope Variable\",Manrope,sans-serif;font-size:13px;border-radius:7px;background:var(--green,#dcfa92);color:#151a0d;border:0;padding:16px 24px}.ds-primary:hover{background:#c4e87b}.ds-primary:focus-visible{outline:2px solid #dcfa92;outline-offset:4px}",
+      "refersTo": "button-primary"
     },
     {
       "name": "Acción secundaria",
       "kind": "button",
-      "refersTo": "button-secondary",
-      "description": "Variante real del control base de UserHelper.",
-      "html": "<button class=\"ds-button-secondary\" type=\"button\">Volver</button>",
-      "css": ".ds-button-secondary{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:10px 15px;font-size:12px;font-weight:670;border-radius:8px;line-height:1.4;cursor:pointer;transition:background .18s,color .18s,border-color .18s;background:#fff;color:#435848;border:1px solid #dce4db;}.ds-button-secondary:hover:not(:disabled){background:#f0f5ef;border-color:#a6baa7;}.ds-button-secondary:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-button-secondary:disabled{cursor:not-allowed;opacity:.46;}@media(prefers-reduced-motion:reduce){.ds-button-secondary{transition:none;}}"
+      "description": "Acción secundaria",
+      "html": "<button class=\"ds-secondary\">Volver a intentar</button>",
+      "css": ".ds-secondary{font-family:\"Manrope Variable\",Manrope,sans-serif;font-size:13px;border-radius:7px;background:#1b2116;color:#d3ddc4;border:1px solid #4e5d41;padding:12px 16px}.ds-secondary:hover{background:#2c3623}.ds-secondary:focus-visible{outline:2px solid #dcfa92;outline-offset:4px}"
     },
     {
-      "name": "Finalizar sesión",
-      "kind": "button",
-      "refersTo": "button-end",
-      "description": "Variante real del control base de UserHelper.",
-      "html": "<button class=\"ds-button-end\" type=\"button\">Finalizar</button>",
-      "css": ".ds-button-end{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:10px 15px;font-size:12px;font-weight:670;border-radius:8px;line-height:1.4;cursor:pointer;transition:background .18s,color .18s,border-color .18s;background:#f9efeb;color:#a45441;border:1px solid #efd9d0;}.ds-button-end:hover:not(:disabled){background:#f3e0d7;}.ds-button-end:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-button-end:disabled{cursor:not-allowed;opacity:.46;}@media(prefers-reduced-motion:reduce){.ds-button-end{transition:none;}}"
-    },
-    {
-      "name": "Acción de texto",
-      "kind": "button",
-      "refersTo": "button-text",
-      "description": "Enlaces internos de acción como abrir la biblioteca o avanzar un paso.",
-      "html": "<button class=\"ds-text-button\" type=\"button\">Ver biblioteca<svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button>",
-      "css": ".ds-text-button{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:5px 0;color:var(--green,#285744);font-size:12px;font-weight:730;border-radius:3px;background:none;border:0;cursor:pointer}.ds-text-button:hover:not(:disabled){text-decoration:underline;text-underline-offset:4px}.ds-text-button:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-text-button:disabled{cursor:not-allowed;opacity:.46}"
-    },
-    {
-      "name": "Búsqueda",
+      "name": "Nombre",
       "kind": "input",
-      "refersTo": "search-field",
-      "description": "Campo de búsqueda con foco aplicado al contenedor.",
-      "html": "<label class=\"ds-search\"><svg aria-hidden=\"true\" width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input type=\"search\" aria-label=\"Buscar sesiones\" placeholder=\"Buscar una experiencia…\"/></label>",
-      "css": ".ds-search{font-family:\"Manrope Variable\",Manrope,sans-serif;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #dbe3d7;padding:0 13px;border-radius:9px;min-height:45px;max-width:600px;color:#7d8d77}.ds-search:focus-within{border-color:#588064;outline:2px solid #cee3d0;outline-offset:1px}.ds-search input{font-family:\"Manrope Variable\",Manrope,sans-serif;border:0;padding:12px 0;background:none;min-width:0;width:100%;font-size:12px;color:#3b4d35;outline:none;caret-color:var(--green,#285744)}.ds-search input::placeholder{color:#73816e}"
+      "description": "Nombre",
+      "html": "<label class=\"ds-label\">¿Cómo te llamas?<input class=\"ds-input\" placeholder=\"Tu nombre\" /></label>",
+      "css": ".ds-label{display:grid;gap:8px;color:#eeeeeb;font-family:\"Manrope Variable\",Manrope,sans-serif;font-size:13px;border-radius:7px;}.ds-input{font-family:\"Manrope Variable\",Manrope,sans-serif;font-size:13px;border-radius:7px;font-size:16px;background:#10120f;color:#eeeeeb;border:1px solid #52584b;padding:12px 14px;caret-color:#dcfa92}.ds-input::placeholder{color:#959b91}.ds-input:focus-visible{outline:2px solid #dcfa92;outline-offset:4px}",
+      "refersTo": "entry-input"
     },
     {
-      "name": "Navegación lateral",
+      "name": "Navegación seleccionada",
       "kind": "nav",
-      "refersTo": "navigation-selected",
-      "description": "Fila seleccionada y fila neutra del espacio de trabajo.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Espacio de trabajo\"><button type=\"button\" class=\"ds-selected\" aria-current=\"page\"><svg aria-hidden=\"true\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M3 3v7h7V3zM14 3v7h7V3zM3 14v7h7v-7zM14 14v7h7v-7z\"/></svg>Mi espacio</button><button type=\"button\"><svg aria-hidden=\"true\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M4 4h6a2 2 0 0 1 2 2v15a3 3 0 0 0-3-3H4zM20 4h-6a2 2 0 0 0-2 2v15a3 3 0 0 1 3-3h5z\"/></svg>Biblioteca</button></nav>",
-      "css": ".ds-nav{display:grid;gap:5px;width:220px}.ds-nav button{font-family:\"Manrope Variable\",Manrope,sans-serif;display:flex;align-items:center;gap:12px;padding:13px;width:100%;text-align:left;border:0;border-radius:9px;font-size:12px;font-weight:580;color:#66716b;background:none;cursor:pointer;transition:background .15s}.ds-nav button:hover{background:#f4f6f3;color:var(--ink,#26352f)}.ds-nav button.ds-selected{background:var(--sage,#eaf1eb);color:var(--green,#285744);font-weight:740}.ds-nav button:focus-visible{outline:3px solid #437e63;outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-nav button{transition:none}}"
+      "description": "Navegación seleccionada",
+      "html": "<nav><button class=\"ds-nav\" aria-current=\"page\">Mi espacio</button></nav>",
+      "css": ".ds-nav{font-family:\"Manrope Variable\",Manrope,sans-serif;font-size:13px;border-radius:7px;background:#292f21;color:#e1f4c2;border:0;padding:13px;min-height:46px}.ds-nav:hover{background:#252a1f}.ds-nav:focus-visible{outline:2px solid #dcfa92;outline-offset:4px}"
     },
     {
-      "name": "Filtros de biblioteca",
-      "kind": "chip",
-      "refersTo": "filter-chip",
-      "description": "Chips de filtro en estado neutro y seleccionado.",
-      "html": "<div class=\"ds-filters\"><button class=\"ds-filter ds-selected\" type=\"button\" aria-pressed=\"true\">Todas</button><button class=\"ds-filter\" type=\"button\" aria-pressed=\"false\">Soporte</button></div>",
-      "css": ".ds-filters{display:flex;gap:8px;flex-wrap:wrap}.ds-filter{font-family:\"Manrope Variable\",Manrope,sans-serif;border:1px solid #dde5d8;border-radius:7px;padding:8px 13px;font-size:11px;font-weight:600;background:#fff;color:#70806a;cursor:pointer}.ds-filter.ds-selected{background:#e7efe3;color:#3d6535;border-color:#c3d6b8}.ds-filter:hover{background:#edf3e9}.ds-filter:focus-visible{outline:3px solid #437e63;outline-offset:4px;}"
-    },
-    {
-      "name": "Tarjeta de sesión",
+      "name": "Panel de entrada",
       "kind": "card",
-      "refersTo": "session-card",
-      "description": "Contenedor de una experiencia sintética, con miniatura y metadatos.",
-      "html": "<button class=\"ds-session\" type=\"button\"><span class=\"ds-art\" aria-hidden=\"true\"><span class=\"ds-window\"><span class=\"ds-window-top\">Soporte · ejemplo</span><span class=\"ds-flow\"><i></i><b></b><i></i><b></b><i></i></span></span><span class=\"ds-art-play\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"m8 5 12 7-12 7z\"/></svg></span><span class=\"ds-duration\">06:40</span></span><span class=\"ds-session-body\"><span class=\"ds-category\">Soporte · ejemplo</span><strong>Resolver una incidencia de acceso</strong><span class=\"ds-description\">Una decisión y sus razones, en contexto.</span><span class=\"ds-author\"><span class=\"ds-avatar\">MT</span><span><b>María Torres</b><small>Senior de ejemplo</small></span></span></span></button>",
-      "css": ".ds-session{font-family:\"Manrope Variable\",Manrope,sans-serif;display:block;background:#fff;border:1px solid #e0e7de;border-radius:12px;overflow:hidden;text-align:left;width:280px;padding:0;cursor:pointer;color:var(--ink,#26352f);transition:border-color .2s}.ds-session:hover{border-color:#8ea78c}.ds-session:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-art{height:143px;position:relative;overflow:hidden;background:#e8efe7;display:flex;align-items:flex-end;justify-content:center;padding:20px 38px 0}.ds-window{display:block;width:185px;height:121px;background:rgba(255,255,255,.83);border:1px solid rgba(68,99,67,.14);border-radius:8px 8px 0 0;transform:translateY(4px)}.ds-window-top{display:block;border-bottom:1px solid rgba(68,99,67,.11);padding:9px 8px;font-size:6px;color:#6c806d;text-align:right}.ds-flow{display:flex;align-items:center;justify-content:center;padding:19px 14px 10px}.ds-flow i{height:25px;width:25px;border:1px solid #ccdacb;border-radius:5px;background:#fff}.ds-flow b{width:19px;border-top:1px dashed #b3c8b3}.ds-flow i:nth-of-type(2){background:#edf4e7;transform:rotate(45deg)}.ds-art-play{position:absolute;top:50%;left:50%;margin:-15px 0 0 -15px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#45634d;box-shadow:0 3px 12px #30492a1a;opacity:0;transition:opacity .15s}.ds-session:hover .ds-art-play,.ds-session:focus-visible .ds-art-play{opacity:1}.ds-duration{position:absolute;right:9px;bottom:9px;color:#fff;background:#344b3dda;padding:3px 6px;border-radius:4px;font-size:8px;font-variant-numeric:tabular-nums}.ds-session-body{display:block;padding:16px 16px 14px}.ds-category{display:block;font-size:10px;color:#547658;margin-bottom:7px}.ds-session-body>strong{display:block;font-size:14px;font-weight:670;line-height:1.6;letter-spacing:-.17px;min-height:44px}.ds-description{display:block;font-size:12px;color:var(--muted,#65736a);line-height:1.8;margin:8px 0 20px}.ds-author{display:flex;align-items:center;gap:8px;margin-top:13px}.ds-avatar{width:29px;height:29px;display:grid;place-items:center;border-radius:50%;font-size:9px;font-weight:750;background:#e5ede6;color:#3c614b}.ds-author b{display:block;font-size:11px;font-weight:650}.ds-author small{display:block;font-size:10px;color:var(--muted,#65736a);margin-top:3px}@media(prefers-reduced-motion:reduce){.ds-session,.ds-art-play{transition:none}}"
-    },
-    {
-      "name": "Paso del proceso",
-      "kind": "custom",
-      "refersTo": "timeline-current",
-      "description": "Selección del proceso con título, tipo y tiempo operativos.",
-      "html": "<button class=\"ds-timeline\" type=\"button\" aria-current=\"step\"><span class=\"ds-node\">2</span><span class=\"ds-timeline-content\"><span class=\"ds-kind\">Paso habitual</span><strong>Revisar el historial</strong><span class=\"ds-time\">01:20</span></span></button>",
-      "css": ".ds-timeline{font-family:\"Manrope Variable\",Manrope,sans-serif;display:flex;align-items:flex-start;gap:11px;padding:12px 8px;text-align:left;width:270px;border-radius:8px;position:relative;border:1px solid #d5e4c8;background:#edf4e5;cursor:pointer}.ds-timeline:hover{background:#edf4e5}.ds-timeline:focus-visible{outline:3px solid #437e63;outline-offset:4px;}.ds-node{width:23px;height:23px;border:1px solid #527744;border-radius:50%;background:#527744;display:grid;place-items:center;color:#fff;font-size:9px;flex-shrink:0}.ds-timeline-content{flex:1;display:block}.ds-kind{display:block;font-size:9px;color:#526258;margin-bottom:5px;font-weight:500}.ds-timeline-content>strong{font-size:12px;font-weight:630;display:block;line-height:1.7;color:#546446}.ds-time{font-size:10px;font-variant-numeric:tabular-nums;color:#526258;margin-top:7px;display:block}"
-    },
-    {
-      "name": "Tipo de paso",
-      "kind": "chip",
-      "refersTo": "step-badge",
-      "description": "Etiqueta informativa colocada después del título, con forma e icono además de tono.",
-      "html": "<span class=\"ds-step-badge\"><svg aria-hidden=\"true\" width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><circle cx=\"12\" cy=\"12\" r=\"10\"/></svg>Paso habitual</span>",
-      "css": ".ds-step-badge{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;gap:5px;color:#61764e;background:#eaf0e3;padding:4px 7px;border-radius:5px;font-size:10px;font-weight:650}"
-    },
-    {
-      "name": "Paso de la guía visual",
-      "kind": "custom",
-      "refersTo": "process-step",
-      "description": "Acción, espacio de captura y motivo juntos; evidencia conversacional desplegable. El snippet muestra imagen pendiente y texto ilustrativo, sin capturas ni datos de bóveda. En la aplicación, un error de descarga conserva la captura registrada y ofrece Reintentar imagen; la carga tiene estado textual y deshabilita ampliación. Ampliar abre un diálogo nativo con imagen a tamaño original y región desplazable enfocable; foco inicial en cerrar, cierre por botón, Escape o fondo, sin alterar la cuadrícula del paso.",
-      "html": "<section class=\"ds-process-step\"><header><span class=\"ds-step-number\">1</span><div><h2>Revisar un registro</h2><p>Acción · 01:20</p></div></header><div class=\"ds-step-work\"><div class=\"ds-step-image-empty\"><svg aria-hidden=\"true\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m2 2 20 20M9 3h10a2 2 0 0 1 2 2v10M3 9v10a2 2 0 0 0 2 2h14M3 3l18 18\"/><circle cx=\"15\" cy=\"8\" r=\"1\"/></svg><strong>Imagen pendiente</strong><p>No se conservó una captura asociada a esta acción.</p></div><div class=\"ds-step-explanation\"><h3>Cómo hacerlo</h3><ol><li>Instrucción ilustrativa para revisar un registro.</li></ol><div class=\"ds-step-reason\"><h3>Por qué se hace así</h3><p>El experto todavía no explicó el motivo. Pendiente de confirmar.</p></div><details class=\"ds-step-sources\"><summary>Consultar evidencia de este paso</summary><article><strong>Experto · 01:20</strong><p>Texto de demostración del componente. No contiene evidencia de una sesión real.</p></article></details></div></div></section>",
-      "css": ".ds-process-step{font-family:\"Manrope Variable\",Manrope,sans-serif;color:var(--ink,#26352f);padding:30px 0 38px;border-bottom:1px solid var(--line,#e2e8e2)}.ds-process-step>header{display:flex;align-items:baseline;gap:18px;margin-bottom:24px}.ds-step-number{color:#688575;font-size:26px;font-weight:500;min-width:30px;font-variant-numeric:tabular-nums}.ds-process-step h2{margin:0;font-size:23px;font-weight:670;letter-spacing:-.025em;line-height:1.45;overflow-wrap:anywhere}.ds-process-step header p{font-size:12px;color:#526258;margin:8px 0 0}.ds-step-work{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:30px;align-items:start;padding-left:48px}.ds-step-image-empty{display:grid;place-content:center;justify-items:center;gap:14px;min-height:245px;padding:26px;background:#eef2ed;border:1px dashed #becdbf;border-radius:8px;color:#526258;text-align:center}.ds-step-image-empty strong{font-size:14px}.ds-step-image-empty p{font-size:12px;line-height:1.8;max-width:260px;margin:0}.ds-step-explanation{min-width:0;font-size:14px;line-height:1.85;overflow-wrap:anywhere}.ds-step-explanation h3{font-size:13px;font-weight:670;line-height:1.5;margin:22px 0 8px;color:#365240}.ds-step-explanation h3:first-child{margin-top:0}.ds-step-explanation p{margin:0 0 12px}.ds-step-explanation ol{padding-left:22px;margin:0}.ds-step-reason{margin:22px 0;padding:17px 19px;background:#edf3eb}.ds-step-reason p:last-child{margin-bottom:0}.ds-step-sources{border-top:1px solid var(--line,#e2e8e2);margin-top:20px;padding-top:13px;font-size:12px;color:#526258}.ds-step-sources summary{cursor:pointer;font-weight:650}.ds-step-sources summary:focus-visible{outline:3px solid #437e63;outline-offset:4px}.ds-step-sources article{margin-top:16px}.ds-step-sources article p{margin-top:6px;white-space:pre-wrap}@media(max-width:1100px){.ds-step-work{padding-left:0;gap:22px}}@media(max-width:950px){.ds-step-work{grid-template-columns:1fr}}@media(max-width:580px){.ds-process-step{padding:24px 0}.ds-process-step>header{gap:12px}.ds-process-step h2{font-size:20px}.ds-step-number{min-width:20px;font-size:23px}.ds-step-explanation{font-size:13px}}"
-    },
-    {
-      "name": "Acción del diagrama alterno",
-      "kind": "custom",
-      "refersTo": "map-node",
-      "description": "Título antes de metadatos, miniatura o estado pendiente y extracto del motivo. Un fallo de descarga ofrece Reintentar imagen también en la variante compacta. La selección real se conecta con el inspector en React Flow.",
-      "html": "<div class=\"ds-map-node ds-map-selected\" role=\"button\" tabindex=\"0\" aria-label=\"Acción: Revisar un registro\"><strong>Revisar un registro</strong><span class=\"ds-map-meta\">Acción · 01:20</span><div class=\"ds-step-image-empty\"><svg aria-hidden=\"true\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m2 2 20 20M9 3h10a2 2 0 0 1 2 2v10M3 9v10a2 2 0 0 0 2 2h14M3 3l18 18\"/><circle cx=\"15\" cy=\"8\" r=\"1\"/></svg><strong>Imagen pendiente</strong></div><p class=\"ds-node-reason\">Motivo pendiente de confirmar</p></div>",
-      "css": ".ds-map-node{font-family:\"Manrope Variable\",Manrope,sans-serif;width:400px;border:1px solid #a8bfad;border-radius:12px;background:#fff;padding:20px;text-align:left;color:#26352f}.ds-map-node.ds-map-decision{border:2px solid #b99a55;background:#fcf9ef}.ds-map-node.ds-map-boundary{border-radius:40px;background:#eaf1eb;text-align:center}.ds-map-node.ds-map-selected,.ds-map-node:focus-visible{outline:3px solid #437e63;outline-offset:3px}.ds-map-node:hover{box-shadow:none}.ds-map-node>strong{font-size:16px;line-height:1.5;display:block;overflow-wrap:anywhere}.ds-map-meta{display:flex;align-items:baseline;font-size:11px;color:#526258;margin:8px 0 12px}.ds-node-reason{font-size:12px;line-height:1.6;max-height:60px;overflow:hidden;margin:12px 0 0}.ds-step-image-empty{display:grid;place-content:center;justify-items:center;gap:14px;min-height:245px;padding:26px;background:#eef2ed;border:1px dashed #becdbf;border-radius:8px;color:#526258;text-align:center}.ds-step-image-empty strong{font-size:14px}.ds-step-image-empty p{font-size:12px;line-height:1.8;max-width:260px;margin:0}.ds-map-node .ds-step-image-empty{min-height:100px;padding:14px;gap:8px}.ds-map-node .ds-step-image-empty strong{font-size:12px}"
-    },
-    {
-      "name": "Clasificación del proceso",
-      "kind": "custom",
-      "refersTo": "process-metadata",
-      "description": "Nombre y categorías editables con sugerencias nativas; Contabilidad se muestra como categoría de ejemplo confirmada, sin contenido de una sesión.",
-      "html": "<form class=\"ds-process-metadata\"><h2>Nombre y clasificación</h2><p>El nombre describe la tarea. Las categorías se pueden escribir o elegir del catálogo.</p><label>Nombre del proceso<input value=\"Revisar un registro\" required maxlength=\"120\"/></label><div class=\"ds-metadata-fields\"><label>Departamento<input list=\"ds-departments\" value=\"Contabilidad\" required maxlength=\"80\"/></label><label>Tipo de tarea<input required maxlength=\"80\"/></label></div><datalist id=\"ds-departments\"><option value=\"Contabilidad\"/></datalist></form>",
-      "css": ".ds-process-metadata{font-family:\"Manrope Variable\",Manrope,sans-serif;color:var(--ink,#26352f);border:1px solid var(--line,#e2e8e2);background:#fff;border-radius:12px;padding:24px;margin:22px 0}.ds-process-metadata h2{font-size:19px;font-weight:670;line-height:1.35;letter-spacing:-.5px;margin:0 0 10px}.ds-process-metadata p{font-size:13px;color:#526258;line-height:1.7}.ds-process-metadata label{display:grid;gap:9px;font-size:13px;margin-top:18px;min-width:0}.ds-process-metadata input{font:inherit;color:var(--ink,#26352f);border:1px solid var(--line,#e2e8e2);border-radius:7px;padding:12px;background:#fff;min-width:0}.ds-process-metadata input:focus-visible{outline:3px solid #437e63;outline-offset:4px}.ds-metadata-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:580px){.ds-metadata-fields{grid-template-columns:1fr;gap:0}.ds-process-metadata{padding:18px}}"
-    },
-    {
-      "name": "Fila de la colección privada",
-      "kind": "custom",
-      "refersTo": "collection-row",
-      "description": "Apertura de procedimiento y marcador como controles hermanos. El título y las cifras son ejemplos sintéticos del componente, sin datos de la bóveda.",
-      "html": "<article class=\"ds-collection-row\"><button class=\"ds-collection-open\" type=\"button\"><span><strong>Revisar un registro de ejemplo</strong><small>3 acciones · 2 con imagen · Por revisar</small></span><svg aria-hidden=\"true\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button><button class=\"ds-collection-bookmark\" type=\"button\" aria-label=\"Guardar: Revisar un registro de ejemplo\" aria-pressed=\"false\"><svg aria-hidden=\"true\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z\"/></svg></button></article>",
-      "css": ".ds-collection-row{font-family:\"Manrope Variable\",Manrope,sans-serif;display:flex;align-items:center;border-top:1px solid #e0e5db;border-bottom:1px solid #e0e5db;background:#fff}.ds-collection-open{font-family:\"Manrope Variable\",Manrope,sans-serif;display:flex;flex:1;min-width:0;align-items:center;justify-content:space-between;text-align:left;padding:22px 20px;gap:20px;border:0;background:transparent;color:#29392a;cursor:pointer}.ds-collection-open:hover{background:#f0f4eb}.ds-collection-open>span{min-width:0}.ds-collection-open strong{display:block;font-size:15px;font-weight:650;line-height:1.55;overflow-wrap:anywhere}.ds-collection-open small{display:block;margin-top:5px;color:#5d6957;font-size:12px}.ds-collection-open svg{flex-shrink:0}.ds-collection-bookmark{display:inline-flex;align-items:center;justify-content:center;border:0;background:none;border-radius:7px;margin:0 12px;flex-shrink:0;color:#516b40;min-width:40px;min-height:44px;cursor:pointer}.ds-collection-bookmark:hover{background:#edf2ec}.ds-collection-bookmark[aria-pressed=true]{background:#edf2e6}.ds-collection-open:focus-visible,.ds-collection-bookmark:focus-visible{outline:3px solid #437e63;outline-offset:4px;}@media(max-width:520px){.ds-collection-open{padding:18px 12px;gap:12px}.ds-collection-open strong{font-size:14px}.ds-collection-bookmark{margin:0 4px}}"
-    },
-    {
-      "name": "Nodos del mapa de colección",
-      "kind": "custom",
-      "refersTo": "knowledge-process",
-      "description": "Proceso rectangular y tema compartido salvia; selección con borde y anillo. Muestra visual sin datos privados: React Flow y el inspector proporcionan la interacción real. El inspector coloca el título antes del tipo, separa evidencias con divisores horizontales y omite un extracto idéntico al título.",
-      "html": "<div class=\"ds-knowledge-sample\"><div class=\"ds-knowledge-process ds-related\" tabindex=\"0\" role=\"button\" aria-label=\"Proceso: Revisar un registro de ejemplo\"><small>Tipo de tarea de ejemplo</small><strong>Revisar un registro de ejemplo</strong><span>3 acciones</span></div><div class=\"ds-knowledge-topic ds-selected\" tabindex=\"0\" role=\"button\" aria-label=\"Tema: Validación de datos\"><small>Tema compartido</small><strong>Validación de datos</strong></div></div>",
-      "css": ".ds-knowledge-sample{font-family:\"Manrope Variable\",Manrope,sans-serif;display:flex;gap:32px;align-items:center;flex-wrap:wrap;padding:6px;color:#29392a}.ds-knowledge-process{width:290px;padding:16px 18px;text-align:left;border:1px solid #9dad90;border-radius:10px;background:#fff}.ds-knowledge-topic{width:240px;padding:13px 18px;border:1px solid #829976;border-radius:24px;text-align:left;background:#eaf1e2}.ds-knowledge-sample strong{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:15px;line-height:1.5;font-weight:650;overflow-wrap:anywhere}.ds-knowledge-sample small{display:block;color:#52634d;font-size:10px;margin-bottom:5px}.ds-knowledge-sample span{display:block;font-size:11px;color:#52634d;margin-top:7px}.ds-knowledge-sample .ds-related{border-color:#3d654b}.ds-knowledge-sample .ds-selected{border:2px solid #3d654b;box-shadow:0 0 0 3px #d7e4cd}.ds-knowledge-process:focus-visible,.ds-knowledge-topic:focus-visible{outline:3px solid #437e63;outline-offset:4px;}"
+      "description": "Panel de entrada",
+      "html": "<section class=\"ds-panel\"><h2>Entra a tu espacio</h2><p>Comparte lo que sabes. Aprende de quien lo vive.</p></section>",
+      "css": ".ds-panel{font-family:\"Manrope Variable\",Manrope,sans-serif;font-size:13px;border-radius:7px;max-width:420px;background:#171a15ed;color:#eeeeeb;border:1px solid #484c40;border-radius:14px;padding:22px;backdrop-filter:blur(18px)}.ds-panel h2{font-size:24px;font-weight:550;margin:0}.ds-panel p{color:#b4b8ac;font-size:12px;line-height:1.6}",
+      "refersTo": "entry-panel"
     }
   ],
   "narrative": {
-    "northStar": "La sala de edición compartida",
-    "overview": "UserHelper se siente como una mesa de trabajo luminosa: superficies blancas, fondo apenas verde y controles de bosque oscuro. La identidad acompaña una tarea en curso y la lectura posterior de sus decisiones. La densidad es operativa, con aire entre grupos y detalles compactos dentro de cada herramienta.\n\nManrope une navegación, contenido y datos temporales. Las ventanas y miniaturas de la biblioteca sintética son ilustraciones construidas con CSS y SVG; los procedimientos privados muestran capturas reales junto a sus acciones cuando están disponibles; el logotipo combina una U abierta con un trazo central. La personalidad es profesional, clara y respetuosa. Biblioteca y Mapas presentan una misma colección privada: organización por departamento y tipo de tarea, o relaciones por temas y actividades compartidas. El registro de demostración permanece visible en los recorridos sintéticos de Ejemplos.",
+    "northStar": "El conocimiento tiene voz",
+    "overview": "Una entrada expresiva abre un espacio de trabajo concentrado. La referencia elegida por el usuario es Gradium: escenario negro, sans de gran escala, acentos lima y partículas detrás de controles compactos. UserHelper conserva nombre, contenido y comportamiento propios. Esta dirección sustituye el sistema claro anterior; no utiliza assets ni tipografías propietarias de Gradium.",
     "keyCharacteristics": [
-      "Superficies claras separadas por bordes suaves y cambios de tono.",
-      "Verde oscuro para acciones principales y selección; azul y arena para distinguir ejemplos.",
-      "Tipografía única, títulos compactos y párrafos con interlineado generoso.",
-      "Pasos, tiempos y razones conectados por una misma selección.",
-      "Movimiento breve de estado y navegación, con reducción de movimiento respetada."
+      "Tipografía grande que enmarca la acción sin taparla.",
+      "Superficies negras con bordes finos y acento lima.",
+      "Una cinta de partículas original, decorativa y controlable.",
+      "Estados y permisos expresados con honestidad."
     ],
     "rules": [
       {
-        "name": "The State Has Words Rule",
-        "body": "Una conexión, pausa, decisión o variante se reconoce por texto y, cuando corresponde, icono o forma; el color nunca carga solo con su significado.",
+        "name": "The Accent Rule",
+        "body": "Reservar lima para selección, foco, acción y estado positivo verdadero; nunca usarlo para simular conexión.",
         "section": "colors"
       },
       {
-        "name": "The Reading Before Ornament Rule",
-        "body": "La información que permite operar y comprender conserva la escala final de lectura; las pequeñas ventanas de ejemplo siguen siendo ilustraciones.",
-        "section": "typography"
-      },
-      {
-        "name": "The Flat Work Surface Rule",
-        "body": "Los paneles de trabajo descansan sobre tono y borde; la elevación marca una superposición, no cada contenedor.",
+        "name": "The Motion Rule",
+        "body": "La cinta es el único motivo animado nuevo; no añadir entradas repetidas o movimiento a cada control.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "**Do** conservar la relación entre superficie blanca, borde suave y fondo vegetal claro.",
-      "**Do** usar verde oscuro para acciones principales y selección reconocible por más de una señal.",
-      "**Do** conservar texto operativo legible, cifras tabulares y foco de teclado visible.",
-      "**Do** colocar el título del paso antes de su tipo y posición, y mantener acción, propósito y razón juntos.",
-      "**Do** mantener el significado del proceso de la biblioteca sintética cuando pase de columna a fila desplazable.",
-      "**Do** identificar las escenas y sesiones sintéticas como ejemplos en los recorridos de demostración.",
-      "**Do** mantener sincronizada la selección del mapa y su inspector al usar puntero, Enter o selector de pasos.",
-      "**Do** mantener título operativo, captura y motivo juntos; dejar la conversación en el desplegable secundario de evidencia.",
-      "**Do** mantener los mismos procesos y filtros entre Biblioteca y Mapas, con evidencia de acciones para explicar cada conexión."
+      "Conservar la legibilidad completa del titular alrededor del formulario.",
+      "Mantener visible el carácter de demostración y los estados reales.",
+      "Respetar movimiento reducido y ofrecer pausa del motivo animado.",
+      "Preservar consentimiento, controles y guardas existentes de las APIs."
     ],
     "donts": [
-      "**Don't** extender las sombras de diálogo a todas las tarjetas del espacio de trabajo.",
-      "**Don't** usar solo un cambio de color para comunicar conexión, pausa, selección o variante.",
-      "**Don't** convertir la microtipografía de las ilustraciones en texto operativo de nuevas pantallas.",
-      "**Don't** añadir una fuente ornamental que rompa la jerarquía única de Manrope.",
-      "**Don't** mostrar controles del cajón móvil en el escritorio ni dejar interactivo su contenido cuando esté cerrado.",
-      "**Don't** representar una variante como un paso habitual sin contexto, etiqueta ni distinción de forma.",
-      "**Don't** convertir mensajes del agente, saludos u observaciones aisladas en pasos de la guía ni sustituir capturas ausentes por escenas inventadas.",
-      "**Don't** representar las coincidencias del mapa de colección como una secuencia de pasos ni como reglas equivalentes."
+      "Confundir la preferencia de entrada con autenticación o autorización.",
+      "Cubrir letras o controles con la composición decorativa.",
+      "Copiar marca o assets de Gradium.",
+      "Cambiar colores de capturas reales para adaptarlas al tema."
     ]
   }
 }

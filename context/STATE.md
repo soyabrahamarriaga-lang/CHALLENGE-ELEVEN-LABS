@@ -1,5 +1,9 @@
 # Estado compartido
 
+## Frontend y entrada visual (2026-10-04)
+
+Trabajo local en `codex/login-frontend`: el usuario eligió gradium.ai como referencia. Entrada de demostración con nombre/perfil, acceso a la interfaz existente y salida; no autentica cuentas ni cambia permisos de APIs. Escenario negro, tipografía grande y cinta original de partículas; escritorio y móvil revisados. `npm test`: 156 pruebas; build correcto. El preview 5183 recibe rechazo de origen de la bóveda del backend existente; falta configurar un entorno completo con origen coincidente para verificar datos privados desde esta rama. Ver `docs/FRONTEND-STUDIO.md` y `context/decisions/ADR-login-studio.md`. Entrega preparada en rama separada, sin integrar en main.
+
 ## Tutor de procesos en Intern (2026-10-03)
 
 Intern → Mi aprendizaje tiene conversación real por voz o texto con el segundo agente proporcionado por el usuario, configurado localmente mediante ELEVENLABS_TUTOR_AGENT_ID. Senior conserva su agente. Indicadores y cachés separados, cierre de sesión al cambiar de perfil y controles de acceso compartidos. Se comprobó la lectura autenticada y una conversación real por texto con saludo, respuesta a una pregunta y cierre. El tutor pidió material del proceso; no se modificaron sus conocimientos ni se conectó automáticamente la bóveda. Ver ADR-intern-tutor.md.

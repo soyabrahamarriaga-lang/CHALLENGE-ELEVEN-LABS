@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Abre `http://127.0.0.1:5173`. Cambia de perfil desde «Explorar como». El botón «Explorar la biblioteca demo» permite probar estados con ejemplos locales al navegador. Biblioteca y Mapas muestran los procesos de la bóveda configurada. Los recorridos de demostración no solicitan dispositivos. La conversación individual con el agente tiene consentimiento y controles propios.
+Abre `http://127.0.0.1:5173`. Entra a la demo con tu nombre y elige Compartir o Aprender; la entrada es una preferencia local, no una cuenta autenticada. El botón «Salir de la demo» regresa al formulario. [Diseño y límites de acceso](docs/FRONTEND-STUDIO.md). Cambia de perfil desde «Explorar como». El botón «Explorar la biblioteca demo» permite probar estados con ejemplos locales al navegador. Biblioteca y Mapas muestran los procesos de la bóveda configurada. Los recorridos de demostración no solicitan dispositivos. La conversación individual con el agente tiene consentimiento y controles propios.
 
 ```sh
 npm test

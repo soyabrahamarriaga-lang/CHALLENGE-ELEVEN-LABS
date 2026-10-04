@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { VoiceField } from "../components/VoiceField";
 import { AudioLines } from "lucide-react";
 import type { Role } from "../domain/types";
 import { AgentStatus } from "../components/AgentStatus";
@@ -49,7 +50,7 @@ function ProfileSpace({ role, children }: { role: Role; children?: ReactNode }) 
           <div className="page-heading">
             <div><h1 tabIndex={-1} ref={heading}>Aprende con tu tutor.</h1><p>{profile.description}</p></div>
           </div>
-        ) : <h1 className="sr-only">Mi espacio</h1>}
+        ) : <><VoiceField compact /><h1 className="space-title">Mi espacio<span>de conocimiento.</span></h1></>}
         <div className="personal-space-entry">
           <AgentStatus health={health} />
           <button className="button primary personal-space-start" disabled={!available}
