@@ -32,6 +32,6 @@ Resultado observado (2026-10-03, `claude-haiku-4-5`): factura 4471 con 4711 (ope
 `scripts/agent_vision.mjs`: subir la imagen a `POST /v1/convai/conversations/{id}/files` (el SDK lo hace con `conversation.uploadFile(blob)`) y enviar `multimodal_message` con texto `[PANTALLA mm:ss]` y el `file_id` (`conversation.sendMultimodalMessage({ text, fileId })`).
 
 ## Pendiente
-- UI: «Compartir pantalla» en `#senior/agent`, detección de pausa por estabilidad visual, máximo 10 envíos y copia de cada captura en la bóveda.
+- UI: «Compartir pantalla» en `#senior/agent`, detección de pausa por estabilidad visual, máximo 10 envíos al agente. Además, se archivan imágenes de cambios visuales estabilizados en la bóveda privada, con aviso visible al compartir pantalla (ADR-0017).
 - Work Map desde los campos de Data collection.
 - Solo datos ficticios hasta tener redacción de datos personales y borrado.

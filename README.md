@@ -32,7 +32,7 @@ Completar `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` en `.env`, conservar el c
 
 ## Diagramas de tus procesos
 
-**Mapas de procesos** muestra las conversaciones de la bóveda privada como diagramas con zoom, navegación por pasos y evidencia. Cada transcripción archivada genera también un Canvas de Obsidian. Para sesiones anteriores: `npm run maps:backfill`. Los mapas son borradores; sus decisiones y reglas requieren revisión. Alcance, formatos y configuración: [PROCESS-MAPS.md](docs/PROCESS-MAPS.md).
+**Mapas de procesos** organiza acciones con imágenes, instrucciones, decisiones y motivos del experto. La conversación queda como evidencia secundaria. Incluye guía visual, diagrama interactivo y Canvas de Obsidian, con nombre y categorías editables; propuesta inicial: Contabilidad. Para mapas locales: `npm run maps:backfill`; análisis estructurado e imágenes del proveedor: `npm run maps:rebuild -- --reanalyze`. Los procedimientos siguen siendo borradores por revisar. Alcance, formatos y configuración: [PROCESS-MAPS.md](docs/PROCESS-MAPS.md).
 
 ## Leer primero
 - [Roadmap hasta las 06:00 del 4 de octubre](docs/ROADMAP-15H.md): problema, opciones, mapas, hitos y reparto entre tres personas.
