@@ -30,7 +30,7 @@ export function readConfig(env = process.env) {
     apiKey: env.LIVEKIT_API_KEY || "",
     apiSecret: env.LIVEKIT_API_SECRET || "",
     joinCode: env.LIVEKIT_JOIN_CODE || "",
-    // Local demo only: start the agent without the team code (ADR-0014).
+    // Optional code-free agent access; Vercel sets its demo default separately.
     openAgent: env.AGENT_OPEN_ACCESS === "true",
     room: env.LIVEKIT_ROOM || "userhelper-team",
     origin: env.APP_ORIGIN || "http://127.0.0.1:5173",

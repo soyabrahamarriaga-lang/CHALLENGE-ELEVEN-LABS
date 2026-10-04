@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "id": "20261004T124245Z-codex-ecc2d6de",
+  "at": "2026-10-04T12:42:45.864119Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "public-agent-access-obsidian-installer",
+  "summary": "Retirar codigo del agente publico y ofrecer instaladores oficiales de Obsidian",
+  "result": "Senior e Intern inician sin codigo por defecto en Vercel. Menu y biblioteca incluyen instaladores universales oficiales Mac/Windows e instrucciones ES/EN; la persona completa la instalacion.",
+  "files": [
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-vercel-open-agent-access.md",
+    "docs/VERCEL-DEMO.md",
+    "server/livekit.mjs",
+    "server/vercelDemo.mjs",
+    "server/vercelDemo.test.mjs",
+    "src/App.tsx",
+    "src/features/ObsidianSetup.css",
+    "src/features/ObsidianSetup.tsx",
+    "src/i18n/en.json",
+    "src/i18n/es.json"
+  ],
+  "decisions": [
+    "Peticion explicita de acceso publico sin codigo; se puede restaurar con AGENT_OPEN_ACCESS=false. Descargas oficiales sin binarios propios ni scripts remotos."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-vercel-open-agent-access.md"
+  ],
+  "ontology_review": "Sin nuevas entidades ni cambios en evidencia. La instalacion de Obsidian no conecta aun la boveda local a la web; esa ampliacion solicitada se aborda a continuacion.",
+  "validation": [
+    "215 tests Vitest y 28 Python aprobados; tsc y build Vercel aprobados; cuatro accesos temporales reales voz/texto Senior/Intern sin codigo devuelven 200; ambos instaladores oficiales verificados por HEAD 200; UI ES/EN verificada en navegador."
+  ],
+  "next_steps": [
+    "Publicar cambios en main. Continuar solicitud de conexion de carpeta local mediante permiso del navegador por computadora."
+  ]
+}

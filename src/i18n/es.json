@@ -646,5 +646,17 @@
   "La biblioteca está disponible en la versión local": "La biblioteca está disponible en la versión local",
   "Aquí puedes conversar con los agentes y explorar ejemplos. Los procesos de tu bóveda permanecen en tu computadora.": "Aquí puedes conversar con los agentes y explorar ejemplos. Los procesos de tu bóveda permanecen en tu computadora.",
   "Explica una tarea, sus decisiones y sus motivos. Puedes compartir pantalla para que el agente te acompañe.": "Explica una tarea, sus decisiones y sus motivos. Puedes compartir pantalla para que el agente te acompañe.",
-  "). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.": "). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios."
+  "). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.": "). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.",
+  "Instalar Obsidian": "Instalar Obsidian",
+  "Instala Obsidian en tu computadora": "Instala Obsidian en tu computadora",
+  "Descarga el instalador oficial para abrir y organizar tu bóveda local.": "Descarga el instalador oficial para abrir y organizar tu bóveda local.",
+  "Abre el archivo .dmg, arrastra Obsidian a Aplicaciones y ábrelo desde ahí.": "Abre el archivo .dmg, arrastra Obsidian a Aplicaciones y ábrelo desde ahí.",
+  "Abre el archivo .exe y sigue los pasos del instalador. Después, abre Obsidian.": "Abre el archivo .exe y sigue los pasos del instalador. Después, abre Obsidian.",
+  "Descargar para Mac": "Descargar para Mac",
+  "Descargar para Windows": "Descargar para Windows",
+  "Ya lo instalé: abrir Obsidian": "Ya lo instalé: abrir Obsidian",
+  "Otros sistemas y versiones": "Otros sistemas y versiones",
+  "La instalación se completa en tu computadora. No conecta automáticamente tu bóveda con esta web; el guardado de procesos aquí sigue desactivado.": "La instalación se completa en tu computadora. No conecta automáticamente tu bóveda con esta web; el guardado de procesos aquí sigue desactivado.",
+  "Mac": "Mac",
+  "Windows": "Windows"
 }

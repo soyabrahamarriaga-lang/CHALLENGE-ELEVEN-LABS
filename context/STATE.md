@@ -101,3 +101,10 @@ La verificación inicial (11:44 UTC) encontró que Senior contestaba español pe
 ## Demo Vercel urgente (2026-10-04)
 
 Se prepara publicación sin migrar la bóveda por indicación del usuario. Vite + una Vercel Function permiten estados y acceso temporal a Senior/Intern; código compartido obligatorio, orígenes del deployment/producción y credenciales solo en servidor. `VERCEL=1` activa el aviso de demo y deshabilita guardado/biblioteca local en la UI publicada. La app local conserva su bóveda. 214 tests Vitest, build y 28 tests Python pasaron; adaptador HTTP obtuvo acceso temporal real para ambos perfiles y transportes. Archivo privado de cuatro variables preparado fuera de Git. El operador aún está en Import Project; no se ha publicado ni verificado una URL pública, y el conector de Vercel apunta a otra cuenta. Ver docs/VERCEL-DEMO.md y ADR-vercel-conversation-demo.md.
+
+
+## Acceso público al agente sin código (2026-10-04)
+
+El usuario confirma que el sitio público pide código y solicita retirarlo temporalmente. PR #26 está integrado en main y Vercel completó su deployment de producción; la URL técnica está protegida por Vercel Authentication. El adaptador ahora usa acceso sin código por defecto para Senior e Intern; el frontend existente oculta el campo según `requiresCode`. `AGENT_OPEN_ACCESS=false` permite recuperar la barrera. Se mantienen el aviso, el origen, los límites y la bóveda deshabilitada en la nube. La documentación de importación requiere solo la clave y ambos IDs. Ver ADR-vercel-open-agent-access.md.
+
+El usuario también solicita que las personas que entren a la web descarguen un instalador de Obsidian. Se incorpora una pantalla bilingüe accesible desde el menú y las vistas de bóveda, con instaladores oficiales Mac/Windows y apertura opcional de la aplicación. No afirma que la instalación esté detectada ni que conecte la bóveda a la web; no cambia la modalidad local ni incorpora un servicio de sincronización.

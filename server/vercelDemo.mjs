@@ -12,7 +12,8 @@ export function createVercelDemo(env = process.env, options = {}) {
     } catch { /* Invalid configuration must not authorize an origin. */ }
   }
   const handlers = new Map([...origins].map(origin => [origin, createHandler(
-    readConfig({ ...env, APP_ORIGIN: origin, AGENT_OPEN_ACCESS: 'false' }),
+    // Public demo starts without a code; an explicit false restores the gate.
+    readConfig({ ...env, APP_ORIGIN: origin, AGENT_OPEN_ACCESS: env.AGENT_OPEN_ACCESS ?? 'true' }),
     { agentConfig: readElevenLabsConfig(env), tutorConfig: readElevenLabsConfig(env, 'intern'), ...options },
   )]));
   const json = (res, status, body) => {

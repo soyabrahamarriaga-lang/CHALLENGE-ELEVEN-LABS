@@ -22,6 +22,7 @@ import {
   X,
 } from "lucide-react";
 import { SignIn } from "./features/SignIn";
+import { ObsidianSetup } from "./features/ObsidianSetup";
 import { demoEntryKey, parseDemoEntry, entryDestination } from "./domain/demoEntry";
 import type { DemoEntry } from "./domain/demoEntry";
 import type { LibraryStatus, Role } from "./domain/types";
@@ -258,6 +259,7 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
           <p>{t("La experiencia crece")}<br />{t("cuando se comparte.")}</p>
         </div>
         <div className="sidebar-bottom">
+          {cloudDemo && <button onClick={() => navigate("library")}><BookOpen size={18} />{t("Instalar Obsidian")}</button>}
           <button onClick={() => setDemoOpen(true)}>
             <Settings2 size={18} />{t("Explorar la biblioteca demo")}</button>
           <button onClick={() => setHelpOpen(true)}>
@@ -320,7 +322,7 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
           }
         >
           {cloudDemo && <p className="original-language-note" role="status">{t("Demo de conversaciones: la biblioteca y el guardado de procesos están desactivados en esta versión.")}</p>}
-          {cloudDemo && ["library", "saved", "processes"].includes(route.view) && <EmptyState title={t("La biblioteca está disponible en la versión local")} description={t("Aquí puedes conversar con los agentes y explorar ejemplos. Los procesos de tu bóveda permanecen en tu computadora.")} action={t("Explorar ejemplos")} onAction={() => navigate("examples")}/>}
+          {cloudDemo && privateView && <ObsidianSetup onExamples={() => navigate("examples")} />}
           {deletion && <DeletionNotice result={deletion} onUpdated={processDeleted} onClose={() => setDeletion(null)}/>}
           {route.view === "home" && route.role === "senior" && (
             <Senior />

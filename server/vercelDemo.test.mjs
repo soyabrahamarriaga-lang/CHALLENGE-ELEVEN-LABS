@@ -15,7 +15,7 @@ async function setup(overrides = {}, parsed = false) {
  });
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));servers.push(server);
  const base=`http://127.0.0.1:${server.address().port}`;
- const post=(path='/api/elevenlabs/session',body={},headers={})=>fetch(base+path,{method:'POST',headers:{Origin:'https://userhelper.vercel.app','Content-Type':'application/json',...headers},body:JSON.stringify({displayName:'Test',consent:true,joinCode:env.LIVEKIT_JOIN_CODE,mode:'voice',...body})});
+ const post=(path='/api/elevenlabs/session',body={},headers={})=>fetch(base+path,{method:'POST',headers:{Origin:'https://userhelper.vercel.app','Content-Type':'application/json',...headers},body:JSON.stringify({displayName:'Test',consent:true,joinCode:'',mode:'voice',...body})});
  return {base,post,agentAccess,tutorAccess};
 }
 describe('Vercel conversation-only deployment',()=>{
@@ -26,12 +26,21 @@ describe('Vercel conversation-only deployment',()=>{
   expect(await(await api.post('/api/demo?route=elevenlabs/session',{mode:'text'},{Origin:'https://demo-preview.vercel.app'})).json()).toEqual({signedUrl:'wss://test.invalid/senior'});
   expect(api.agentAccess).toHaveBeenCalledTimes(2);expect(api.tutorAccess).toHaveBeenCalledTimes(1);
  });
- it('requires the access code and consent even if a local open-access .env is imported',async()=>{
-  const api=await setup({AGENT_OPEN_ACCESS:'true'});
-  expect((await api.post(undefined,{joinCode:''})).status).toBe(401);
+ it('hides the code for both agents by default and still requires consent',async()=>{
+  const api=await setup({LIVEKIT_JOIN_CODE:''});
+  for(const path of ['/api/elevenlabs/status','/api/elevenlabs/tutor/status'])
+   expect(await(await fetch(api.base+path)).json()).toEqual({configured:true,requiresCode:false});
   expect((await api.post(undefined,{consent:false})).status).toBe(400);
-  expect(await(await fetch(api.base+'/api/elevenlabs/status')).json()).toEqual({configured:true,requiresCode:true});
   expect(api.agentAccess).not.toHaveBeenCalled();
+  expect((await api.post()).status).toBe(200);
+  expect((await api.post('/api/elevenlabs/tutor/session')).status).toBe(200);
+ });
+ it('can explicitly restore the code requirement without changing the frontend',async()=>{
+  const api=await setup({AGENT_OPEN_ACCESS:'false'});
+  expect(await(await fetch(api.base+'/api/elevenlabs/status')).json()).toEqual({configured:true,requiresCode:true});
+  expect((await api.post()).status).toBe(401);
+  expect(api.agentAccess).not.toHaveBeenCalled();
+  expect((await api.post(undefined,{joinCode:env.LIVEKIT_JOIN_CODE})).status).toBe(200);
  });
  it('rejects external or absent POST origins and never trusts request Host for authorization',async()=>{
   const api=await setup();
@@ -39,12 +48,12 @@ describe('Vercel conversation-only deployment',()=>{
   expect((await api.post(undefined,{}, {'Sec-Fetch-Site':'cross-site'})).status).toBe(403);
   expect(api.agentAccess).not.toHaveBeenCalled();
  });
- it('supports an explicit custom domain and fails closed without trusted deployment origins or code',async()=>{
+ it('supports a custom domain and fails closed without origins or a required code',async()=>{
   const api=await setup({APP_ORIGIN:'https://demo.example.com'});
   expect((await api.post(undefined,{}, {Origin:'https://demo.example.com'})).status).toBe(200);
   const invalid=await setup({VERCEL_URL:'',VERCEL_PROJECT_PRODUCTION_URL:'',APP_ORIGIN:'https://demo.example.com/path'});
   expect((await invalid.post()).status).toBe(503);
-  const noCode=await setup({LIVEKIT_JOIN_CODE:'',AGENT_OPEN_ACCESS:'true'});
+  const noCode=await setup({LIVEKIT_JOIN_CODE:'',AGENT_OPEN_ACCESS:'false'});
   expect((await noCode.post()).status).toBe(503);
  });
  it('enforces payload limits on platform-parsed JSON before reaching ElevenLabs',async()=>{
