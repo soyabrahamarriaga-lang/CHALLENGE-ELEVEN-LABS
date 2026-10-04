@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
-    "dev:token": "node --env-file-if-exists=.env server/main.mjs"
+    "dev:token": "node --env-file-if-exists=.env server/main.mjs",
+    "check:vision": "node --env-file-if-exists=.env scripts/agent_vision_check.mjs"
   },
   "dependencies": {
     "@elevenlabs/client": "1.26.0",
