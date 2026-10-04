@@ -5,11 +5,14 @@ import {
   LoaderCircle,
   MessageCircle,
   Mic,
+  MonitorOff,
+  MonitorUp,
   PhoneOff,
   Send,
   ShieldCheck,
 } from "lucide-react";
 import {
+  MAX_SCREEN_FRAMES,
   applyAgentEvent,
   channel,
   initialAgentState,
@@ -20,7 +23,10 @@ import type {
   AgentMode,
   AgentState,
 } from "../services/agentProtocol";
-import { archiveConversation } from "../services/vault";
+import { archiveConversation, logVaultEvent } from "../services/vault";
+import { clock } from "../services/screenDiff";
+import { startScreenWatch } from "../services/screenWatcher";
+import type { ScreenEvent, WatchStatus } from "../services/screenWatcher";
 import type { ArchiveResult } from "../services/vault";
 import "./AgentConversation.css";
 const labels = {
@@ -54,6 +60,14 @@ export default function AgentConversation() {
   const generation = useRef(0);
   const request = useRef<AbortController | null>(null);
   const [archive, setArchive] = useState<ArchiveResult | "saving" | null>(null);
+  const [screen, setScreen] = useState<{
+    status: WatchStatus | "idle" | "denied";
+    events: ScreenEvent[];
+    frames: number;
+  }>({ status: "idle", events: [], frames: 0 });
+  const watch = useRef<{ stop: () => void } | null>(null);
+  const framesSent = useRef(0);
+  const connectedAt = useRef(0);
   const busy = state.phase === "authorizing" || state.phase === "connecting";
   const active = busy || state.phase === "connected";
   // Copy the finished conversation into the private Obsidian vault, when the team enabled it.
@@ -69,6 +83,19 @@ export default function AgentConversation() {
   useEffect(() => {
     if (state.phase === "authorizing") setArchive(null);
   }, [state.phase]);
+  // Screen watching lives only while the conversation is connected.
+  useEffect(() => {
+    if (state.phase === "connected") connectedAt.current = Date.now();
+    else {
+      watch.current?.stop();
+      watch.current = null;
+    }
+    if (state.phase === "authorizing") {
+      framesSent.current = 0;
+      setScreen({ status: "idle", events: [], frames: 0 });
+    }
+  }, [state.phase]);
+  useEffect(() => () => watch.current?.stop(), []);
   useEffect(() => {
     const abort = new AbortController();
     let live = true;
@@ -233,6 +260,58 @@ export default function AgentConversation() {
         window.location.origin,
       );
   };
+  const shareScreen = async () => {
+    if (watch.current || state.phase !== "connected") return;
+    let stream: MediaStream;
+    try {
+      stream = await navigator.mediaDevices.getDisplayMedia({
+        video: { frameRate: 5 },
+        audio: false,
+      });
+    } catch {
+      setScreen((previous) => ({ ...previous, status: "denied" }));
+      return;
+    }
+    const conversationId = state.conversationId;
+    const elapsed = () => (Date.now() - connectedAt.current) / 1000;
+    try {
+      watch.current = await startScreenWatch(
+        stream,
+        {
+          onStatus: (status) => {
+            if (status === "ended") watch.current = null;
+            setScreen((previous) => ({ ...previous, status }));
+          },
+          // Every second with changes: context for the agent (no turn) + line in eventos.md.
+          onEvent: (event) => {
+            post({ type: "context", text: `[OCR ${clock(event.at)}] ${event.text}` });
+            void logVaultEvent(conversationId, { kind: "screen", text: event.text, at: event.at });
+            setScreen((previous) => ({
+              ...previous,
+              events: [...previous.events, event].slice(-8),
+            }));
+          },
+          // At a pause: one snapshot so the agent can ask about what it sees.
+          onPause: (frame, at) => {
+            if (framesSent.current >= MAX_SCREEN_FRAMES) return;
+            framesSent.current++;
+            const label = `[PANTALLA ${clock(at)}]`;
+            post({ type: "screen", frame, label });
+            void logVaultEvent(conversationId, { kind: "note", text: `captura enviada al agente ${label}`, at });
+            setScreen((previous) => ({ ...previous, frames: framesSent.current }));
+          },
+        },
+        { now: elapsed },
+      );
+    } catch {
+      for (const track of stream.getTracks()) track.stop();
+      setScreen((previous) => ({ ...previous, status: "error" }));
+    }
+  };
+  const stopScreen = () => {
+    watch.current?.stop();
+    watch.current = null;
+  };
   const send = (event: React.FormEvent) => {
     event.preventDefault();
     const text = draft.trim();
@@ -386,6 +465,35 @@ export default function AgentConversation() {
               </button>
             </>
           )}
+          {state.phase === "connected" &&
+            (screen.status === "watching" || screen.status === "loading" ? (
+              <button className="button secondary" onClick={stopScreen}>
+                <MonitorOff size={18} />
+                Dejar de compartir pantalla
+              </button>
+            ) : (
+              <button
+                className="button secondary"
+                onClick={() => void shareScreen()}
+                disabled={!navigator.mediaDevices?.getDisplayMedia}
+              >
+                <MonitorUp size={18} />
+                Compartir pantalla
+              </button>
+            ))}
+          {screen.status !== "idle" && (
+            <p className="agent-screen-status" role="status">
+              {screen.status === "loading"
+                ? "Preparando la lectura de pantalla… la primera vez descarga el OCR."
+                : screen.status === "watching"
+                  ? `Leyendo tu pantalla cada segundo · capturas al agente ${screen.frames}/${MAX_SCREEN_FRAMES}`
+                  : screen.status === "denied"
+                    ? "No se compartió la pantalla."
+                    : screen.status === "error"
+                      ? "No se pudo leer la pantalla. Deja de compartir y vuelve a intentarlo."
+                      : "Pantalla dejó de compartirse."}
+            </p>
+          )}
           {active && (
             <button className="button end-button" onClick={stop}>
               <PhoneOff size={18} />
@@ -393,15 +501,29 @@ export default function AgentConversation() {
             </button>
           )}
           <p className="agent-scope">
-            Esta conversación no se escucha en la sala del equipo. El agente
-            recibe voz o texto; la pantalla y el Work Map todavía no están
-            conectados.
+            Esta conversación no se escucha en la sala del equipo. Si compartes
+            pantalla, tu navegador la lee cada segundo: el agente recibe el
+            texto que cambia y una captura en cada pausa (máx.{" "}
+            {MAX_SCREEN_FRAMES}). Las capturas se suben a ElevenLabs; usa
+            datos ficticios.
           </p>
         </section>
         <section
           className="agent-transcript"
           aria-labelledby="agent-transcript-title"
         >
+          {screen.events.length > 0 && (
+            <div className="agent-screen-log" aria-live="polite">
+              <h3>Lo que pasa en tu pantalla</h3>
+              <ol>
+                {screen.events.map((event) => (
+                  <li key={`${event.at}-${event.text.slice(0, 20)}`}>
+                    <time>{clock(event.at)}</time> {event.text}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
           <div className="agent-transcript-heading">
             <h2 id="agent-transcript-title">La conversación</h2>
             <span>Mensajes recientes · temporales</span>
