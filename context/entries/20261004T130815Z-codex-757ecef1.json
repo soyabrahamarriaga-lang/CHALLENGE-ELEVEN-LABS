@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "id": "20261004T130815Z-codex-757ecef1",
+  "at": "2026-10-04T13:08:15.662372Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "browser-local-vault",
+  "summary": "Conectar la boveda de cada computadora al sitio publico con permiso del navegador",
+  "result": "Biblioteca, mapas, metadatos y retiro usan la carpeta elegida. Senior copia mensajes recibidos y capturas compartidas, y genera borradores y Canvas locales. El handle vive solo en esta pestana y no se sube la carpeta a Vercel.",
+  "files": [
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-browser-local-vault.md",
+    "docs/LOCAL-BROWSER-VAULT.md",
+    "docs/VERCEL-DEMO.md",
+    "package-lock.json",
+    "package.json",
+    "server/processCatalog.d.mts",
+    "server/processFlow.mjs",
+    "server/processFlowCore.d.mts",
+    "server/processFlowCore.mjs",
+    "server/processKnowledge.d.mts",
+    "src/App.tsx",
+    "src/features/AgentConversation.tsx",
+    "src/features/DeleteProcess.tsx",
+    "src/features/ObsidianSetup.css",
+    "src/features/ObsidianSetup.tsx",
+    "src/i18n/en.json",
+    "src/i18n/es.json",
+    "src/services/browserVault.test.ts",
+    "src/services/browserVault.ts",
+    "src/services/browserVaultConnection.test.ts",
+    "src/services/browserVaultConnection.ts",
+    "src/services/processFlow.ts",
+    "src/services/useProcessCollection.ts"
+  ],
+  "decisions": [
+    "File System Access en Chrome/Edge con seleccion explicita por visita, permisos comprobados y objetivo de guardado fijado al iniciar. Reutilizar derivacion pura y SHA-256 compatible. Conservar originales, Canvas manuales y notas arbitrarias."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-browser-local-vault.md"
+  ],
+  "ontology_review": "Sin entidades nuevas: procesos siguen siendo borradores con evidencia. Seleccion de carpeta amplía ubicacion de la coleccion; retiro compatible por marcador local, sin afirmar actualizacion remota del tutor.",
+  "validation": [
+    "226 pruebas Vitest aprobadas, incluidas E/S contra carpetas temporales reales con handles adaptados y permisos simulados, cambios de carpeta, cancelacion y aislamiento de red; 28 Python aprobadas; TypeScript y builds local/Vercel aprobados. Selector de carpeta abierto desde navegador, sin completar permiso nativo por restriccion de herramienta sobre Codex. PR27 en produccion: ambos agentes disponibles, requiresCode=false y acceso temporal texto HTTP200 sin codigo."
+  ],
+  "next_steps": [
+    "Publicar en main. La persona debe pulsar Conectar carpeta en Chrome/Edge y autorizar su boveda; comprobar una conversacion con esa carpeta real. No se ha probado una llamada fisica ni el permiso nativo end-to-end."
+  ]
+}

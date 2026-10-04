@@ -22,7 +22,8 @@ import {
   X,
 } from "lucide-react";
 import { SignIn } from "./features/SignIn";
-import { ObsidianSetup } from "./features/ObsidianSetup";
+import { LocalVaultControl, ObsidianSetup } from "./features/ObsidianSetup";
+import { useBrowserVault } from './services/browserVaultConnection';
 import { demoEntryKey, parseDemoEntry, entryDestination } from "./domain/demoEntry";
 import type { DemoEntry } from "./domain/demoEntry";
 import type { LibraryStatus, Role } from "./domain/types";
@@ -81,12 +82,15 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
   const [processSaved, setProcessSaved] = useState(() => loadSaved("userhelper.process.bookmarks.v1"));
   const [processFilters, setProcessFilters] = useState(emptyProcessFilters);
   const privateView = ["library", "saved", "processes"].includes(route.view);
-  const collection = useProcessCollection(privateView && !cloudDemo);
+  const localVault = useBrowserVault();
+  const vaultAvailable = !cloudDemo || !!localVault;
+  const collection = useProcessCollection(privateView && vaultAvailable, localVault);
   const [libraryStatus, setLibraryStatus] = useState<LibraryStatus>("ready");
   const [menuOpen, setMenuOpen] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [deletion, setDeletion] = useState<ProcessDeletion | null>(null);
+  useEffect(() => { setDeletion(null); }, [localVault]);
   const [toast, setToast] = useState("");
   const mainRef = useRef<HTMLElement>(null);
   useEffect(() => { mainRef.current?.focus(); }, []);
@@ -321,8 +325,8 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
               : "main-content"
           }
         >
-          {cloudDemo && <p className="original-language-note" role="status">{t("Demo de conversaciones: la biblioteca y el guardado de procesos están desactivados en esta versión.")}</p>}
-          {cloudDemo && privateView && <ObsidianSetup onExamples={() => navigate("examples")} />}
+          {cloudDemo && <LocalVaultControl />}
+          {cloudDemo && privateView && !localVault && <ObsidianSetup onExamples={() => navigate("examples")} />}
           {deletion && <DeletionNotice result={deletion} onUpdated={processDeleted} onClose={() => setDeletion(null)}/>}
           {route.view === "home" && route.role === "senior" && (
             <Senior />
@@ -336,7 +340,7 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
               saved={saved}
             />
           )}
-          {(route.view === "library" || route.view === "saved") && !route.id && !cloudDemo && (
+          {(route.view === "library" || route.view === "saved") && !route.id && vaultAvailable && (
             <ProcessLibrary collection={collection} filters={processFilters} onFilters={setProcessFilters}
               onOpen={(id) => navigate("library", id)} saved={processSaved} onToggleSaved={toggleProcessSaved}
               onlySaved={route.view === "saved"} onDeleted={processDeleted} onMap={() => navigate("processes")}/>
@@ -362,12 +366,12 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
                 onAction={() => navigate("examples")}
               />
             ))}
-          {(route.view === "library" || route.view === "processes") && !!route.id && !cloudDemo && (
+          {(route.view === "library" || route.view === "processes") && !!route.id && vaultAvailable && (
             <Suspense fallback={<p role="status">{t("Preparando procedimiento…")}</p>}>
-              <ProcessMaps id={route.id} onOpen={(id) => navigate("library", id)} onUpdated={collection.refresh} onDeleted={processDeleted}/>
+              <ProcessMaps key={localVault?.connectionId || 'server'} id={route.id} onOpen={(id) => navigate("library", id)} onUpdated={collection.refresh} onDeleted={processDeleted}/>
             </Suspense>
           )}
-          {route.view === "processes" && !route.id && !cloudDemo && (
+          {route.view === "processes" && !route.id && vaultAvailable && (
             <Suspense fallback={<p role="status">{t("Preparando relaciones…")}</p>}>
               <KnowledgeMap collection={collection} filters={processFilters} onFilters={setProcessFilters}
                 onOpen={(id) => navigate("library", id)} onLibrary={() => navigate("library")}/>

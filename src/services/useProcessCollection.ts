@@ -4,13 +4,20 @@ import type { ProcessCollection } from '../domain/processFlow';
 import { listProcesses } from './processFlow';
 
 // One owner in App. Changing view never creates a second source or cache.
-export function useProcessCollection(enabled: boolean) {
+export function useProcessCollection(enabled: boolean, source: unknown = null) {
   const removed = useRef(new Set<string>());
+  const previousSource = useRef(source);
   const [data, setData] = useState<ProcessCollection | null>(null);
+  const [dataSource, setDataSource] = useState(source);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [revision, setRevision] = useState(0);
   useEffect(() => {
+    if (!enabled || previousSource.current !== source) {
+      removed.current.clear();
+      setData(null);
+      previousSource.current = source;
+    }
     if (!enabled) return;
     const abort = new AbortController();
     const timeout = setTimeout(() => abort.abort(), 20000);
@@ -18,7 +25,7 @@ export function useProcessCollection(enabled: boolean) {
     setLoading(true);
     setError('');
     void listProcesses(abort.signal).then((next) => {
-      if (live) setData([...removed.current].reduce(withoutProcess, next));
+      if (live) { setData([...removed.current].reduce(withoutProcess, next)); setDataSource(source); }
     }).catch((e: unknown) => {
       if (live) setError(e instanceof Error && !['AbortError', 'TypeError'].includes(e.name)
         ? e.message : 'La bóveda no respondió. Comprueba que el servicio esté activo y vuelve a intentarlo.');
@@ -27,8 +34,8 @@ export function useProcessCollection(enabled: boolean) {
       if (live) setLoading(false);
     });
     return () => { live = false; abort.abort(); clearTimeout(timeout); };
-  }, [enabled, revision]);
-  return { data, loading, error, remove: (id: string) => {
+  }, [enabled, revision, source]);
+  return { data: dataSource === source ? data : null, loading, error, remove: (id: string) => {
     removed.current.add(id);
     setData((current) => current ? withoutProcess(current, id) : current);
     setRevision((n) => n + 1);

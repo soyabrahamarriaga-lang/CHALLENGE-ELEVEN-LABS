@@ -1,4 +1,5 @@
 import { t } from "../i18n";
+import { cloudDemo } from '../services/deployment';
 import { useEffect, useRef, useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { deleteProcess, type ProcessDeletion } from '../services/processFlow';
@@ -42,10 +43,10 @@ export default function DeleteProcess({ id, title, compact = false, onDeleted }:
       <p className="delete-process-name">{title}</p>
       <div id={'delete-description-' + id}>
         <p>{t("Se quitará de Biblioteca, Guardadas y Mapas para todos los perfiles de esta plataforma.")}</p>
-        <p>{t("Actualizaremos el material del tutor para nuevas conversaciones. Los archivos originales se conservan en la bóveda y en ElevenLabs.")}</p>
+        <p>{cloudDemo ? t('Se retira de esta bóveda local. Los archivos originales se conservan y el conocimiento remoto del tutor no se modifica.') : t("Actualizaremos el material del tutor para nuevas conversaciones. Los archivos originales se conservan en la bóveda y en ElevenLabs.")}</p>
       </div>
       {error && <p className="delete-process-error" role="alert">{t(error)}</p>}
-      {busy && <p role="status">{t("Eliminando y actualizando el tutor…")}</p>}
+      {busy && <p role="status">{cloudDemo ? t('Eliminando…') : t("Eliminando y actualizando el tutor…")}</p>}
       <div className="delete-process-actions">
         <button autoFocus className="button secondary" disabled={busy} onClick={() => setOpen(false)}>{t("Cancelar")}</button>
         <button className="button delete-confirm" disabled={busy} onClick={() => void confirm()}>{busy ? t("Eliminando…") : t("Eliminar proceso")}</button>
@@ -68,7 +69,7 @@ export function DeletionNotice({ result, onUpdated, onClose }: {
   };
   return <div className="process-deletion-notice" role="status">
     <p><strong>{t("Proceso eliminado de la plataforma.")}</strong> {result.tutor === 'updated' && t("El material del tutor está actualizado para nuevas conversaciones.")}
-      {result.tutor === 'disabled' && t("El tutor no está configurado en este servidor; su material remoto no se ha actualizado.")}
+      {result.local ? t('El conocimiento remoto del tutor no se ha modificado.') : result.tutor === 'disabled' && t("El tutor no está configurado en este servidor; su material remoto no se ha actualizado.")}
       {result.tutor === 'pending' && t("El tutor aún no pudo actualizarse y puede conservar este material. Reintenta la actualización.")}
       {result.indexes === 'pending' && t(" Los índices de la bóveda están pendientes de actualizar.")}</p>
     {error && <p role="alert">{t(error)}</p>}
