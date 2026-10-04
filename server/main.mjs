@@ -7,6 +7,7 @@ import {
   syncAgentConversations,
   vaultProblems,
 } from "./vault.mjs";
+import { syncTutorKnowledge } from "./tutorKnowledge.mjs";
 
 // One local backend: LiveKit tokens plus the private Obsidian vault.
 export function createAppHandler(handlers = {}) {
@@ -44,7 +45,15 @@ if (process.argv[1]?.endsWith("main.mjs")) {
 
 // Polls ElevenLabs so every finished conversation of the agent lands in the vault,
 // including ones started outside this app. No public URL needed (unlike the webhook).
-export function startAgentSync(config, { log = console, sync = syncAgentConversations } = {}) {
+export function startAgentSync(
+  config,
+  {
+    log = console,
+    sync = syncAgentConversations,
+    tutorAgentId = process.env.ELEVENLABS_TUTOR_AGENT_ID,
+    syncTutor = syncTutorKnowledge,
+  } = {},
+) {
   if (!config.ready || !config.apiKey || !config.agentId || !(config.syncMinutes > 0)) return null;
   const vault = createVault(config);
   let running = false;
@@ -56,6 +65,16 @@ export function startAgentSync(config, { log = console, sync = syncAgentConversa
       if (maps.failures.length) log.error(`[vault] ${maps.failures.length} diagramas pendientes: revisar permisos y archivos de la bóveda`);
       const result = await sync(config, vault);
       for (const file of result.imported) log.info(`[vault] transcripción guardada: ${file}`);
+      // Keep the tutor's ElevenLabs knowledge base in step with the vault's process notes (ADR-0016).
+      if (tutorAgentId) {
+        try {
+          const tutor = await syncTutor({ apiKey: config.apiKey, tutorAgentId, vaultPath: config.path });
+          if (tutor.status === "updated")
+            log.info(`[tutor] conocimiento actualizado desde la bóveda: ${tutor.processes.length} procesos`);
+        } catch (error) {
+          log.error("[tutor] no se pudo actualizar su base de conocimiento:", error?.message || error);
+        }
+      }
     } catch (error) {
       log.error("[vault] sincronización con ElevenLabs falló:", error?.message || error);
     } finally {

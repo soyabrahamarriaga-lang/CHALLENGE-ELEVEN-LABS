@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "id": "20261004T055312Z-claude-5b1238bb",
+  "at": "2026-10-04T05:53:12.312164Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "tutor-knowledge",
+  "summary": "Conectar el tutor a la bóveda Obsidian mediante su base de conocimiento en ElevenLabs",
+  "result": "Las notas de Procesos/ se compilan y se mantienen como documento en la base de conocimiento del tutor, automáticamente en cada sincronización y con npm run tutor:knowledge. Probado con el tutor real: enseña la regla de 30 días y la excepción del director de finanzas en un caso nuevo.",
+  "files": [
+    "context/STATE.md",
+    "context/decisions/ADR-0016.md",
+    "docs/OBSIDIAN.md",
+    "package.json",
+    "scripts/tutor_knowledge.mjs",
+    "server/main.mjs",
+    "server/tutorKnowledge.mjs",
+    "server/tutorKnowledge.test.mjs"
+  ],
+  "decisions": [
+    "Base de conocimiento de ElevenLabs (elegida por el usuario) con un documento compilado, reemplazo verificado y sin tocar el prompt (ADR-0016)."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0016.md"
+  ],
+  "ontology_review": "Sin cambio en ontology.json; materializa tutor uses work_map con las notas de proceso.",
+  "validation": [
+    "npm test: 128 pruebas pasaron (4 nuevas). npm run build completado.",
+    "Real: 4 procesos, 4,887 caracteres adjuntos al tutor; prompt y LLM sin cambios; segunda pasada unchanged; respaldo previo en la bóveda.",
+    "Conversación real con el tutor (conv_1701m42qehmxfyd8355eg7zdt7kw): OC de 35 días urgente → no aprobar y pedir correo del director; teléfono no basta."
+  ],
+  "next_steps": [
+    "Guardar las conversaciones del tutor en la bóveda y ensayar la demo Intern por voz."
+  ]
+}
