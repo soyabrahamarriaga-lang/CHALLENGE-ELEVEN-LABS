@@ -49,7 +49,7 @@ Alternativa sin la app abierta: webhook post-llamada de ElevenLabs a `POST /api/
 
 ## El tutor aprende de la bóveda
 
-Con `ELEVENLABS_TUTOR_AGENT_ID` en `.env`, el backend junta las notas de `Procesos/` (pasos, decisiones, motivos y límites del experto) en un documento y lo mantiene en la **base de conocimiento del tutor** en ElevenLabs. Solo lo reemplaza cuando las notas cambian y no toca su prompt. Forzarlo: `npm run tutor:knowledge`. Estado: `Procesos/tutor-conocimiento.json`. Decisión: [ADR-0016](../context/decisions/ADR-0016.md).
+Con `ELEVENLABS_TUTOR_AGENT_ID` en `.env`, el backend junta las notas de `Procesos/` (pasos, decisiones, motivos y límites del experto) en un documento y lo mantiene en la **base de conocimiento del tutor** en ElevenLabs. Solo lo reemplaza cuando las notas cambian y no toca su prompt. Forzarlo: `npm run tutor:knowledge`. Al eliminar el último proceso se desadjunta el documento de UserHelper; otros documentos y el prompt permanecen. Usa un único backend actualizado por bóveda. Estado: `Procesos/tutor-conocimiento.json`. Decisión: [ADR-0016](../context/decisions/ADR-0016.md).
 
 ## Tutorías
 
@@ -71,7 +71,7 @@ Todas excepto el webhook exigen el origen exacto de `APP_ORIGIN` y JSON.
 ## Límites
 
 - Privado: no copiar notas de la bóveda a este repo, issues ni capturas públicas.
-- Sin redacción automática de datos personales ni botón de retiro todavía. Retirar = borrar la nota y revisar qué Work Map la cita.
+- Eliminar proceso desde la plataforma guarda un marcador privado en `Retirados/<id>.json`: bloquea reimportación, oculta fuentes en la API y excluye sus notas del material del tutor. Los originales de la bóveda y ElevenLabs se conservan; no hay purga ni redacción automática. Ver [eliminación de procesos](PROCESS-MAPS.md#eliminar-un-proceso).
 - La firma del webhook no se ha probado con un envío real de ElevenLabs.
 - Verificado con una conversación real del agente (46 s, 2026-10-03) importada por la sincronización; una segunda pasada la omitió.
 - La sesión `ejemplo_sintetico_demo` de la bóveda es sintética, creada para verificar la escritura; se puede borrar.

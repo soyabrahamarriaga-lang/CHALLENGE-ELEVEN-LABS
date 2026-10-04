@@ -1,5 +1,9 @@
 # Estado compartido
 
+## Eliminar procesos desde la plataforma (2026-10-04)
+
+Biblioteca, Guardadas y el detalle permiten eliminar un proceso con confirmación. El retiro persiste en la bóveda, excluye mapas/imágenes y futuras importaciones, regenera índices y actualiza el material del tutor, incluido el caso de eliminar el último proceso. Los originales se conservan en Obsidian y ElevenLabs. Fallas parciales del tutor o índices se informan con reintento. Es una función compartida de la demo local, sin permisos por persona; usar una sola instancia de backend por bóveda. Ver `ADR-process-removal.md` y `docs/PROCESS-MAPS.md`. No constituye purga de datos personales ni retiro de evidencia parcial.
+
 ## Voces de fondo (2026-10-04)
 
 El usuario pidió ignorar automáticamente voces de otras personas o televisión, sin pulsar para hablar. El observador tiene filtro de fondo activado, prompt de escucha dirigida y herramienta `skip_turn` para guardar silencio ante contenido ajeno. Como el ruido podía interrumpir antes de clasificarse, termina sus respuestas antes de tomar otro turno, manteniendo transcripción de intervenciones mientras habla. El timeout para volver a preguntar por silencio pasa de 3 a 30 s y el prompt descarta esas entradas sin hablar. El ajuste aplica a nuevas conversaciones sin recompilar; no modifica el tutor. Perfil en `config/observer-audio.json`, prompt versionado y decisión en `ADR-agent-background-voices.md`. No es identificación de hablante: voces pertinentes a la tarea aún pueden confundirse y el audio de fondo puede seguir en la transcripción. Pendiente calibración física del operador.
@@ -50,7 +54,7 @@ Unificar Biblioteca y Mapas sobre una colección de la bóveda: biblioteca orden
 Plan vigente: `docs/ROADMAP-15H.md`; método: `docs/WORKFLOW.md`; acceso: `docs/READINESS.md`. La ampliación v2 del harness (issue #2) se conservó localmente y queda diferida; la base estable sigue operativa.
 
 ## Bóveda Obsidian
-Transcripciones del agente se importan al terminar a una bóveda Obsidian privada (repo `userhelper-vault`, fuera de este repo público). API de eventos/notas lista para visión y Work Map. Ver docs/OBSIDIAN.md y ADR-0011. Pendiente: llamar eventos desde visión/client tools, retiro desde UI y redacción de datos personales.
+Transcripciones del agente se importan al terminar a una bóveda Obsidian privada (repo `userhelper-vault`, fuera de este repo público). API de eventos/notas lista para visión y Work Map. Ver docs/OBSIDIAN.md y ADR-0011. Pendiente: llamar eventos desde visión/client tools, retiro parcial/purga de originales y redacción de datos personales.
 
 ## Diagramas de procesos
 

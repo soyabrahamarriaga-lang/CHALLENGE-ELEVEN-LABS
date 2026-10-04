@@ -410,14 +410,15 @@
     "La clasificación editable y un catálogo de reglas no ejecutan ni validan políticas contables o fiscales.",
     "Biblioteca y Mapas son vistas de la misma colección; cambiar de vista no cambia los procesos ni mezcla ejemplos.",
     "Toda conexión temática conserva el paso y campo que la sustenta; no implica causalidad, secuencia o políticas equivalentes.",
-    "Un proceso aislado o sin tarea identificada sigue siendo accesible aunque no tenga conexiones."
+    "Un proceso aislado o sin tarea identificada sigue siendo accesible aunque no tenga conexiones.",
+    "Un proceso eliminado de la plataforma queda fuera de Biblioteca, Guardadas, Mapas y la compilación del tutor; el retiro persiste ante reimportaciones y no implica borrar las fuentes ni las conversaciones del proveedor."
   ],
   "open_questions": [
     "¿Qué flujo y casos se usarán para demostrar transferencia?",
     "¿Qué señal distingue una pausa o lectura de una oportunidad para preguntar?",
     "¿Cómo se representa la incertidumbre y se decide que el debrief terminó?",
     "¿Qué mecanismo permite intervenir antes del guardado en la interfaz elegida?",
-    "¿Cómo se retira evidencia y se actualizan mapas/tutores derivados de ella?",
+    "¿Cómo retirar evidencia parcial, purgar originales y respaldos y actualizar reglas que dependan de ella?",
     "¿Qué límites y excepciones no quedan cubiertos por una sola sesión?",
     "¿Qué retención y acceso del proveedor acuerda el equipo antes de usar datos reales del experto?"
   ]

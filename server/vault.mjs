@@ -1,3 +1,5 @@
+import { isProcessRemoved, removedProcessIds, markProcessRemoved, withProcessLock } from "./processRemoval.mjs";
+import { syncTutorKnowledge } from "./tutorKnowledge.mjs";
 import { buildKnowledgeGraph, knowledgeToCanvas } from "./processKnowledge.mjs";
 import { writeKnowledgeIndex } from "./vaultCatalog.mjs";
 import { extractionFromConversation } from "./processExtraction.mjs";
@@ -45,6 +47,7 @@ export function readVaultConfig(env = process.env) {
     origin: env.APP_ORIGIN || "http://127.0.0.1:5173",
     apiKey: (env.ELEVENLABS_API_KEY || "").trim(),
     agentId: (env.ELEVENLABS_AGENT_ID || "").trim(),
+    tutorAgentId: (env.ELEVENLABS_TUTOR_AGENT_ID || "").trim(),
     syncMinutes: Number(env.VAULT_SYNC_MINUTES || 2),
     apiBase: env.ELEVENLABS_API_BASE || "https://api.elevenlabs.io",
     webhookSecret: env.ELEVENLABS_WEBHOOK_SECRET || "",
@@ -259,7 +262,8 @@ export async function syncAgentConversations(
           await fetchConversation(config, item.conversation_id, fetchImpl),
           { recoverImages: true, fetcher: fetchImpl },
         );
-        result.imported.push(saved.file);
+        if (saved.ignored) result.skipped++;
+        else result.imported.push(saved.file);
       }
     }
     if (!body.has_more || !body.next_cursor) break;
@@ -287,21 +291,23 @@ export function createVault(config) {
     await mkdir(sessions, { recursive: true });
     return (
       (await readdir(sessions)).find((name) =>
-        name.endsWith(`-${conversationId}`),
+        name.replace(/^(?:\d{4}-\d{2}-\d{2}|sin-fecha)-/, "") === conversationId,
       ) || null
     );
   }
   async function ensureFolder(conversationId) {
     if (!ID.test(conversationId)) throw new Error("invalid-id");
+    if (await isProcessRemoved(root, conversationId)) throw new Error("process-deleted");
     const existing = await findFolder(conversationId);
     if (existing) return existing;
     const folder = `${new Date().toISOString().slice(0, 10)}-${conversationId}`;
     await mkdir(inside("Sesiones", folder), { recursive: true });
     return folder;
   }
-  return {
+  const vault = {
     root,
     async hasTranscript(conversationId) {
+      if (await isProcessRemoved(root, conversationId)) return true;
       const folder = await findFolder(conversationId);
       if (!folder) return false;
       return stat(inside("Sesiones", folder, "transcripcion.md")).then(
@@ -315,6 +321,8 @@ export function createVault(config) {
     ) {
       if (!conversation || !ID.test(conversation.conversation_id || ""))
         throw new Error("invalid-id");
+      if (await isProcessRemoved(root, conversation.conversation_id))
+        return { ignored: "deleted", id: conversation.conversation_id };
       const folder =
         (await findFolder(conversation.conversation_id)) ||
         sessionFolder(conversation);
@@ -379,10 +387,12 @@ export function createVault(config) {
       return saveCapture(root, folder, capture);
     },
     async getCapture(conversationId, captureId) {
+      if (await isProcessRemoved(root, conversationId)) return null;
       const folder = await findFolder(conversationId);
       return folder ? getCapture(root, folder, captureId) : null;
     },
     async saveProcessMetadata(conversationId, body) {
+      if (await isProcessRemoved(root, conversationId)) throw new Error("process-deleted");
       const folder = await findFolder(conversationId);
       if (!folder) return null;
       const dir = await privateDirectory(root, "Sesiones", folder);
@@ -420,10 +430,21 @@ export function createVault(config) {
     },
     async getProcessFlow(conversationId) {
       if (!ID.test(conversationId)) throw new Error("invalid-id");
+      if (await isProcessRemoved(root, conversationId)) return null;
       const folder = await findFolder(conversationId);
       if (!folder) return null;
       const flow = await ensureProcessFlow(root, folder, conversationId);
       return flow ? { ...flow, catalog: await readProcessCatalog(root) } : null;
+    },
+    async removeProcess(conversationId) {
+      if (!ID.test(conversationId)) throw new Error("invalid-id");
+      const removed = await isProcessRemoved(root, conversationId);
+      if (!removed && !await findFolder(conversationId)) return null;
+      await markProcessRemoved(root, conversationId);
+      let indexes = "updated";
+      try { await this.ensureProcessMaps(); }
+      catch { indexes = "pending"; }
+      return { id: conversationId, deleted: true, indexes };
     },
     async ensureProcessMaps() {
       const sessions = await this.listSessions();
@@ -477,8 +498,9 @@ export function createVault(config) {
       const sessions = inside("Sesiones");
       await mkdir(sessions, { recursive: true });
       const result = [];
+      const removed = await removedProcessIds(root);
       for (const folder of (await readdir(sessions)).sort().reverse()) {
-        if (folder.startsWith(".")) continue;
+        if (folder.startsWith(".") || removed.includes(folder.replace(/^(?:\d{4}-\d{2}-\d{2}|sin-fecha)-/, ""))) continue;
         const files = await readdir(inside("Sesiones", folder)).catch(() => []);
         const summary = {};
         if (files.includes("transcripcion.md")) {
@@ -504,6 +526,9 @@ export function createVault(config) {
       return result;
     },
   };
+  return Object.fromEntries(Object.entries(vault).map(([name, value]) => [name,
+    typeof value === "function" ? (...args) => withProcessLock(root, () => value.apply(vault, args)) : value,
+  ]));
 }
 
 function send(res, status, body) {
@@ -568,7 +593,7 @@ export function createVaultHandler(config = readVaultConfig(), options = {}) {
           recoverImages: true,
           fetcher: fetchImpl,
         });
-        log.info(`[vault] transcripción guardada: ${saved.file}`);
+        if (saved.file) log.info(`[vault] transcripción guardada: ${saved.file}`);
         return send(res, 200, saved);
       }
 
@@ -603,11 +628,29 @@ export function createVaultHandler(config = readVaultConfig(), options = {}) {
       const [, , collection, id, action, name] = parts;
       if (!ID.test(id || "")) return send(res, 400, { error: "invalid_id" });
 
+      if (collection === "processes" && action === "delete" && parts.length === 5) {
+        let body;
+        try { body = JSON.parse(await readRaw(req, 1024)); }
+        catch { return send(res, 400, { error: "invalid_request" }); }
+        if (body?.confirm !== true) return send(res, 400, { error: "confirmation_required" });
+        const result = await vault.removeProcess(id);
+        if (!result) return send(res, 404, { error: "process_not_found" });
+        let tutor = "pending";
+        try {
+          const update = await (options.syncTutor || syncTutorKnowledge)({
+            apiKey: config.apiKey, tutorAgentId: config.tutorAgentId, vaultPath: config.path,
+          });
+          tutor = update.status === "disabled" ? "disabled" : "updated";
+        } catch (error) { log.error("[vault] tutor pendiente tras eliminar proceso:", error?.message); }
+        return send(res, 200, { ...result, tutor });
+      }
+
       if (
         collection === "conversations" &&
         action === "import" &&
         parts.length === 5
       ) {
+        if (await isProcessRemoved(vault.root, id)) return send(res, 410, { error: "process_deleted" });
         if (!config.apiKey) return send(res, 503, { error: "api_key_missing" });
         const conversation = await fetchConversation(config, id, fetchImpl);
         if (
@@ -659,7 +702,8 @@ export function createVaultHandler(config = readVaultConfig(), options = {}) {
             200,
             await vault.saveCapture(id, { data, at: body.at }),
           );
-        } catch {
+        } catch (error) {
+          if (error.message === "process-deleted") throw error;
           return send(res, 400, { error: "invalid_capture" });
         }
       }
@@ -728,6 +772,7 @@ export function createVaultHandler(config = readVaultConfig(), options = {}) {
       }
       return send(res, 404, { error: "not_found" });
     } catch (error) {
+      if (error?.message === "process-deleted") return send(res, 410, { error: "process_deleted" });
       log.error("[vault] error:", error?.message || error);
       if (error?.status === 404)
         return send(res, 404, { error: "conversation_not_found" });

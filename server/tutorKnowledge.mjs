@@ -1,3 +1,5 @@
+import { isProcessRemoved, withProcessLock } from "./processRemoval.mjs";
+import { privateDirectory } from "./vaultMedia.mjs";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, rename, stat, writeFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
@@ -40,7 +42,7 @@ export function cleanProcessNote(body) {
 
 async function walk(dir) {
   const out = [];
-  for (const entry of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) out.push(...(await walk(path)));
     else if (entry.isFile() && entry.name.endsWith(".md")) out.push(path);
@@ -51,9 +53,11 @@ async function walk(dir) {
 export async function compileKnowledge(root) {
   const base = resolve(root);
   const byConversation = new Map();
-  for (const file of await walk(join(base, "Procesos"))) {
+  const processDir = await privateDirectory(base, "Procesos");
+  for (const file of await walk(processDir)) {
     const { fields, body } = frontmatter(await readFile(file, "utf8"));
     if (fields.tipo !== "proceso" || !fields.nombre) continue;
+    if (await isProcessRemoved(base, fields.conversacion)) continue;
     if (/^registro sin proceso/i.test(fields.nombre) || /ejemplo_sintetico/.test(fields.conversacion || "")) continue;
     const key = fields.conversacion || relative(base, file);
     const { mtimeMs } = await stat(file);
@@ -108,18 +112,38 @@ async function call(fetchImpl, apiKey, method, path, body) {
 
 // Uploads the compiled knowledge when it changed and attaches it to the tutor, replacing the
 // previous UserHelper document. Verifies the tutor's prompt is untouched after the update.
-export async function syncTutorKnowledge(
+export async function syncTutorKnowledge(config, options = {}) {
+  if (!config.vaultPath) return { status: "disabled" };
+  return withProcessLock(config.vaultPath, () => updateTutorKnowledge(config, options));
+}
+async function updateTutorKnowledge(
   { apiKey, tutorAgentId, vaultPath },
   { fetch: fetchImpl = fetch, now = () => new Date() } = {},
 ) {
   if (!apiKey || !/^[A-Za-z0-9_-]{1,100}$/.test(tutorAgentId || "") || !vaultPath) return { status: "disabled" };
   const knowledge = await compileKnowledge(vaultPath);
-  if (!knowledge.processes.length) return { status: "empty" };
   const state = await readState(vaultPath);
   const agentPath = `/v1/convai/agents/${encodeURIComponent(tutorAgentId)}`;
   const agent = await call(fetchImpl, apiKey, "GET", agentPath);
   const prompt = agent?.conversation_config?.agent?.prompt;
   if (!prompt) throw new Error("tutor-invalid-response");
+  if (!knowledge.processes.length) {
+    const stale = (prompt.knowledge_base || []).filter((doc) => doc.id === state?.docId || doc.name === DOC_NAME);
+    if (stale.length) {
+      await call(fetchImpl, apiKey, "PATCH", agentPath, { conversation_config: { agent: { prompt: {
+        knowledge_base: (prompt.knowledge_base || []).filter((doc) => !stale.some((old) => old.id === doc.id)),
+      } } } });
+      const after = (await call(fetchImpl, apiKey, "GET", agentPath))?.conversation_config?.agent?.prompt;
+      if (!after || (after.knowledge_base || []).some((doc) => stale.some((old) => old.id === doc.id)))
+        throw new Error("tutor-kb-still-attached");
+      if ((after.prompt || "") !== (prompt.prompt || "") || after.llm !== prompt.llm)
+        throw new Error("tutor-prompt-changed");
+      for (const doc of stale)
+        await call(fetchImpl, apiKey, "DELETE", `/v1/convai/knowledge-base/${encodeURIComponent(doc.id)}`).catch(() => {});
+    }
+    await writeState(vaultPath, { agentId: tutorAgentId, docId: null, digest: knowledge.digest, actualizado: now().toISOString(), procesos: [] });
+    return { status: "empty", processes: [] };
+  }
   const attached = (prompt.knowledge_base || []).some((doc) => doc.id === state?.docId);
   if (state?.agentId === tutorAgentId && state.digest === knowledge.digest && attached)
     return { status: "unchanged", docId: state.docId, processes: knowledge.processes };

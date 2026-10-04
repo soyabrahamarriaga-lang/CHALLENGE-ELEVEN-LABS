@@ -14,8 +14,8 @@ export async function readProcessData<T>(
     throw new Error(
       response.status === 503
         ? "La bóveda no está configurada en esta computadora. Configúrala para ver tus procesos."
-        : response.status === 404
-          ? "Este proceso aún no tiene una transcripción disponible."
+        : response.status === 404 || response.status === 410
+          ? "Este proceso ya no está disponible o aún no tiene una transcripción."
           : response.status === 403
             ? "Abre UserHelper desde la dirección autorizada del equipo."
             : "No pudimos leer los procesos. Comprueba que el servicio de la bóveda esté activo y vuelve a intentarlo.",
@@ -70,4 +70,21 @@ export async function getProcessImage(
   );
   if (!response.ok) throw new Error("Imagen no disponible");
   return response.blob();
+}
+
+export interface ProcessDeletion {
+  id: string;
+  deleted: true;
+  tutor: 'updated' | 'pending' | 'disabled';
+  indexes: 'updated' | 'pending';
+}
+export async function deleteProcess(id: string): Promise<ProcessDeletion> {
+  const response = await fetch(`/api/vault/processes/${encodeURIComponent(id)}/delete`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ confirm: true }), cache: 'no-store', signal: AbortSignal.timeout(150000),
+  });
+  if (!response.ok) throw new Error(response.status === 403
+    ? 'Abre UserHelper desde la dirección autorizada del equipo.'
+    : 'No pudimos confirmar la eliminación. Puedes reintentar sin afectar otros procesos.');
+  return response.json();
 }

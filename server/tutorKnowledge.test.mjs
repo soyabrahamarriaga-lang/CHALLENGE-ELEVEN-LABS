@@ -1,5 +1,6 @@
+import { markProcessRemoved } from "./processRemoval.mjs";
 import { afterEach, describe, expect, it } from "vitest";
-import { mkdtemp, mkdir, readFile, rm, utimes, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, symlink, utimes, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { cleanProcessNote, compileKnowledge, syncTutorKnowledge } from "./tutorKnowledge.mjs";
@@ -109,6 +110,34 @@ describe("tutor knowledge from the vault", () => {
     expect(changed.calls).not.toContain("DELETE /v1/convai/knowledge-base/doc_manual");
   });
 
+  it("does not treat an unreadable or missing vault as an empty knowledge base", async () => {
+    const dir = await vault();
+    const remote = fakeElevenLabs();
+    const config = { apiKey: "only-a-test-key", tutorAgentId: "agent_tutor", vaultPath: dir };
+    await rm(join(dir, "Procesos"), { recursive: true });
+    await symlink(tmpdir(), join(dir, "Procesos"));
+    await expect(syncTutorKnowledge(config, { fetch: remote.fetcher })).rejects.toThrow("invalid-private-path");
+    await expect(syncTutorKnowledge({ ...config, vaultPath: join(dir, "missing") }, { fetch: remote.fetcher })).rejects.toThrow();
+    expect(remote.calls).toEqual([]);
+  });
+
+  it("detaches the final removed process while preserving other knowledge and the tutor prompt", async () => {
+    const dir = await vault();
+    await writeFile(join(dir, "Procesos", "compras", "ordenes", "a.md"), note("Rechazar órdenes", "conv_a", body));
+    const config = { apiKey: "only-a-test-key", tutorAgentId: "agent_tutor", vaultPath: dir };
+    const manual = { type: "file", id: "doc_manual", name: "Manual" };
+    const remote = fakeElevenLabs({ existing: [manual] });
+    const before = await syncTutorKnowledge(config, { fetch: remote.fetcher });
+    await markProcessRemoved(dir, "conv_a");
+    expect((await compileKnowledge(dir)).processes).toEqual([]);
+    expect((await syncTutorKnowledge(config, { fetch: remote.fetcher })).status).toBe("empty");
+    expect(remote.calls).toContain(`DELETE /v1/convai/knowledge-base/${before.docId}`);
+    expect(remote.calls).not.toContain("DELETE /v1/convai/knowledge-base/doc_manual");
+    const state = JSON.parse(await readFile(join(dir, "Procesos", "tutor-conocimiento.json"), "utf8"));
+    expect(state.docId).toBeNull();
+    expect(state.procesos).toEqual([]);
+  });
+
   it("refuses to continue if the tutor's prompt changed and does nothing without configuration", async () => {
     const dir = await vault();
     await writeFile(join(dir, "Procesos", "compras", "ordenes", "a.md"), note("Rechazar órdenes", "conv_a", body));
@@ -117,6 +146,6 @@ describe("tutor knowledge from the vault", () => {
     await expect(syncTutorKnowledge(config, { fetch: broken.fetcher })).rejects.toThrow("tutor-prompt-changed");
     expect((await syncTutorKnowledge({ ...config, tutorAgentId: "" })).status).toBe("disabled");
     const empty = await vault();
-    expect((await syncTutorKnowledge({ ...config, vaultPath: empty })).status).toBe("empty");
+    expect((await syncTutorKnowledge({ ...config, vaultPath: empty }, { fetch: fakeElevenLabs().fetcher })).status).toBe("empty");
   });
 });

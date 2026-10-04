@@ -1,3 +1,4 @@
+import DeleteProcess, { type OnProcessDeleted } from "./DeleteProcess";
 import { useEffect, useState, useRef } from "react";
 import {
   ReactFlow,
@@ -542,10 +543,12 @@ export default function ProcessMaps({
   id,
   onOpen,
   onUpdated,
+  onDeleted,
 }: {
   id: string;
   onOpen: (id: string) => void;
   onUpdated: () => void;
+  onDeleted: OnProcessDeleted;
 }) {
   const [data, setData] = useState<FlowResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -643,6 +646,7 @@ export default function ProcessMaps({
               <Pencil size={15} />
               Editar nombre y categoría
             </button>
+            <DeleteProcess id={data.flow.id} title={data.flow.title} onDeleted={onDeleted}/>
           </div>
           {editing && (
             <MetadataEditor
