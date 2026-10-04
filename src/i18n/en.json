@@ -646,5 +646,17 @@
   "La biblioteca está disponible en la versión local": "The library is available in the local version",
   "Aquí puedes conversar con los agentes y explorar ejemplos. Los procesos de tu bóveda permanecen en tu computadora.": "Here you can talk with the agents and explore examples. The processes in your vault remain on your computer.",
   "Explica una tarea, sus decisiones y sus motivos. Puedes compartir pantalla para que el agente te acompañe.": "Explain a task, its decisions and the reasons behind them. You can share your screen so the agent can follow along.",
-  "). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.": "). This demo does not save processes or captures to the library. Use fictional data."
+  "). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.": "). This demo does not save processes or captures to the library. Use fictional data.",
+  "Instalar Obsidian": "Install Obsidian",
+  "Instala Obsidian en tu computadora": "Install Obsidian on your computer",
+  "Descarga el instalador oficial para abrir y organizar tu bóveda local.": "Download the official installer to open and organize your local vault.",
+  "Abre el archivo .dmg, arrastra Obsidian a Aplicaciones y ábrelo desde ahí.": "Open the .dmg file, drag Obsidian to Applications, then open it from there.",
+  "Abre el archivo .exe y sigue los pasos del instalador. Después, abre Obsidian.": "Open the .exe file and follow the installer steps. Then open Obsidian.",
+  "Descargar para Mac": "Download for Mac",
+  "Descargar para Windows": "Download for Windows",
+  "Ya lo instalé: abrir Obsidian": "Already installed: open Obsidian",
+  "Otros sistemas y versiones": "Other systems and versions",
+  "La instalación se completa en tu computadora. No conecta automáticamente tu bóveda con esta web; el guardado de procesos aquí sigue desactivado.": "Installation finishes on your computer. It does not automatically connect your vault to this website; saving processes here is still disabled.",
+  "Mac": "Mac",
+  "Windows": "Windows"
 }
