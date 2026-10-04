@@ -20,6 +20,8 @@ import type {
   AgentMode,
   AgentState,
 } from "../services/agentProtocol";
+import { archiveConversation } from "../services/vault";
+import type { ArchiveResult } from "../services/vault";
 import "./AgentConversation.css";
 const labels = {
   idle: "Listo para comenzar",
@@ -51,8 +53,22 @@ export default function AgentConversation() {
   const frameSession = useRef<FrameSession | null>(null);
   const generation = useRef(0);
   const request = useRef<AbortController | null>(null);
+  const [archive, setArchive] = useState<ArchiveResult | "saving" | null>(null);
   const busy = state.phase === "authorizing" || state.phase === "connecting";
   const active = busy || state.phase === "connected";
+  // Copy the finished conversation into the private Obsidian vault, when the team enabled it.
+  useEffect(() => {
+    if (state.phase !== "ended" || !state.conversationId) return;
+    const abort = new AbortController();
+    setArchive("saving");
+    archiveConversation(state.conversationId, { signal: abort.signal }).then((result) => {
+      if (!abort.signal.aborted) setArchive(result);
+    });
+    return () => abort.abort();
+  }, [state.phase, state.conversationId]);
+  useEffect(() => {
+    if (state.phase === "authorizing") setArchive(null);
+  }, [state.phase]);
   useEffect(() => {
     const abort = new AbortController();
     let live = true;
@@ -262,10 +278,19 @@ export default function AgentConversation() {
         <p>
           <strong>Tú decides cuándo empezar.</strong> Tu voz y tus mensajes se
           envían a ElevenLabs, que puede conservar audio y transcripciones según
-          la configuración del agente. UserHelper no guarda estos mensajes al
-          salir de esta pantalla.
+          la configuración del agente. Si tu equipo activó la bóveda privada,
+          al terminar se guarda una copia de la transcripción en ella.
         </p>
       </div>
+      {archive && (archive === "saving" || archive.status !== "disabled") && (
+        <p className="agent-archive" role="status">
+          {archive === "saving"
+            ? "Guardando la transcripción en la bóveda…"
+            : archive.status === "saved"
+              ? `Transcripción guardada en la bóveda: ${archive.file}`
+              : `No se pudo guardar en la bóveda (${archive.reason}).`}
+        </p>
+      )}
       {state.error && (
         <div className="rtc-alert" role="alert">
           <CircleAlert size={20} />

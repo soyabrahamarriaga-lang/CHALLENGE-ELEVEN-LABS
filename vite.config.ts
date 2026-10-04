@@ -9,6 +9,7 @@ export default defineConfig({
     proxy: {
       "/api/livekit": "http://127.0.0.1:3001",
       "/api/elevenlabs": "http://127.0.0.1:3001",
+      "/api/vault": "http://127.0.0.1:3001",
     },
   },
   build: {

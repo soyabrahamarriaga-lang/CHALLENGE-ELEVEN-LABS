@@ -11,7 +11,7 @@
 5. Abrir `http://127.0.0.1:5173/#senior/agent`, introducir el código del equipo y aceptar el aviso. **Iniciar con micrófono** solicita el permiso del navegador; **Iniciar por texto** no captura audio. Puede enviarse texto también durante una conversación de voz.
 6. **Terminar conversación** corta la sesión. Iniciar otra crea una conversación nueva; no se promete recuperar el contexto anterior. Cambiar de pantalla también la termina. Los mensajes visibles se descartan al salir o comenzar otra conversación.
 
-Se mantiene un máximo de 200 mensajes recientes en memoria, con 20 000 caracteres por mensaje recibido y 4 000 por mensaje enviado. No se guarda transcripción, código ni acceso temporal en localStorage. Los eventos de transcripción dependen de la configuración del agente y pueden contener errores. Un mensaje del agente no acredita observación real de pantalla ni conocimiento validado.
+Se mantiene un máximo de 200 mensajes recientes en memoria, con 20 000 caracteres por mensaje recibido y 4 000 por mensaje enviado. No se guarda transcripción, código ni acceso temporal en localStorage. Si `VAULT_PATH` está configurado, al terminar se importa la transcripción a la bóveda Obsidian privada (docs/OBSIDIAN.md). Los eventos de transcripción dependen de la configuración del agente y pueden contener errores. Un mensaje del agente no acredita observación real de pantalla ni conocimiento validado.
 
 ## Acceso y arquitectura
 

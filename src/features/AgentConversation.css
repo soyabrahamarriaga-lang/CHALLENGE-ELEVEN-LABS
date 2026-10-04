@@ -248,3 +248,9 @@
     gap: 16px;
   }
 }
+.agent-archive {
+  margin: -12px 0 24px;
+  font-size: 13px;
+  color: #385947;
+  overflow-wrap: anywhere;
+}
