@@ -2,7 +2,7 @@
 
 Proyecto para el Challenge 01 del 7th Global AI Hackathon (Hack-Nation × ElevenLabs): aprender el criterio de un experto mientras trabaja, construir un Work Map verificable y enseñar a otra persona en un caso nuevo.
 
-**Estado:** UserHelper en React + TypeScript, con perfiles senior/intern de demostración y una sección de videollamada mediante LiveKit. La biblioteca, escenas y procesos siguen siendo ejemplos sintéticos. Incluye conversación individual con el agente ElevenLabs existente; Capture → Map → Teach todavía requiere integración. El harness de contexto y colaboración sigue operativo.
+**Estado:** UserHelper en React + TypeScript, con conversación individual de ElevenLabs integrada en Mi espacio y perfiles senior/intern de demostración. La biblioteca, escenas y procesos de ejemplo siguen siendo sintéticos. Capture → Map → Teach todavía requiere integración. El harness de contexto y colaboración sigue operativo.
 
 ## Ejecutar el prototipo
 
@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Abre `http://127.0.0.1:5173`. Cambia de perfil desde «Explorar como». El botón «Demo interactiva» permite probar conexión y estados de biblioteca. Las sesiones guardadas permanecen únicamente en el navegador de esa computadora. Los recorridos de demostración no solicitan dispositivos. La sección Videollamada tiene consentimiento y controles propios.
+Abre `http://127.0.0.1:5173`. Cambia de perfil desde «Explorar como». El botón «Demo interactiva» permite probar conexión y estados de biblioteca. Las sesiones guardadas permanecen únicamente en el navegador de esa computadora. Los recorridos de demostración no solicitan dispositivos. La conversación individual con el agente tiene consentimiento y controles propios.
 
 ```sh
 npm test
@@ -22,13 +22,13 @@ npm run build
 
 El build queda en `dist/` y no se versiona. El contrato, recorrido de prueba y puntos de integración están en [FRONTEND-PROTOTYPE.md](docs/FRONTEND-PROTOTYPE.md); la decisión de alcance está en [ADR-0008](context/decisions/ADR-0008.md).
 
-## Videollamadas reales
+## Conversación desde Mi espacio
 
-Completar `.env` con la URL y credenciales de LiveKit, sala y código de equipo. Ejecutar `npm run dev:token` en otra terminal junto a `npm run dev`. Entrar por **Videollamada**; cámara, micrófono y pantalla comienzan apagados. Consulta [LIVEKIT.md](docs/LIVEKIT.md) para la configuración completa, trabajo desde otras computadoras y límites de la integración.
+La entrada principal es **Mi espacio → Iniciar conversación con el agente**. La aplicación se centra en conversar individualmente con ElevenLabs. Ya no ofrece videollamadas del equipo ni un inicio de llamada simulada. Biblioteca, Guardadas y Mapas de procesos siguen disponibles. Los enlaces antiguos del agente y de videollamada llevan a Mi espacio. Decisión: [ADR-mi-espacio-agente](context/decisions/ADR-mi-espacio-agente.md).
 
 ## Conversación individual con tu agente
 
-Completar `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` en `.env`, conservar el código de equipo y reiniciar `npm run dev:token`. Abrir **Tu aprendiz de IA**, aceptar el aviso e iniciar por voz o texto. La clave permanece en el backend. La conversación individual puede compartir pantalla con OCR y conserva transcripciones en la bóveda; el Work Map validado sigue pendiente. Configuración, privacidad y resultados: [ELEVENLABS.md](docs/ELEVENLABS.md).
+Completar `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` en `.env` y reiniciar `npm run dev:token`. Abrir **Mi espacio**, pulsar **Iniciar conversación con el agente**, aceptar el aviso e iniciar por voz o texto. La clave permanece en el backend. La conversación individual puede compartir pantalla con OCR y conserva transcripciones en la bóveda; el Work Map validado sigue pendiente. Configuración, privacidad y resultados: [ELEVENLABS.md](docs/ELEVENLABS.md).
 
 ## Diagramas de tus procesos
 
@@ -55,7 +55,7 @@ npm run demo
 
 Si ya tienes el repo: `git switch main && git pull && npm run demo`.
 
-`npm run demo` instala dependencias si faltan, crea `.env`, activa el inicio del agente sin código (ADR-0014), pide `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` la primera vez, levanta backend (3001) y app (5173) y abre `#senior/agent`. Ctrl+C detiene todo. Si lo corre otro agente sin terminal interactiva, agrega las dos claves a `.env` a mano antes. Bóveda opcional: docs/OBSIDIAN.md.
+`npm run demo` instala dependencias si faltan, crea `.env`, activa el inicio del agente sin código (ADR-0014), pide `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` la primera vez, levanta backend (3001) y app (5173) y abre `#senior/home`. Ctrl+C detiene todo. Si lo corre otro agente sin terminal interactiva, agrega las dos claves a `.env` a mano antes. Bóveda opcional: docs/OBSIDIAN.md.
 
 ## Preparar otra computadora
 Se necesita Git, Python 3.9+ y acceso a este repositorio. El harness no requiere paquetes externos.

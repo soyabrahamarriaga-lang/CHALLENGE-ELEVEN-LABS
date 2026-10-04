@@ -31,13 +31,15 @@ async function request(config, path, fetcher) {
       cache: "no-store",
       signal: AbortSignal.timeout(10000),
     });
-  } catch {
-    throw new ElevenLabsError("agent_unavailable");
+  } catch (error) {
+    throw new ElevenLabsError(error?.name === "TimeoutError" ? "agent_timeout" : "agent_unavailable");
   }
   if (!response.ok) {
     const code =
       response.status === 401 || response.status === 403
         ? "agent_access_denied"
+        : response.status === 402
+          ? "agent_quota_exceeded"
         : response.status === 404
           ? "agent_not_found"
           : response.status === 429

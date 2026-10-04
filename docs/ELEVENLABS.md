@@ -21,7 +21,8 @@ El SDK oficial `@elevenlabs/client` se carga en `agent-session.html`, un documen
 
 El mismo proceso Node del acceso LiveKit incorpora:
 
-- `GET /api/elevenlabs/status`: informa si las variables necesarias existen; no comprueba credenciales, cuota ni salud del proveedor.
+- `GET /api/elevenlabs/status`: informa si las variables necesarias existen; se conserva para compatibilidad y no dirige el indicador de Mi espacio.
+- `GET /api/elevenlabs/availability`: consulta el agente real con una petición autenticada de solo lectura a ElevenLabs; comprueba identidad, archivo y modo de texto. No genera tokens ni reserva conversaciones. Devuelve estados seguros, hora y vigencia sin revelar claves, tokens, URLs firmadas ni configuración privada. Caché compartida de 15 segundos y vigencia máxima de 30. El frontend comprueba cada 20 segundos cuando está visible y permite repetir manualmente. «Agente accesible» indica una respuesta real del servicio; no garantiza cupo o cuota para la siguiente llamada. «Conectado» requiere confirmación de una conversación por el SDK. Ante errores de red o datos caducados, se retira la disponibilidad y se bloquea el inicio hasta verificar de nuevo. Detalles: ADR-agent-availability.md.
 - `POST /api/elevenlabs/session`: exige origen exacto, JSON, consentimiento, código y modo válido. Comparte el límite de 10 intentos/minuto/IP y cuerpo de 4 KiB con el acceso LiveKit. Devuelve un token de conversación para voz/WebRTC o URL firmada para texto/WebSocket, con `Cache-Control: no-store`.
 
 `server/elevenlabs.mjs` fija el agente desde el entorno, limita el destino a ElevenLabs, rechaza redirecciones y respuestas inesperadas y no refleja errores privados del proveedor. El cliente no puede seleccionar otro agente. Solo el backend posee la API key. Los accesos temporales siguen siendo credenciales: no publicarlos en logs, capturas o issues.

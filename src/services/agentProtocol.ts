@@ -46,7 +46,8 @@ export function isAgentEvent(value: unknown): value is AgentEvent {
   switch (value.type) {
     case "connected":
       return (
-        "conversationId" in value && typeof value.conversationId === "string"
+        "conversationId" in value && typeof value.conversationId === "string" &&
+        value.conversationId.trim().length > 0
       );
     case "speaking":
       return "speaking" in value && typeof value.speaking === "boolean";

@@ -1,0 +1,39 @@
+.agent-health {
+  max-width: 440px;
+  min-width: 0;
+}
+.agent-health-label {
+  display: flex;
+  align-items: center;
+  justify-content: inherit;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.agent-health-label svg { flex-shrink: 0; }
+.agent-health-label.success { color: var(--green); }
+.agent-health-label.error { color: #883f30; }
+.agent-health-label.warning { color: #604d2f; }
+.agent-health > p {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.agent-health-check {
+  display: flex;
+  align-items: center;
+  justify-content: inherit;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.agent-health-check .text-button {
+  min-height: 44px;
+  font-size: 12px;
+}
+.agent-page > .agent-health { margin-bottom: 24px; }

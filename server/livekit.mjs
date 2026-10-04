@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { createHash, timingSafeEqual, randomUUID } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import { AccessToken, TrackSource } from "livekit-server-sdk";
+import { createAgentAvailability } from "./agentAvailability.mjs";
 import {
   ElevenLabsError,
   getConversationAccess,
@@ -72,6 +73,10 @@ async function readBody(req) {
 // The signing key and secret never cross this process boundary.
 export function createHandler(config = readConfig(), options = {}) {
   const agentConfig = options.agentConfig || readElevenLabsConfig();
+  const agentAvailability = options.agentAvailability || createAgentAvailability(agentConfig, {
+    configured: Boolean(agentConfig.ready && (config.openAgent || config.joinCode.length >= 16)),
+    requiresCode: !config.openAgent,
+  });
   const agentAccess =
     options.agentAccess ||
     ((mode) =>
@@ -106,6 +111,13 @@ export function createHandler(config = readConfig(), options = {}) {
   return async (req, res) => {
     try {
       const path = (req.url || "").split("?")[0];
+      if (path === "/api/elevenlabs/availability") {
+        if (req.method !== "GET") return send(res, 405, { error: "method_not_allowed" });
+        if (req.headers["sec-fetch-site"] === "cross-site" ||
+          (req.headers.origin && req.headers.origin !== config.origin))
+          return send(res, 403, { error: "origin_not_allowed" });
+        return send(res, 200, await agentAvailability());
+      }
       if (req.method === "GET" && path === "/api/elevenlabs/status")
         return send(res, 200, {
           configured: Boolean(
