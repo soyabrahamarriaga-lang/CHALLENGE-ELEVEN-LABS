@@ -13,7 +13,8 @@
     "check:vision": "node --env-file-if-exists=.env scripts/agent_vision_check.mjs",
     "maps:backfill": "node --env-file-if-exists=.env scripts/maps_backfill.mjs",
     "maps:configure": "node --env-file-if-exists=.env scripts/configure_process_analysis.mjs",
-    "maps:rebuild": "node --env-file-if-exists=.env scripts/rebuild_processes.mjs"
+    "maps:rebuild": "node --env-file-if-exists=.env scripts/rebuild_processes.mjs",
+    "tutor:knowledge": "node --env-file-if-exists=.env scripts/tutor_knowledge.mjs"
   },
   "dependencies": {
     "@elevenlabs/client": "1.26.0",
