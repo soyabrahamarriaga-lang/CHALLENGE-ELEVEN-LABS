@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "id": "20261004T021753Z-claude-1509c733",
+  "at": "2026-10-04T02:17:53.612081Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "agent-turn-timing",
+  "summary": "Corregir por qué el agente no preguntó en la prueba con el ERP: momento de las capturas, OCR limpio y transcripción ordenada",
+  "result": "Capturas retenidas hasta 1.5 s de silencio del experto y agente callado; OCR por filas asentadas sin fragmentos; transcripción ordenada sin contextual_update. Diagnóstico con datos reales y réplica por texto: el prompt responde Mm-hm ante reglas y capturas; se entregan cambios de prompt al usuario.",
+  "files": [
+    "context/decisions/ADR-0015.md",
+    "server/vault.mjs",
+    "server/vault.test.mjs",
+    "src/features/AgentConversation.tsx",
+    "src/services/agentFrame.ts",
+    "src/services/agentProtocol.ts",
+    "src/services/screenDiff.test.ts",
+    "src/services/screenDiff.ts",
+    "src/services/screenWatcher.ts",
+    "src/services/turnGate.test.ts",
+    "src/services/turnGate.ts"
+  ],
+  "decisions": [
+    "TurnGate con volumen de micrófono del SDK en vez de cambiar client_events del agente; OCR en lienzo propio por fallo verificado de rectangle en franjas anchas (ADR-0015)."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0015.md"
+  ],
+  "ontology_review": "Sin cambio.",
+  "validation": [
+    "npm test: todas las pruebas pasaron (TurnGate 4, filtro y within, orden de transcripción). npm run build y tsc completados.",
+    "Chromium, pantalla simulada: tecleo letra a letra → un solo evento con el valor final; cambio de estado → «Estado Borrador» → «Estado Rechazada»; sin fragmentos.",
+    "Réplica por texto con el agente real (conv_1701m42avm0mewkbmvxwz3gmzb7z): regla verbalizada y captura → «Mm-hm.»; cierre con 3 preguntas juntas."
+  ],
+  "next_steps": [
+    "Usuario: aplicar los cambios de prompt y repetir la prueba con el ERP en silencio ambiental."
+  ]
+}

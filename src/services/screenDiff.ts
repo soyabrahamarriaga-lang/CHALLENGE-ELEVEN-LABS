@@ -54,6 +54,11 @@ export function grow(box: Box, by: number, maxW: number, maxH: number): Box {
   return { x, y, w: Math.min(maxW, box.x + box.w + by) - x, h: Math.min(maxH, box.y + box.h + by) - y };
 }
 
+// A line fully inside the band (vertically); rows cut by the band edge are read badly.
+export function within(line: Box, band: Box, margin = 2) {
+  return line.y >= band.y + margin && line.y + line.h <= band.y + band.h - margin;
+}
+
 export function overlaps(a: Box, b: Box) {
   return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 }
@@ -64,6 +69,9 @@ export const meaningful = (text: string) => {
   const value = clean(text);
   return value.length >= 2 && (value.match(/[\p{L}\p{N}]/gu) || []).length >= Math.min(3, value.length * 0.5);
 };
+
+// Fragments shorter than this (a word cut by the crop, a half-typed value) are not reported.
+export const substantial = (text: string) => (clean(text).match(/[\p{L}\p{N}]/gu) || []).length >= 4;
 
 export type LineDiff = { changed: Array<[string, string]>; added: string[]; removed: string[] };
 
@@ -89,7 +97,11 @@ export function diffLines(before: OcrLine[], after: OcrLine[]): LineDiff {
       added.splice(added.indexOf(line), 1);
     }
   }
-  return { changed, added: added.map((line) => line.text), removed: removed.map((line) => line.text) };
+  return {
+    changed: changed.filter(([from, to]) => substantial(from) || substantial(to)),
+    added: added.map((line) => line.text).filter(substantial),
+    removed: removed.map((line) => line.text).filter(substantial),
+  };
 }
 
 // Short Spanish description sent to the agent as context and stored in eventos.md.

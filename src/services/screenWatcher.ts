@@ -6,8 +6,8 @@ import {
   grayGrid,
   grow,
   meaningful,
-  overlaps,
   summarize,
+  within,
 } from "./screenDiff";
 import type { Box, OcrLine } from "./screenDiff";
 import type { Worker } from "tesseract.js";
@@ -68,24 +68,33 @@ export async function startScreenWatch(stream: MediaStream, handlers: Handlers, 
 
   let previous: ReturnType<typeof grayGrid> | null = null;
   let pending: Box | null = null;
+  let pendingSince = 0;
   let lines: OcrLine[] = [];
   let busy = false;
   let first = true;
   const pause = new PauseDetector(3);
 
+  // The region is copied to its own canvas: Tesseract's `rectangle` option misreads wide,
+  // short bands of a full screenshot (verified: "o o" instead of the row text).
+  const band = document.createElement("canvas");
+  const bandContext = band.getContext("2d");
   async function read(region: Box): Promise<OcrLine[]> {
-    const { data } = await worker!.recognize(
-      snapshot,
-      { rectangle: { left: region.x, top: region.y, width: region.w, height: region.h } },
-      { blocks: true },
-    );
+    band.width = region.w;
+    band.height = region.h;
+    bandContext!.drawImage(snapshot, region.x, region.y, region.w, region.h, 0, 0, region.w, region.h);
+    const { data } = await worker!.recognize(band, {}, { blocks: true });
     const found: OcrLine[] = [];
     for (const block of data.blocks || [])
       for (const paragraph of block.paragraphs)
         for (const line of paragraph.lines)
           found.push({
             text: line.text,
-            box: { x: line.bbox.x0, y: line.bbox.y0, w: line.bbox.x1 - line.bbox.x0, h: line.bbox.y1 - line.bbox.y0 },
+            box: {
+              x: region.x + line.bbox.x0,
+              y: region.y + line.bbox.y0,
+              w: line.bbox.x1 - line.bbox.x0,
+              h: line.bbox.y1 - line.bbox.y0,
+            },
           });
     return found;
   }
@@ -111,27 +120,32 @@ export async function startScreenWatch(stream: MediaStream, handlers: Handlers, 
     previous = grid;
     if (pause.feed(Boolean(box) && !first, at))
       canvas.toBlob((blob) => blob && !stopped && handlers.onPause(blob, at), "image/jpeg", 0.8);
-    if (box) pending = pending ? union(pending, box) : box;
-    // While OCR runs, changes accumulate in `pending` and are read on the next free tick.
-    if (!pending || busy) return;
+    if (box) {
+      if (!pending) pendingSince = at;
+      pending = pending ? union(pending, box) : box;
+    }
+    // Read once the area settles (no change this tick) so typing is reported as the final value,
+    // or after 3 s of continuous change. Changes keep accumulating while OCR runs.
+    if (!pending || busy || (box && !first && at - pendingSince < 3)) return;
 
-    const area = grow(pending, 2, grid.gridWidth, grid.gridHeight);
+    const area = grow(pending, 5, grid.gridWidth, grid.gridHeight);
     pending = null;
-    const left = Math.floor(area.x * grid.scale);
+    // Whole rows: a field's label and value are read together instead of a cropped word.
     const top = Math.floor(area.y * grid.scale);
     const region = {
-      x: left,
+      x: 0,
       y: top,
-      w: Math.min(width, Math.ceil((area.x + area.w) * grid.scale)) - left,
+      w: width,
       h: Math.min(height, Math.ceil((area.y + area.h) * grid.scale)) - top,
     };
     busy = true;
     snapshotContext!.drawImage(canvas, 0, 0);
     try {
-      const after = await read(region);
+      // Compare only rows read whole; a row cut by the band edge keeps its previous reading.
+      const after = (await read(region)).filter((line) => first || within(line.box, region));
       if (stopped) return;
-      const before = lines.filter((line) => overlaps(line.box, region));
-      lines = [...lines.filter((line) => !overlaps(line.box, region)), ...after];
+      const before = lines.filter((line) => within(line.box, region));
+      lines = [...lines.filter((line) => !within(line.box, region)), ...after];
       const text = first
         ? after
             .map((line) => line.text.replace(/\s+/g, " ").trim())
