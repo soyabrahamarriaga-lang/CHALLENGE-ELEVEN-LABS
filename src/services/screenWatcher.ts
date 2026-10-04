@@ -21,6 +21,7 @@ type Handlers = {
   onStatus: (status: WatchStatus) => void;
 };
 type Options = { intervalMs?: number; maxWidth?: number; now?: () => number };
+const AGENT_FRAME_WIDTH = 1024;
 
 const union = (a: Box, b: Box): Box => {
   const x = Math.min(a.x, b.x);
@@ -83,7 +84,12 @@ export async function startScreenWatch(
   let lines: OcrLine[] = [];
   let busy = false;
   let first = true;
-  const pause = new PauseDetector(3);
+  // 1.5 s of a still screen after a change counts as a pause (ADR-0018).
+  const pause = new PauseDetector(1.5);
+  // The agent re-reads every image it keeps on each turn, so its snapshot is small (ADR-0018);
+  // vault captures (onCapture) keep full size.
+  const agentFrame = document.createElement("canvas");
+  const agentFrameContext = agentFrame.getContext("2d");
 
   // The region is copied to its own canvas: Tesseract's `rectangle` option misreads wide,
   // short bands of a full screenshot (verified: "o o" instead of the row text).
@@ -143,12 +149,17 @@ export async function startScreenWatch(
       ? changedBox(previous.gray, grid.gray, grid.gridWidth, grid.gridHeight)
       : { x: 0, y: 0, w: grid.gridWidth, h: grid.gridHeight };
     previous = grid;
-    if (pause.feed(Boolean(box) && !first, at))
-      canvas.toBlob(
+    if (pause.feed(Boolean(box) && !first, at)) {
+      const shrink = Math.min(1, AGENT_FRAME_WIDTH / width);
+      agentFrame.width = Math.round(width * shrink);
+      agentFrame.height = Math.round(height * shrink);
+      agentFrameContext!.drawImage(canvas, 0, 0, agentFrame.width, agentFrame.height);
+      agentFrame.toBlob(
         (blob) => blob && !stopped && handlers.onPause(blob, at),
         "image/jpeg",
-        0.8,
+        0.7,
       );
+    }
     if (box) {
       if (!pending) pendingSince = at;
       pending = pending ? union(pending, box) : box;

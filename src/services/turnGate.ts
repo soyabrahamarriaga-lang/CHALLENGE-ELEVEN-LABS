@@ -1,5 +1,5 @@
 // Holds a pause snapshot until it is a good moment to interrupt (ADR-0015):
-// the expert has been quiet for `quietMs` and the agent is not speaking.
+// the expert has been quiet for `quietMs` (1 s, ADR-0018) and the agent is not speaking.
 // A snapshot is a user turn; sent while the expert talks, the agent stays silent and it is wasted.
 
 export class TurnGate<T> {
@@ -9,7 +9,7 @@ export class TurnGate<T> {
   private agentSpeaking = false;
   private quietMs: number;
   private maxWaitMs: number;
-  constructor(quietMs = 1500, maxWaitMs = 20000) {
+  constructor(quietMs = 1000, maxWaitMs = 20000) {
     this.quietMs = quietMs;
     this.maxWaitMs = maxWaitMs;
   }
