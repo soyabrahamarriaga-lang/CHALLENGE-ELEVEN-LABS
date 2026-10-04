@@ -42,7 +42,7 @@ import type { AgentAvailabilityControl } from "../services/useAgentAvailability"
 import { agentProfiles } from "../services/agentProfiles";
 import type { Role } from "../domain/types";
 import "./AgentConversation.css";
-type FrameSession = { key: string; mode: AgentMode; access: AgentAccess; overrideLanguage?: Language };
+type FrameSession = { key: string; mode: AgentMode; access: AgentAccess; language: Language; overrideLanguage?: Language };
 const accessErrors: Record<number, string> = {
   401: "El código de acceso no es correcto. Revisa el código e inténtalo de nuevo.",
   403: "Abre la aplicación desde su dirección autorizada.",
@@ -303,6 +303,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
         key: crypto.randomUUID(),
         mode,
         access: data as AgentAccess,
+        language: selectedLanguage,
         overrideLanguage,
       };
       frameSession.current = next;
@@ -748,7 +749,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
           src={import.meta.env.BASE_URL + "agent-session.html"}
           allow="microphone; autoplay"
           onLoad={() =>
-            post({ type: "start", mode: frame.mode, access: frame.access, overrideLanguage: frame.overrideLanguage })
+            post({ type: "start", mode: frame.mode, access: frame.access, language: frame.language, overrideLanguage: frame.overrideLanguage })
           }
         />
       )}

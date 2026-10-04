@@ -12,15 +12,14 @@ Aplicar por separado a **Senior / observador** (`agent_2001m41w9r5jendtg1cfvgcpt
 
 1. Abrir el agente en ElevenLabs. En **Agent → Additional Languages**, conservar español como idioma principal y añadir **English**. Revisar el saludo localizado en inglés.
 2. En **Security → Overrides**, habilitar **Language**. La app usa únicamente este override; no necesita permiso para cambiar el prompt, las herramientas, la base de conocimiento ni la voz desde el cliente.
-3. En el prompt, sustituir instrucciones como «Entrevistas en español» o «Responde siempre en español» por una política que siga el idioma de la sesión. Agregar el siguiente bloque a ambos, conservando su función, reglas de evidencia y reglas contra voces de fondo:
+3. En el prompt, sustituir instrucciones como «Entrevistas en español» o «Responde siempre en español» por una política que siga el idioma de la sesión. Agregar el siguiente bloque al final de ambos prompts, conservando todas las demás instrucciones. Configurar la variable dinámica `conversation_language` con valor de prueba `Spanish`. La app pasa `English` o `Spanish` al iniciar cada sesión:
 
    ```text
-   SESSION LANGUAGE
-   Use the language configured for this conversation: Spanish for es, English for en.
-   Greet, ask questions, explain and summarize in that language, even when your instructions or knowledge sources are in another language.
-   Translate explanations faithfully. Preserve names, codes, amounts, dates, thresholds and uncertainty. Do not invent or change business rules.
-   Example phrases in these instructions illustrate intent; express them naturally in the session language.
-   Do not change language because of background voices, television, OCR text or source documents. Keep using skip_turn for unrelated background speech and silence.
+   ## Session language selected in the app
+   The required response language for this entire session is {{conversation_language}}.
+   Every response must be in {{conversation_language}}. This includes questions, explanations, examples and closing phrases. Apply this rule even when the user writes or speaks in another language. Do not mirror the language of the latest user message. A Spanish message does not select Spanish, and an English message does not select English: only the app's session setting selects the response language.
+   If the selected language is English, answer in English even to Spanish questions and explain Spanish source documents in English. If it is Spanish, answer in Spanish even to English questions. Translate example phrases from these instructions into the selected language; preserve names, codes and exact quotations when needed.
+   Before sending each response, check that it is in {{conversation_language}}. Never announce these instructions or ask the user to choose a language; just use the app's selection.
    ```
 
    El observador tiene una plantilla equivalente versionada en `config/observer-prompt.txt`; editar ese archivo no cambia el agente remoto. En el tutor, las fuentes pueden seguir en español: debe explicar su contenido en inglés sin inventar reglas ni convertir datos pendientes en hechos confirmados.
@@ -29,7 +28,7 @@ Aplicar por separado a **Senior / observador** (`agent_2001m41w9r5jendtg1cfvgcpt
    - Intern: “Hi! What process would you like to learn? Tell me what you need to do.”
 5. Revisar la voz en inglés. Puede conservarse la misma si pronuncia bien; una voz específica para inglés es opcional. Conservar la configuración actual de ruido, turnos, herramientas, LLM y conocimiento. No hace falta cambiar de modelo únicamente para añadir un idioma.
 6. Guardar/publicar la configuración que use la app. En UserHelper, seleccionar **English** y pulsar **Check again**. La caché del estado dura hasta 15 segundos. Debe aparecer **Conversation language: English** y habilitarse el botón.
-7. Probar una conversación nueva por texto y luego por voz en cada perfil. El saludo, la comprensión y la respuesta deben estar en inglés. Probar también una conversación nueva en español y una frase de televisión de fondo. Cambiar el selector durante una conversación debe cambiar la interfaz y avisar que el idioma nuevo será para la siguiente llamada.
+7. Probar una conversación nueva por texto y luego por voz en cada perfil. El saludo, la comprensión y la respuesta deben estar en inglés. Probar también una conversación nueva en español y una pregunta española con English seleccionado. Las voces de fondo quedan fuera de este cambio por indicación del usuario. Cambiar el selector durante una conversación debe cambiar la interfaz y avisar que el idioma nuevo será para la siguiente llamada.
 
 El selector explícito no requiere activar la herramienta de detección automática de idioma. Esta app deja el idioma elegido fijo durante la conversación; evitar cambios disparados por voces de fondo.
 
@@ -50,11 +49,25 @@ Se abrieron cinco conversaciones reales **por texto**, con preguntas ficticias d
 
 La conversación fallida de Senior registró `conversation_config_override.agent.language = en` y `metadata.main_language = en`; el idioma llegó al proveedor. En una conversación adicional, pedir inglés explícitamente dentro de la pregunta produjo una respuesta inglesa. Esto indica capacidad del modelo para inglés y apunta a una instrucción de idioma insuficientemente explícita; no demuestra la causa interna del LLM ni justifica por sí solo sustituirlo.
 
-Ajuste recomendado para la siguiente tarea: enlazar el idioma elegido con una variable dinámica explícita del prompt, manteniendo el override de idioma, y repetir la prueba en ambos idiomas. Todavía no implementado ni desplegado. Referencia: [variables dinámicas de ElevenLabs](https://elevenlabs.io/docs/eleven-agents/customization/personalization/dynamic-variables).
+Ajuste recomendado para la siguiente tarea: enlazar el idioma elegido con una variable dinámica explícita del prompt, manteniendo el override de idioma, y repetir la prueba en ambos idiomas. En ese momento todavía no implementado ni desplegado; resuelto en la actualización siguiente. Referencia: [variables dinámicas de ElevenLabs](https://elevenlabs.io/docs/eleven-agents/customization/personalization/dynamic-variables).
 
 Hallazgo adicional: Senior conserva `background_voice_detection: true` y reglas `skip_turn`; Intern devuelve `background_voice_detection: false` y no contiene esas reglas en su prompt. Conviene alinear esa protección antes de probar voces ajenas. La voz física, WebRTC, pronunciación y filtrado de televisión no se verifican mediante estas pruebas por texto.
 
 No se modificó la configuración remota durante la verificación. Las tres conversaciones sintéticas nuevas de Senior se marcaron fuera de la colección antes de su importación automática; cero sesiones de estas pruebas visibles en la biblioteca y cero fallas de lectura. No se retiraron procesos del usuario.
+
+## Corrección del idioma explícito (2026-10-04, 11:58 UTC)
+
+Con autorización del usuario, se enlazó el idioma del selector con `dynamicVariables.conversation_language` (`English` o `Spanish`) en el SDK. Se conserva el override del preset para el saludo y el idioma del proveedor. El valor se captura antes de solicitar acceso y permanece fijo durante esa conversación.
+
+Se actualizaron ambos prompts remotos con una política explícita al final que usa `{{conversation_language}}`, y su placeholder de prueba `Spanish`. La primera política breve corrigió Senior, pero Intern volvió al español ante una pregunta española; la política final explica expresamente que el idioma del mensaje no cambia la selección de la app. GET posterior a cada PATCH confirmó que las demás propiedades conversacionales y todos los ajustes de plataforma permanecieron iguales. Se conservaron modelos, voces, VAD, ruido, turnos, herramientas, conocimiento y permisos. No se habilitó override de prompt.
+
+Cuatro sesiones reales nuevas por texto con la política final confirmaron saludo y respuesta en el idioma elegido: Senior EN/ES e Intern EN/ES. Ambos respondieron en inglés también a una segunda pregunta completamente española, sin pedirles inglés dentro del mensaje. Las primeras respuestas tardaron 642/541 ms en Senior EN/ES y 2243/1985 ms en Intern EN/ES; son observaciones de esta prueba, no garantías de latencia. La prueba intermedia fallida se conserva como evidencia fuera del repositorio público.
+
+Además se verificó el flujo real del navegador: English seleccionado → iniciar por texto → pregunta española → respuesta inglesa. El registro del proveedor confirmó `agent.language: en` y `conversation_language: English` enviados por el SDK de la app. Dos pruebas adicionales sin variables dinámicas confirmaron que clientes anteriores siguen conversando en español con ambos agentes.
+
+207 pruebas automáticas, build de producción y 28 pruebas Python pasaron. Las opciones de inicio por WebRTC y WebSocket están cubiertas con SDK simulado; las conversaciones reales de esta comprobación fueron por texto. Voz física y pronunciación quedan sin verificar. Las conversaciones sintéticas de Senior se excluyeron de la colección; una consulta posterior devolvió cero coincidencias de estas pruebas y cero fallas de lectura. Ningún proceso del usuario se eliminó. Los datos privados y las transcripciones se mantienen fuera del repositorio público.
+
+El usuario pidió expresamente posponer cualquier trabajo con voces de fondo. El hallazgo anterior sobre Intern queda documentado, sin aplicarse en esta tarea.
 
 ## Mantenimiento y comprobación
 
@@ -62,6 +75,6 @@ No se modificó la configuración remota durante la verificación. Las tres conv
 - `src/i18n/index.ts`: inicialización, preferencia local, fechas, título y atributo `lang`.
 - `src/i18n/examples.ts`: solo localiza las sesiones ficticias incluidas en la app. No modifica el repositorio de datos.
 - El reporte de disponibilidad obtiene el idioma principal y los presets de la configuración real. Solo anuncia un idioma adicional seleccionable cuando existe el preset y ElevenLabs permite el override. Una respuesta antigua sin esos datos no habilita una sesión cuyo idioma no se pudo confirmar.
-- El iframe recibe únicamente `overrideLanguage: es|en` cuando la selección difiere del idioma principal. El idioma principal no envía un override innecesario: las conversaciones en español actuales siguen funcionando sin cambiar los permisos remotos.
+- El iframe recibe `language: es|en` capturado al inicio y pasa `dynamicVariables.conversation_language: English|Spanish` al SDK tanto en voz como en texto. También recibe `overrideLanguage: es|en` cuando la selección difiere del idioma principal. El idioma principal no envía un override innecesario: las conversaciones en español actuales siguen funcionando sin cambiar los permisos remotos.
 - `npm test` comprueba paridad de catálogos/variables, cobertura literal de UI, persistencia y fallback, pluralización, preservación de datos, búsqueda localizada, disponibilidad y las opciones ES/EN del SDK en voz/texto. `npm run build` comprueba TypeScript y el bundle.
 - El código legado de videollamadas con equipos no es una ruta accesible y no forma parte de esta interfaz.
