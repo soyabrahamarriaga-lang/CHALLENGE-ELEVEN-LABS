@@ -23,7 +23,11 @@ import type {
   AgentMode,
   AgentState,
 } from "../services/agentProtocol";
-import { archiveConversation, logVaultEvent } from "../services/vault";
+import {
+  archiveConversation,
+  logVaultEvent,
+  archiveScreenCapture,
+} from "../services/vault";
 import { clock } from "../services/screenDiff";
 import { startScreenWatch } from "../services/screenWatcher";
 import { TurnGate } from "../services/turnGate";
@@ -62,6 +66,8 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
   const frameSession = useRef<FrameSession | null>(null);
   const generation = useRef(0);
   const request = useRef<AbortController | null>(null);
+  const pendingCaptures = useRef(new Set<Promise<boolean>>());
+  const [captureWarning, setCaptureWarning] = useState(false);
   const [archive, setArchive] = useState<ArchiveResult | "saving" | null>(null);
   const [screen, setScreen] = useState<{
     status: WatchStatus | "idle" | "denied";
@@ -92,11 +98,13 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
     if (!persistEvidence || state.phase !== "ended" || !state.conversationId) return;
     const abort = new AbortController();
     setArchive("saving");
-    archiveConversation(state.conversationId, { signal: abort.signal }).then(
-      (result) => {
+    Promise.allSettled([...pendingCaptures.current])
+      .then(() =>
+        archiveConversation(state.conversationId, { signal: abort.signal }),
+      )
+      .then((result) => {
         if (!abort.signal.aborted) setArchive(result);
-      },
-    );
+      });
     return () => abort.abort();
   }, [state.phase, state.conversationId, persistEvidence]);
   useEffect(() => {
@@ -111,6 +119,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
     }
     if (state.phase === "authorizing") {
       framesSent.current = 0;
+      setCaptureWarning(false);
       setScreen({ status: "idle", events: [], frames: 0 });
     }
   }, [state.phase]);
@@ -148,8 +157,10 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
       )
         return;
       const update = event.data.event;
-      if (update.type === "voice") gate.current.noteVoice(update.active, Date.now());
-      if (update.type === "speaking") gate.current.noteAgentSpeaking(update.speaking);
+      if (update.type === "voice")
+        gate.current.noteVoice(update.active, Date.now());
+      if (update.type === "speaking")
+        gate.current.noteAgentSpeaking(update.speaking);
       if (update.type === "message" && update.message.role === "user")
         gate.current.noteVoice(false, Date.now());
       setState((previous) => applyAgentEvent(previous, update));
@@ -312,6 +323,16 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
               events: [...previous.events, event].slice(-8),
             }));
           },
+          // Store evidence independently of the agent's 10-image conversation limit.
+          onCapture: (capture, at) => {
+            const saving = archiveScreenCapture(conversationId, capture, at);
+            pendingCaptures.current.add(saving);
+            void saving
+              .then((ok) => {
+                if (!ok) setCaptureWarning(true);
+              })
+              .finally(() => pendingCaptures.current.delete(saving));
+          },
           // At a pause: one snapshot, held until the expert is quiet (see the gate effect).
           onPause: (frame, at) => {
             if (framesSent.current < MAX_SCREEN_FRAMES)
@@ -373,10 +394,26 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
               ? `Transcripción guardada en la bóveda: ${archive.file}`
               : `No se pudo guardar en la bóveda (${archive.reason}).`}
           {archive !== "saving" && archive.status === "saved" && (
-            <> {archive.flowStatus === "failed" && "El diagrama está pendiente; puedes reintentar desde Mapas de procesos. "}
-              <a href={"#senior/processes/" + encodeURIComponent(state.conversationId)}>Ver diagrama del proceso</a>
+            <>
+              {" "}
+              {archive.flowStatus === "failed" &&
+                "El diagrama está pendiente; puedes reintentar desde Mapas de procesos. "}
+              <a
+                href={
+                  "#senior/processes/" +
+                  encodeURIComponent(state.conversationId)
+                }
+              >
+                Ver diagrama del proceso
+              </a>
             </>
           )}
+        </p>
+      )}
+      {captureWarning && (
+        <p role="status" className="agent-capture-warning">
+          No se pudieron guardar algunas imágenes en la bóveda. Los pasos
+          correspondientes se marcarán sin imagen.
         </p>
       )}
       {state.error && (
@@ -411,7 +448,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
                 : "El micrófono está apagado. Escribe para conversar con el mismo agente."
               : role === "intern"
                 ? "Cuéntale qué necesitas aprender y pregúntale por el siguiente paso."
-                : "Explica una tarea, sus decisiones y lo que has aprendido al realizarla."}
+                : "Explica una tarea, sus decisiones y sus motivos. Al compartir pantalla se guardan capturas de los cambios en la bóveda privada para ilustrar cada paso."}
           </p>
           {!active && (
             <>
@@ -502,7 +539,8 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
           <p className="agent-scope">
             Si compartes pantalla, tu navegador la lee cada segundo: el agente recibe el
             texto que cambia y una captura en cada pausa (máx.{" "}
-            {MAX_SCREEN_FRAMES}). Las capturas se suben a ElevenLabs; usa datos
+            {MAX_SCREEN_FRAMES}). Además, se conservan capturas de los cambios
+            en tu bóveda privada para ilustrar el procedimiento. Usa datos
             ficticios.
           </p>
         </section>

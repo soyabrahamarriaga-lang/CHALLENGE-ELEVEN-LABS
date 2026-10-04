@@ -1,5 +1,5 @@
 // Watches a shared screen every second, OCRs only the area that changed and reports text
-// changes. Frames never leave the browser; only the text (and pause snapshots) are sent on.
+// changes. Changed-screen captures can be archived privately; only pause snapshots go to the agent.
 import {
   PauseDetector,
   changedBox,
@@ -17,6 +17,7 @@ export type WatchStatus = "loading" | "watching" | "ended" | "error";
 type Handlers = {
   onEvent: (event: ScreenEvent) => void;
   onPause: (frame: Blob, at: number) => void;
+  onCapture?: (frame: Blob, at: number) => void;
   onStatus: (status: WatchStatus) => void;
 };
 type Options = { intervalMs?: number; maxWidth?: number; now?: () => number };
@@ -24,10 +25,19 @@ type Options = { intervalMs?: number; maxWidth?: number; now?: () => number };
 const union = (a: Box, b: Box): Box => {
   const x = Math.min(a.x, b.x);
   const y = Math.min(a.y, b.y);
-  return { x, y, w: Math.max(a.x + a.w, b.x + b.w) - x, h: Math.max(a.y + a.h, b.y + b.h) - y };
+  return {
+    x,
+    y,
+    w: Math.max(a.x + a.w, b.x + b.w) - x,
+    h: Math.max(a.y + a.h, b.y + b.h) - y,
+  };
 };
 
-export async function startScreenWatch(stream: MediaStream, handlers: Handlers, options: Options = {}) {
+export async function startScreenWatch(
+  stream: MediaStream,
+  handlers: Handlers,
+  options: Options = {},
+) {
   const { intervalMs = 1000, maxWidth = 1600 } = options;
   const started = performance.now();
   const now = options.now || (() => (performance.now() - started) / 1000);
@@ -53,7 +63,8 @@ export async function startScreenWatch(stream: MediaStream, handlers: Handlers, 
     void worker?.terminate();
     handlers.onStatus("ended");
   };
-  for (const track of stream.getVideoTracks()) track.addEventListener("ended", stop);
+  for (const track of stream.getVideoTracks())
+    track.addEventListener("ended", stop);
 
   handlers.onStatus("loading");
   await video.play();
@@ -81,7 +92,17 @@ export async function startScreenWatch(stream: MediaStream, handlers: Handlers, 
   async function read(region: Box): Promise<OcrLine[]> {
     band.width = region.w;
     band.height = region.h;
-    bandContext!.drawImage(snapshot, region.x, region.y, region.w, region.h, 0, 0, region.w, region.h);
+    bandContext!.drawImage(
+      snapshot,
+      region.x,
+      region.y,
+      region.w,
+      region.h,
+      0,
+      0,
+      region.w,
+      region.h,
+    );
     const { data } = await worker!.recognize(band, {}, { blocks: true });
     const found: OcrLine[] = [];
     for (const block of data.blocks || [])
@@ -112,14 +133,22 @@ export async function startScreenWatch(stream: MediaStream, handlers: Handlers, 
       first = true;
     }
     context!.drawImage(video, 0, 0, width, height);
-    const grid = grayGrid(context!.getImageData(0, 0, width, height).data, width, height);
+    const grid = grayGrid(
+      context!.getImageData(0, 0, width, height).data,
+      width,
+      height,
+    );
     const at = now();
     const box = previous
       ? changedBox(previous.gray, grid.gray, grid.gridWidth, grid.gridHeight)
       : { x: 0, y: 0, w: grid.gridWidth, h: grid.gridHeight };
     previous = grid;
     if (pause.feed(Boolean(box) && !first, at))
-      canvas.toBlob((blob) => blob && !stopped && handlers.onPause(blob, at), "image/jpeg", 0.8);
+      canvas.toBlob(
+        (blob) => blob && !stopped && handlers.onPause(blob, at),
+        "image/jpeg",
+        0.8,
+      );
     if (box) {
       if (!pending) pendingSince = at;
       pending = pending ? union(pending, box) : box;
@@ -140,9 +169,19 @@ export async function startScreenWatch(stream: MediaStream, handlers: Handlers, 
     };
     busy = true;
     snapshotContext!.drawImage(canvas, 0, 0);
+    // Preserve settled visual changes even when OCR finds no readable text.
+    snapshot.toBlob(
+      (blob) => {
+        if (blob && !stopped) handlers.onCapture?.(blob, at);
+      },
+      "image/jpeg",
+      0.8,
+    );
     try {
       // Compare only rows read whole; a row cut by the band edge keeps its previous reading.
-      const after = (await read(region)).filter((line) => first || within(line.box, region));
+      const after = (await read(region)).filter(
+        (line) => first || within(line.box, region),
+      );
       if (stopped) return;
       const before = lines.filter((line) => within(line.box, region));
       lines = [...lines.filter((line) => !within(line.box, region)), ...after];
@@ -154,7 +193,12 @@ export async function startScreenWatch(stream: MediaStream, handlers: Handlers, 
             .join(" | ")
             .slice(0, 900)
         : summarize(before, after);
-      if (text) handlers.onEvent({ at, text: first ? `pantalla inicial: ${text}` : text });
+      if (text) {
+        handlers.onEvent({
+          at,
+          text: first ? `pantalla inicial: ${text}` : text,
+        });
+      }
       first = false;
     } catch {
       if (!stopped) handlers.onStatus("error");

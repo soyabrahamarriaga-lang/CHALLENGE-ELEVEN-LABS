@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-04T03:46:44.737202+00:00",
+  "generatedAt": "2026-10-04T04:47:53.469394+00:00",
   "title": "Design System: UserHelper",
   "extensions": {
     "colorMeta": {
@@ -216,7 +216,7 @@
       },
       "map-decision": {
         "role": "secondary",
-        "displayName": "Decisión por revisar",
+        "displayName": "Decisión del procedimiento",
         "tonalRamp": [
           "oklch(15% 0.0136 92.98)",
           "oklch(26.43% 0.0136 92.98)",
@@ -228,51 +228,9 @@
           "oklch(95% 0.0136 92.98)"
         ]
       },
-      "map-guardrail": {
+      "map-connection": {
         "role": "secondary",
-        "displayName": "Regla por revisar",
-        "tonalRamp": [
-          "oklch(15% 0.0111 45.72)",
-          "oklch(26.43% 0.0111 45.72)",
-          "oklch(37.86% 0.0111 45.72)",
-          "oklch(49.29% 0.0111 45.72)",
-          "oklch(60.71% 0.0111 45.72)",
-          "oklch(72.14% 0.0111 45.72)",
-          "oklch(83.57% 0.0111 45.72)",
-          "oklch(95% 0.0111 45.72)"
-        ]
-      },
-      "map-screen": {
-        "role": "secondary",
-        "displayName": "Pantalla",
-        "tonalRamp": [
-          "oklch(15% 0.0085 225.08)",
-          "oklch(26.43% 0.0085 225.08)",
-          "oklch(37.86% 0.0085 225.08)",
-          "oklch(49.29% 0.0085 225.08)",
-          "oklch(60.71% 0.0085 225.08)",
-          "oklch(72.14% 0.0085 225.08)",
-          "oklch(83.57% 0.0085 225.08)",
-          "oklch(95% 0.0085 225.08)"
-        ]
-      },
-      "map-question": {
-        "role": "secondary",
-        "displayName": "Pregunta",
-        "tonalRamp": [
-          "oklch(15% 0.0085 308.36)",
-          "oklch(26.43% 0.0085 308.36)",
-          "oklch(37.86% 0.0085 308.36)",
-          "oklch(49.29% 0.0085 308.36)",
-          "oklch(60.71% 0.0085 308.36)",
-          "oklch(72.14% 0.0085 308.36)",
-          "oklch(83.57% 0.0085 308.36)",
-          "oklch(95% 0.0085 308.36)"
-        ]
-      },
-      "map-sequence": {
-        "role": "secondary",
-        "displayName": "Orden observado",
+        "displayName": "Conexión entre acciones",
         "tonalRamp": [
           "oklch(15% 0.0341 156.76)",
           "oklch(26.43% 0.0341 156.76)",
@@ -284,18 +242,32 @@
           "oklch(95% 0.0341 156.76)"
         ]
       },
-      "map-condition": {
-        "role": "secondary",
-        "displayName": "Condición explícita",
+      "process-image": {
+        "role": "neutral",
+        "displayName": "Superficie de captura",
         "tonalRamp": [
-          "oklch(15% 0.0832 75.46)",
-          "oklch(26.43% 0.0832 75.46)",
-          "oklch(37.86% 0.0832 75.46)",
-          "oklch(49.29% 0.0832 75.46)",
-          "oklch(60.71% 0.0832 75.46)",
-          "oklch(72.14% 0.0832 75.46)",
-          "oklch(83.57% 0.0832 75.46)",
-          "oklch(95% 0.0832 75.46)"
+          "oklch(15% 0.0079 139.44)",
+          "oklch(26.43% 0.0079 139.44)",
+          "oklch(37.86% 0.0079 139.44)",
+          "oklch(49.29% 0.0079 139.44)",
+          "oklch(60.71% 0.0079 139.44)",
+          "oklch(72.14% 0.0079 139.44)",
+          "oklch(83.57% 0.0079 139.44)",
+          "oklch(95% 0.0079 139.44)"
+        ]
+      },
+      "process-reason": {
+        "role": "secondary",
+        "displayName": "Fondo del motivo",
+        "tonalRamp": [
+          "oklch(15% 0.0123 137.78)",
+          "oklch(26.43% 0.0123 137.78)",
+          "oklch(37.86% 0.0123 137.78)",
+          "oklch(49.29% 0.0123 137.78)",
+          "oklch(60.71% 0.0123 137.78)",
+          "oklch(72.14% 0.0123 137.78)",
+          "oklch(83.57% 0.0123 137.78)",
+          "oklch(95% 0.0123 137.78)"
         ]
       }
     },
@@ -327,6 +299,14 @@
       "map-node-title": {
         "displayName": "Título de nodo",
         "purpose": "Acción o momento del proceso; tipo y tiempo son metadatos separados."
+      },
+      "process-step-title": {
+        "displayName": "Título operativo",
+        "purpose": "Encabezar cada acción de la guía antes de actividad, tipo y tiempo."
+      },
+      "process-explanation": {
+        "displayName": "Explicación del paso",
+        "purpose": "Instrucciones, motivos y límites junto a la imagen."
       }
     },
     "shadows": [
@@ -412,6 +392,10 @@
       {
         "name": "process-map-mobile-max",
         "value": "580px"
+      },
+      {
+        "name": "process-guide-compact-max",
+        "value": "1100px"
       }
     ]
   },
@@ -497,25 +481,33 @@
       "css": ".ds-step-badge{font-family:\"Manrope Variable\",Manrope,sans-serif;display:inline-flex;align-items:center;gap:5px;color:#61764e;background:#eaf0e3;padding:4px 7px;border-radius:5px;font-size:10px;font-weight:650}"
     },
     {
-      "name": "Nodo de mapa y relaciones",
+      "name": "Paso de la guía visual",
       "kind": "custom",
-      "refersTo": "map-node",
-      "description": "Muestra del nodo de decisión seleccionado y la leyenda de relaciones; el producto usa React Flow para selección y navegación. Las clases de variantes conservan los demás tipos del mapa.",
-      "html": "<div class=\"ds-map-sample\"><div class=\"ds-map-node ds-map-decision ds-map-selected\" role=\"button\" tabindex=\"0\" aria-label=\"Decisión por revisar: Revisar la condición\"><span class=\"ds-map-meta\">Decisión por revisar <time>01:20</time></span><strong>Revisar la condición</strong></div><div class=\"ds-map-legend\"><span class=\"ds-map-line\"></span>Orden observado <span class=\"ds-map-line ds-map-condition\"></span>Condición explícita</div></div>",
-      "css": ".ds-map-sample{font-family:\"Manrope Variable\",Manrope,sans-serif;color:var(--ink,#26352f)}.ds-map-node{width:340px;border:1px solid #a8bfad;border-radius:12px;background:#fff;padding:20px;text-align:left;color:#26352f}.ds-map-node.ds-map-decision{border:2px solid #b99a55;background:#fcf9ef}.ds-map-node.ds-map-guardrail{border-color:#c29683;background:#fff6f2}.ds-map-node.ds-map-question{border-color:#bbb0ca;background:#f6f3f9}.ds-map-node.ds-map-screen{background:#edf4f7;border-color:#a5bac9}.ds-map-node.ds-map-boundary{border-radius:40px;background:#eaf1eb;text-align:center}.ds-map-node.ds-map-selected,.ds-map-node:focus-visible{outline:3px solid #437e63;outline-offset:3px}.ds-map-node:hover{box-shadow:none}.ds-map-meta{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:11px;color:#526258;margin-bottom:9px}.ds-map-node strong{font-size:16px;line-height:1.5;display:block;overflow-wrap:anywhere}.ds-map-legend{display:flex;align-items:center;gap:9px;padding:14px 19px;font-size:11px;color:#526258;border-top:1px solid var(--line,#e2e8e2);margin-top:20px}.ds-map-line{width:22px;border-top:2px dashed #82998a}.ds-map-line.ds-map-condition{border-top-style:solid;border-top-color:#86632e;margin-left:12px}@media(max-width:580px){.ds-map-legend{flex-wrap:wrap;font-size:10px;padding:12px}}"
+      "refersTo": "process-step",
+      "description": "Acción, espacio de captura y motivo juntos; evidencia conversacional desplegable. El snippet muestra imagen pendiente y texto ilustrativo, sin capturas ni datos de bóveda. En la aplicación, un error de descarga conserva la captura registrada y ofrece Reintentar imagen; la carga tiene estado textual y deshabilita ampliación. Ampliar abre un diálogo nativo con imagen a tamaño original y región desplazable enfocable; foco inicial en cerrar, cierre por botón, Escape o fondo, sin alterar la cuadrícula del paso.",
+      "html": "<section class=\"ds-process-step\"><header><span class=\"ds-step-number\">1</span><div><h2>Revisar un registro</h2><p>Acción · 01:20</p></div></header><div class=\"ds-step-work\"><div class=\"ds-step-image-empty\"><svg aria-hidden=\"true\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m2 2 20 20M9 3h10a2 2 0 0 1 2 2v10M3 9v10a2 2 0 0 0 2 2h14M3 3l18 18\"/><circle cx=\"15\" cy=\"8\" r=\"1\"/></svg><strong>Imagen pendiente</strong><p>No se conservó una captura asociada a esta acción.</p></div><div class=\"ds-step-explanation\"><h3>Cómo hacerlo</h3><ol><li>Instrucción ilustrativa para revisar un registro.</li></ol><div class=\"ds-step-reason\"><h3>Por qué se hace así</h3><p>El experto todavía no explicó el motivo. Pendiente de confirmar.</p></div><details class=\"ds-step-sources\"><summary>Consultar evidencia de este paso</summary><article><strong>Experto · 01:20</strong><p>Texto de demostración del componente. No contiene evidencia de una sesión real.</p></article></details></div></div></section>",
+      "css": ".ds-process-step{font-family:\"Manrope Variable\",Manrope,sans-serif;color:var(--ink,#26352f);padding:30px 0 38px;border-bottom:1px solid var(--line,#e2e8e2)}.ds-process-step>header{display:flex;align-items:baseline;gap:18px;margin-bottom:24px}.ds-step-number{color:#688575;font-size:26px;font-weight:500;min-width:30px;font-variant-numeric:tabular-nums}.ds-process-step h2{margin:0;font-size:23px;font-weight:670;letter-spacing:-.025em;line-height:1.45;overflow-wrap:anywhere}.ds-process-step header p{font-size:12px;color:#526258;margin:8px 0 0}.ds-step-work{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:30px;align-items:start;padding-left:48px}.ds-step-image-empty{display:grid;place-content:center;justify-items:center;gap:14px;min-height:245px;padding:26px;background:#eef2ed;border:1px dashed #becdbf;border-radius:8px;color:#526258;text-align:center}.ds-step-image-empty strong{font-size:14px}.ds-step-image-empty p{font-size:12px;line-height:1.8;max-width:260px;margin:0}.ds-step-explanation{min-width:0;font-size:14px;line-height:1.85;overflow-wrap:anywhere}.ds-step-explanation h3{font-size:13px;font-weight:670;line-height:1.5;margin:22px 0 8px;color:#365240}.ds-step-explanation h3:first-child{margin-top:0}.ds-step-explanation p{margin:0 0 12px}.ds-step-explanation ol{padding-left:22px;margin:0}.ds-step-reason{margin:22px 0;padding:17px 19px;background:#edf3eb}.ds-step-reason p:last-child{margin-bottom:0}.ds-step-sources{border-top:1px solid var(--line,#e2e8e2);margin-top:20px;padding-top:13px;font-size:12px;color:#526258}.ds-step-sources summary{cursor:pointer;font-weight:650}.ds-step-sources summary:focus-visible{outline:3px solid #437e63;outline-offset:4px}.ds-step-sources article{margin-top:16px}.ds-step-sources article p{margin-top:6px;white-space:pre-wrap}@media(max-width:1100px){.ds-step-work{padding-left:0;gap:22px}}@media(max-width:950px){.ds-step-work{grid-template-columns:1fr}}@media(max-width:580px){.ds-process-step{padding:24px 0}.ds-process-step>header{gap:12px}.ds-process-step h2{font-size:20px}.ds-step-number{min-width:20px;font-size:23px}.ds-step-explanation{font-size:13px}}"
     },
     {
-      "name": "Inspector de evidencia del mapa",
+      "name": "Acción del diagrama alterno",
       "kind": "custom",
-      "refersTo": "map-evidence-inspector",
-      "description": "Título primero, metadatos después, razón y evidencia atribuida. El texto del snippet es un ejemplo de diseño, no contenido de la bóveda.",
-      "html": "<aside class=\"ds-map-inspector\" aria-label=\"Evidencia del paso\"><div class=\"ds-map-detail\"><h2>Revisar la condición</h2><span class=\"ds-map-kind ds-map-decision\">Decisión por revisar · 01:20</span><div class=\"ds-map-reason\"><h3>Razón narrada</h3><p>Ejemplo ilustrativo: reviso el plazo porque cambia la siguiente acción.</p></div><h3>Evidencia de origen</h3><article class=\"ds-map-evidence\"><div><strong>Persona</strong><time>01:20</time></div><p>Texto de ejemplo para mostrar la jerarquía de la evidencia.</p><small>transcripcion.md</small></article></div></aside>",
-      "css": ".ds-map-inspector{font-family:\"Manrope Variable\",Manrope,sans-serif;min-width:0;max-width:330px;border-left:1px solid var(--line,#e2e8e2);background:#fff;color:var(--ink,#26352f)}.ds-map-detail{padding:24px;max-height:624px;overflow-y:auto;overscroll-behavior:contain}.ds-map-detail h2{font-size:21px;font-weight:670;line-height:1.5;overflow-wrap:anywhere;margin:16px 0 28px;letter-spacing:-.025em}.ds-map-detail h3{font-size:13px;font-weight:670;line-height:1.5;margin:25px 0 14px}.ds-map-kind{font-size:11px;color:#526258}.ds-map-kind.ds-map-decision{color:#765b20}.ds-map-evidence{padding:17px 0;border-top:1px solid #e2e8e2}.ds-map-evidence>div{display:flex;justify-content:space-between;font-size:12px;gap:8px}.ds-map-evidence time{color:#526258;font-variant-numeric:tabular-nums}.ds-map-evidence p,.ds-map-reason p{font-size:13px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}.ds-map-evidence small{color:#526258;font-size:11px;line-height:1.7;display:block}@media(max-width:1200px){.ds-map-detail{padding:20px}}@media(max-width:950px){.ds-map-inspector{border-left:0;border-top:1px solid var(--line,#e2e8e2)}.ds-map-detail{max-height:none}}"
+      "refersTo": "map-node",
+      "description": "Título antes de metadatos, miniatura o estado pendiente y extracto del motivo. Un fallo de descarga ofrece Reintentar imagen también en la variante compacta. La selección real se conecta con el inspector en React Flow.",
+      "html": "<div class=\"ds-map-node ds-map-selected\" role=\"button\" tabindex=\"0\" aria-label=\"Acción: Revisar un registro\"><strong>Revisar un registro</strong><span class=\"ds-map-meta\">Acción · 01:20</span><div class=\"ds-step-image-empty\"><svg aria-hidden=\"true\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m2 2 20 20M9 3h10a2 2 0 0 1 2 2v10M3 9v10a2 2 0 0 0 2 2h14M3 3l18 18\"/><circle cx=\"15\" cy=\"8\" r=\"1\"/></svg><strong>Imagen pendiente</strong></div><p class=\"ds-node-reason\">Motivo pendiente de confirmar</p></div>",
+      "css": ".ds-map-node{font-family:\"Manrope Variable\",Manrope,sans-serif;width:400px;border:1px solid #a8bfad;border-radius:12px;background:#fff;padding:20px;text-align:left;color:#26352f}.ds-map-node.ds-map-decision{border:2px solid #b99a55;background:#fcf9ef}.ds-map-node.ds-map-boundary{border-radius:40px;background:#eaf1eb;text-align:center}.ds-map-node.ds-map-selected,.ds-map-node:focus-visible{outline:3px solid #437e63;outline-offset:3px}.ds-map-node:hover{box-shadow:none}.ds-map-node>strong{font-size:16px;line-height:1.5;display:block;overflow-wrap:anywhere}.ds-map-meta{display:flex;align-items:baseline;font-size:11px;color:#526258;margin:8px 0 12px}.ds-node-reason{font-size:12px;line-height:1.6;max-height:60px;overflow:hidden;margin:12px 0 0}.ds-step-image-empty{display:grid;place-content:center;justify-items:center;gap:14px;min-height:245px;padding:26px;background:#eef2ed;border:1px dashed #becdbf;border-radius:8px;color:#526258;text-align:center}.ds-step-image-empty strong{font-size:14px}.ds-step-image-empty p{font-size:12px;line-height:1.8;max-width:260px;margin:0}.ds-map-node .ds-step-image-empty{min-height:100px;padding:14px;gap:8px}.ds-map-node .ds-step-image-empty strong{font-size:12px}"
+    },
+    {
+      "name": "Clasificación del proceso",
+      "kind": "custom",
+      "refersTo": "process-metadata",
+      "description": "Nombre y categorías editables con sugerencias nativas; Contabilidad se muestra como categoría de ejemplo confirmada, sin contenido de una sesión.",
+      "html": "<form class=\"ds-process-metadata\"><h2>Nombre y clasificación</h2><p>El nombre describe la tarea. Las categorías se pueden escribir o elegir del catálogo.</p><label>Nombre del proceso<input value=\"Revisar un registro\" required maxlength=\"120\"/></label><div class=\"ds-metadata-fields\"><label>Departamento<input list=\"ds-departments\" value=\"Contabilidad\" required maxlength=\"80\"/></label><label>Tipo de tarea<input required maxlength=\"80\"/></label></div><datalist id=\"ds-departments\"><option value=\"Contabilidad\"/></datalist></form>",
+      "css": ".ds-process-metadata{font-family:\"Manrope Variable\",Manrope,sans-serif;color:var(--ink,#26352f);border:1px solid var(--line,#e2e8e2);background:#fff;border-radius:12px;padding:24px;margin:22px 0}.ds-process-metadata h2{font-size:19px;font-weight:670;line-height:1.35;letter-spacing:-.5px;margin:0 0 10px}.ds-process-metadata p{font-size:13px;color:#526258;line-height:1.7}.ds-process-metadata label{display:grid;gap:9px;font-size:13px;margin-top:18px;min-width:0}.ds-process-metadata input{font:inherit;color:var(--ink,#26352f);border:1px solid var(--line,#e2e8e2);border-radius:7px;padding:12px;background:#fff;min-width:0}.ds-process-metadata input:focus-visible{outline:3px solid #437e63;outline-offset:4px}.ds-metadata-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:580px){.ds-metadata-fields{grid-template-columns:1fr;gap:0}.ds-process-metadata{padding:18px}}"
     }
   ],
   "narrative": {
     "northStar": "La sala de edición compartida",
-    "overview": "UserHelper se siente como una mesa de trabajo luminosa: superficies blancas, fondo apenas verde y controles de bosque oscuro. La identidad acompaña una tarea en curso y la lectura posterior de sus decisiones. La densidad es operativa, con aire entre grupos y detalles compactos dentro de cada herramienta.\n\nManrope une navegación, contenido y datos temporales. Los diagramas de ventanas, conexiones y pasos son ilustraciones construidas con CSS y SVG; el logotipo combina una U abierta con un trazo central. La personalidad es profesional, clara y respetuosa. El registro de demostración permanece visible en los recorridos sintéticos.",
+    "overview": "UserHelper se siente como una mesa de trabajo luminosa: superficies blancas, fondo apenas verde y controles de bosque oscuro. La identidad acompaña una tarea en curso y la lectura posterior de sus decisiones. La densidad es operativa, con aire entre grupos y detalles compactos dentro de cada herramienta.\n\nManrope une navegación, contenido y datos temporales. Las ventanas y miniaturas de la biblioteca sintética son ilustraciones construidas con CSS y SVG; los procedimientos privados muestran capturas reales junto a sus acciones cuando están disponibles; el logotipo combina una U abierta con un trazo central. La personalidad es profesional, clara y respetuosa. El registro de demostración permanece visible en los recorridos sintéticos.",
     "keyCharacteristics": [
       "Superficies claras separadas por bordes suaves y cambios de tono.",
       "Verde oscuro para acciones principales y selección; azul y arena para distinguir ejemplos.",
@@ -538,11 +530,6 @@
         "name": "The Flat Work Surface Rule",
         "body": "Los paneles de trabajo descansan sobre tono y borde; la elevación marca una superposición, no cada contenedor.",
         "section": "elevation"
-      },
-      {
-        "name": "The Observed Order Rule",
-        "body": "En el mapa privado, una línea discontinua comunica orden observado; una línea sólida comunica una condición explícita. Conservar ambas muestras en la leyenda y no presentar la cronología como causalidad.",
-        "section": "colors"
       }
     ],
     "dos": [
@@ -550,10 +537,10 @@
       "**Do** usar verde oscuro para acciones principales y selección reconocible por más de una señal.",
       "**Do** conservar texto operativo legible, cifras tabulares y foco de teclado visible.",
       "**Do** colocar el título del paso antes de su tipo y posición, y mantener acción, propósito y razón juntos.",
-      "**Do** mantener el significado del proceso cuando pase de columna a fila desplazable.",
+      "**Do** mantener el significado del proceso de la biblioteca sintética cuando pase de columna a fila desplazable.",
       "**Do** identificar las escenas y sesiones sintéticas como ejemplos en los recorridos de demostración.",
       "**Do** mantener sincronizada la selección del mapa y su inspector al usar puntero, Enter o selector de pasos.",
-      "**Do** conservar el título antes de los metadatos y distinguir autor, tiempo y contexto de pantalla en la evidencia."
+      "**Do** mantener título operativo, captura y motivo juntos; dejar la conversación en el desplegable secundario de evidencia."
     ],
     "donts": [
       "**Don't** extender las sombras de diálogo a todas las tarjetas del espacio de trabajo.",
@@ -562,7 +549,7 @@
       "**Don't** añadir una fuente ornamental que rompa la jerarquía única de Manrope.",
       "**Don't** mostrar controles del cajón móvil en el escritorio ni dejar interactivo su contenido cuando esté cerrado.",
       "**Don't** representar una variante como un paso habitual sin contexto, etiqueta ni distinción de forma.",
-      "**Don't** dibujar el orden observado con la misma línea sólida que una condición explícita ni ocultar el estado de borrador del mapa."
+      "**Don't** convertir mensajes del agente, saludos u observaciones aisladas en pasos de la guía ni sustituir capturas ausentes por escenas inventadas."
     ]
   }
 }
