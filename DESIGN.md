@@ -21,6 +21,36 @@ colors:
   map-connection: "#82998a"
   process-image: "#eef2ed"
   process-reason: "#edf3eb"
+  knowledge-topic: "#eaf1e2"
+  knowledge-active: "#3d654b"
+  knowledge-link: "#bcc7b6"
+  collection-select-ink: "#283829"
+  collection-ink: "#29392a"
+  collection-bookmark-ink: "#516b40"
+  collection-muted: "#52604c"
+  knowledge-label: "#52634d"
+  collection-count: "#586751"
+  collection-row-meta: "#5d6957"
+  knowledge-proof-meta: "#617057"
+  knowledge-minimap-topic: "#72906c"
+  knowledge-legend-border: "#809273"
+  knowledge-topic-border: "#829976"
+  knowledge-process-border: "#9dad90"
+  collection-field-border: "#c8d1c1"
+  collection-department-line: "#ccd4c6"
+  knowledge-frame-line: "#d0d8c9"
+  knowledge-grid: "#d2dacd"
+  knowledge-selection-ring: "#d7e4cd"
+  knowledge-toolbar-line: "#d8dfd0"
+  knowledge-minimap-process: "#d8e0d1"
+  knowledge-proof-line: "#dbe1d4"
+  collection-row-line: "#e0e5db"
+  knowledge-legend-topic: "#e5eddb"
+  collection-bookmark-selected: "#edf2e6"
+  collection-row-hover: "#f0f4eb"
+  knowledge-canvas: "#f6f8f2"
+  map-arrow: "#668273"
+  map-link-label: "#445b4d"
 typography:
   headline:
     fontFamily: '"Manrope Variable", Manrope, sans-serif'
@@ -67,6 +97,15 @@ typography:
     fontFamily: '"Manrope Variable", Manrope, sans-serif'
     fontSize: "14px"
     lineHeight: 1.85
+  collection-row-title:
+    fontFamily: '"Manrope Variable", Manrope, sans-serif'
+    fontSize: "15px"
+    fontWeight: 650
+    lineHeight: 1.55
+  collection-department:
+    fontFamily: '"Manrope Variable", Manrope, sans-serif'
+    fontSize: "24px"
+    letterSpacing: "-0.5px"
 rounded:
   badge: "5px"
   chip: "7px"
@@ -76,6 +115,8 @@ rounded:
   stage: "16px"
   circle: "50%"
   map-boundary: "40px"
+  knowledge-topic: "24px"
+  knowledge-process: "10px"
 spacing:
   compact: "8px"
   control: "12px"
@@ -159,6 +200,24 @@ components:
     backgroundColor: "{colors.paper}"
     rounded: "{rounded.card}"
     padding: "24px"
+  collection-row:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.collection-ink}"
+    typography: "{typography.collection-row-title}"
+  collection-open:
+    padding: "22px 20px"
+  knowledge-process:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.collection-ink}"
+    rounded: "{rounded.knowledge-process}"
+    padding: "16px 18px"
+    width: "290px"
+  knowledge-topic:
+    backgroundColor: "{colors.knowledge-topic}"
+    textColor: "{colors.collection-ink}"
+    rounded: "{rounded.knowledge-topic}"
+    padding: "13px 18px"
+    width: "240px"
 ---
 
 # Design System: UserHelper
@@ -169,7 +228,7 @@ components:
 
 UserHelper se siente como una mesa de trabajo luminosa: superficies blancas, fondo apenas verde y controles de bosque oscuro. La identidad acompaña una tarea en curso y la lectura posterior de sus decisiones. La densidad es operativa, con aire entre grupos y detalles compactos dentro de cada herramienta.
 
-Manrope une navegación, contenido y datos temporales. Las ventanas y miniaturas de la biblioteca sintética son ilustraciones construidas con CSS y SVG; los procedimientos privados muestran capturas reales junto a sus acciones cuando están disponibles; el logotipo combina una U abierta con un trazo central. La personalidad es profesional, clara y respetuosa. El registro de demostración permanece visible en los recorridos sintéticos.
+Manrope une navegación, contenido y datos temporales. Las ventanas y miniaturas de la biblioteca sintética son ilustraciones construidas con CSS y SVG; los procedimientos privados muestran capturas reales junto a sus acciones cuando están disponibles; el logotipo combina una U abierta con un trazo central. La personalidad es profesional, clara y respetuosa. Biblioteca y Mapas presentan una misma colección privada: organización por departamento y tipo de tarea, o relaciones por temas y actividades compartidas. El registro de demostración permanece visible en los recorridos sintéticos de Ejemplos.
 
 **Key Characteristics:**
 
@@ -179,7 +238,7 @@ Manrope une navegación, contenido y datos temporales. Las ventanas y miniaturas
 - Pasos, tiempos y razones conectados por una misma selección.
 - Movimiento breve de estado y navegación, con reducción de movimiento respetada.
 
-Este documento registra el código terminado de `src/styles.css`, `src/components/Shared.tsx`, `src/App.tsx` y `src/features/`, incluida la cascada final de legibilidad y la extensión de mapas en `src/features/ProcessMaps.tsx` y `ProcessMaps.css`. Los tokens del frontmatter son normativos; los ejemplos completos y las extensiones están en `.impeccable/design.json`.
+Este documento registra el código terminado de `src/styles.css`, `src/components/Shared.tsx`, `src/App.tsx` y `src/features/`, incluida la cascada final de legibilidad y las extensiones de procedimientos y colección en `src/features/ProcessMaps.tsx`, `ProcessMaps.css`, `ProcessCollection.tsx`, `ProcessCollection.css` y `KnowledgeMap.tsx`. Los tokens del frontmatter son normativos; los ejemplos completos y las extensiones están en `.impeccable/design.json`.
 
 ## Colors
 
@@ -200,6 +259,9 @@ La paleta tiene una base vegetal sobria, blancos limpios y tintes suaves que sep
 - **Imagen y motivo** (`process-image`, `process-reason`): soporte neutro para la captura y bloque salvia para el criterio del experto.
 - **Conexión del diagrama** (`map-connection`): línea continua entre acciones, con flecha; las alternativas se explican en el contenido del paso.
 
+- **Tema compartido** (`knowledge-topic`): fondo salvia de los nodos de tema o actividad del mapa de colección; el proceso conserva superficie blanca.
+- **Relación activa** y **conexión discreta** (`knowledge-active`, `knowledge-link`): distinguen el conjunto relacionado con la selección de las otras conexiones del grafo. El inspector aporta la evidencia y la forma distingue los dos tipos de nodo.
+
 ### Neutral
 
 - **Tinta vegetal** (`ink`): texto principal.
@@ -207,6 +269,8 @@ La paleta tiene una base vegetal sobria, blancos limpios y tintes suaves que sep
 - **Texto operativo secundario** (`operational-secondary`): tiempos y categorías del proceso, recordatorios de contexto, fecha, metadatos de sesión y estado de registro. Conserva la corrección de contraste del cierre visual.
 - **Mesa clara**, **papel** y **línea** (`workspace`, `paper`, `line`): fondo de aplicación, contenedores y divisiones respectivamente.
 - **Verde de foco** (`focus`): contorno de teclado visible.
+
+Los tokens `collection-*` y `knowledge-*` conservan los matices implementados en filas, selectores, etiquetas, contornos, divisores, lienzo y minimapa. Sus nombres indican el destino de uso: no convierten cada tono en un nuevo acento de marca. `map-arrow` y `map-link-label` corresponden únicamente a flechas y etiquetas del diagrama individual.
 
 **The State Has Words Rule.** Una conexión, pausa, decisión o variante se reconoce por texto y, cuando corresponde, icono o forma; el color nunca carga solo con su significado.
 
@@ -218,12 +282,14 @@ El sistema usa una sola familia geométrica de trazos amables. La jerarquía dep
 
 - **Headline:** título base de página; el token describe escritorio. Se adapta a tamaños de (27–28px) bajo los puntos de cambio de escritorio y móvil.
 - **Title:** encabezado base de sección. Las secciones recientes usan (19px) en escritorio; los títulos de detalle y explicación tienen ajustes propios.
-- **Card title:** títulos de sesiones, con dos líneas cuando lo pide el contenido. La tarjeta amplia de biblioteca en móvil sube a (17px), mientras la tarjeta reciente compacta usa (12px).
+- **Card title:** títulos de sesiones, con dos líneas cuando lo pide el contenido. La tarjeta amplia de la biblioteca de ejemplos en móvil sube a (17px), mientras la tarjeta reciente compacta usa (12px).
 - **Body:** explicación de una acción y su propósito. Otras descripciones operativas usan (12–14px); el interlineado observado es de (1.7–1.9). No convertir los textos minúsculos de una escena ilustrada en una escala de lectura.
 - **Button / Navigation:** controles compactos; la selección de navegación aumenta el peso a (740). El botón de inicio tiene una variante más visible de (14px).
 - **Tiempo:** temporizadores y marcas de reproducción usan cifras tabulares; el contador de sesión usa (19px), peso (620) y espaciado de (1px).
 
 La guía de procedimientos conserva esta familia: título según `process-step-title`, explicación según `process-explanation`, número de paso con cifras tabulares (26px) y metadatos a (12px). El título aparece antes de actividad, tipo y tiempo. En móvil, el título baja a (20px) y la explicación a (13px). El diagrama alterno usa `map-node-title`; su inspector comienza por el título de la acción (21px) y continúa con cómo ejecutarla y su motivo.
+
+En la colección privada, los departamentos usan `collection-department` y las filas `collection-row-title`; las familias de tarea se identifican a (13px). Los nodos del mapa usan títulos de (15px), peso (650), con hasta tres líneas; el inspector conserva el título completo a (21px) y explicaciones a (13px). Las etiquetas de tipo y los conteos funcionan como metadatos de navegación.
 
 **The Reading Before Ornament Rule.** La información que permite operar y comprender conserva la escala final de lectura; las pequeñas ventanas de ejemplo siguen siendo ilustraciones.
 
@@ -231,7 +297,7 @@ La guía de procedimientos conserva esta familia: título según `process-step-t
 
 La estructura de escritorio combina navegación fija a la izquierda (232px), una barra superior (73px) y contenido centrado con ancho máximo (1410px). El relleno horizontal principal es (38px). El contenido usa columnas flexibles de mínimo cero para contener nombres, escenas y tarjetas sin ensanchar la página.
 
-La superficie senior distribuye la sesión y un acompañamiento lateral de (265px), con separación de (31px). El detalle combina contenido flexible y proceso de (310px), separado por (27px); el proceso permanece pegado a (22px) del borde superior durante el desplazamiento de escritorio. Las sesiones forman tres columnas; los bloques de explicación distribuyen acción y propósito en dos columnas.
+La superficie senior distribuye la sesión y un acompañamiento lateral de (265px), con separación de (31px). El detalle de ejemplo combina contenido flexible y proceso de (310px), separado por (27px); el proceso permanece pegado a (22px) del borde superior durante el desplazamiento de escritorio. Las sesiones forman tres columnas; los bloques de explicación distribuyen acción y propósito en dos columnas.
 
 Los cambios efectivos son:
 
@@ -246,9 +312,15 @@ La guía visual de procedimientos se lee en una columna de pasos separados por l
 
 La vista alternativa de diagrama incorpora un lienzo y un inspector lateral de (360px), reducido a (300px) hasta (1100px). Hasta (950px), el inspector pasa debajo del lienzo y deja de limitar su altura interna. El lienzo pasa de (580px) a (500px) en ese rango y a (440px) hasta (580px); en este último rango se oculta el minimapa, se apilan filtros y campos de clasificación y se reorganizan las acciones. Son puntos de cambio propios de procedimientos, sin reemplazar los del marco general.
 
+La colección privada agrupa filas primero por departamento y después por tipo de tarea. Sus tres filtros —búsqueda, departamento y tipo— forman una fila; hasta (1100px), la búsqueda ocupa toda la fila superior; hasta (520px), cada campo ocupa su propia fila. Los encabezados de departamento, las familias y los divisores ofrecen jerarquía sin una cuadrícula de tarjetas.
+
+El mapa de la colección coloca procesos a la izquierda y temas o actividades compartidas a la derecha. Su inspector lateral mide (330px), reducido a (290px) hasta (1100px); hasta (800px), pasa debajo del lienzo y deja de tener altura limitada. El lienzo pasa de (680px) a (480px) en ese rango y a (440px) hasta (520px), donde se oculta el minimapa. Estos puntos de cambio corresponden al mapa de colección; el diagrama individual mantiene los suyos.
+
 ## Elevation & Depth
 
 La profundidad habitual proviene de superficies blancas, tintes y bordes de un píxel. Las tarjetas permanecen planas; su interacción cambia el borde. Las sombras se reservan para elementos superpuestos o affordances puntuales: diálogo, aviso flotante, cajón móvil y botón de reproducción sobre una miniatura. Los valores exactos viven en las extensiones del sidecar.
+
+La selección del mapa de colección usa un borde verde más fuerte y un anillo exterior suave sin desplazamiento. Es una señal de selección sobre un lienzo plano, no una tarjeta elevada.
 
 **The Flat Work Surface Rule.** Los paneles de trabajo descansan sobre tono y borde; la elevación marca una superposición, no cada contenedor.
 
@@ -259,6 +331,8 @@ Los rectángulos tienen esquinas suaves y escala de radio según función: peque
 En la biblioteca de ejemplos, círculos pequeños indican estado o paso habitual. Decisiones y variantes usan nodos más cuadrados; la variante añade línea discontinua y una rama lateral. Los avatares son círculos con iniciales, sin retratos sintéticos. La marca es un SVG blanco de extremos redondos dentro de un cuadrado verde redondeado; conservar su geometría, no sustituirla por un carácter tipográfico.
 
 En el diagrama alterno de procedimientos privados, el nodo es una tarjeta de borde suave. Inicio y fin usan extremos más redondos; una decisión refuerza el borde a (2px), y la selección añade el contorno verde de foco separado del borde. Las conexiones continuas bajan de una acción a la siguiente con codos suaves y flecha final. El lienzo tiene una retícula de puntos discreta; nodos y controles no reciben sombra de selección ni hover.
+
+En el mapa de la colección, el proceso es un rectángulo blanco de radio (10px) y el tema o actividad un rectángulo salvia de extremos más redondos. La leyenda traduce esa diferencia a cuadrado y círculo con texto. Las conexiones son curvas sin punta de flecha: representan pertenencia compartida, no orden de ejecución. El nodo relacionado refuerza su borde y la conexión relacionada aumenta su grosor.
 
 ## Components
 
@@ -274,7 +348,7 @@ Los filtros son botones blancos con borde, radio pequeño y estado seleccionado 
 
 ### Cards / Containers
 
-Las tarjetas de sesión contienen una miniatura de proceso, título, datos del senior y duración. El borde se oscurece al pasar el puntero; la miniatura revela un símbolo de reproducción también con foco de teclado. Una tarjeta completa es un botón, sin acciones interactivas anidadas. El escenario y el proceso son contenedores separados por borde; la explicación vive directamente en el fondo de trabajo.
+Las tarjetas de sesión de Ejemplos contienen una miniatura de proceso, título, datos del senior y duración. El borde se oscurece al pasar el puntero; la miniatura revela un símbolo de reproducción también con foco de teclado. Una tarjeta completa es un botón, sin acciones interactivas anidadas. El escenario y el proceso son contenedores separados por borde; la explicación vive directamente en el fondo de trabajo.
 
 ### Inputs / Fields
 
@@ -288,9 +362,19 @@ La navegación lateral usa icono lineal y etiqueta alineados. La selección aña
 
 En la biblioteca de ejemplos, la firma del sistema es la relación entre momento, paso y razón. El elemento elegido usa fondo salvia, borde y nodo distinguible; conserva su título, tipo y tiempo. Seleccionarlo actualiza la escena y el contenido contextual. Las variantes son ramas, no pasos indistinguibles. En tablet y móvil se convierte en una fila de pasos desplazable; conserva la selección y el orden de lectura.
 
+### Shared collection and knowledge map
+
+Biblioteca y Mapas son dos vistas de los mismos procesos de la bóveda privada. Comparten búsqueda, filtros de departamento y tipo, conteos y actualización. Biblioteca agrupa por departamento y familia de tarea, ordenando los títulos dentro de cada grupo. Cada fila abre el procedimiento y muestra acciones, imágenes y estado de revisión. El marcador es un botón hermano independiente, con estado presionado y nombre accesible; Guardados filtra favoritos de este navegador.
+
+El mapa es bipartito: procesos a un lado, temas o actividades compartidas al otro. El selector «Conectar por» permite todas las coincidencias, solo temas o solo actividades. Seleccionar un proceso, tema, actividad o conexión destaca sus relaciones y actualiza el inspector. Los procesos sin coincidencias permanecen visibles; un mensaje explica que ampliar filtros puede revelar otras relaciones. Una coincidencia no representa secuencia ni equivalencia de reglas.
+
+El inspector ofrece un selector nativo para explorar sin mover el lienzo. Presenta primero el título completo y debajo la clase de selección con icono. Bajo cada relación muestra las acciones que la sustentan, el campo de origen y el extracto, omitiendo este último cuando repite exactamente el título. La evidencia se separa mediante divisores horizontales de un píxel, sin un acento lateral. Los enlaces «Abrir procedimiento» y «Ver acciones e imágenes» conducen al detalle operativo. Zoom, encuadre, minimapa y selección por teclado acompañan el recorrido; los nodos de esta vista no se arrastran ni se reconectan.
+
+La actualización tiene estado textual; si falla después de una lectura válida, la última colección queda visible con aviso y reintento. El vacío distingue ausencia de procesos, filtros sin resultados y falta de favoritos. Las demos viven en Ejemplos; sus tarjetas y escenas sintéticas no constituyen la colección privada.
+
 ### Process guides and action diagrams
 
-La guía visual es la vista inicial del procedimiento; «Diagrama» es una alternativa del mismo contenido. El selector de vista usa texto, icono, estado presionado y borde inferior verde. La cantidad indicada corresponde a acciones. La lista de procesos usa filas blancas con título, departamento, tipo de tarea, fecha y conteos de acciones e imágenes. Los estados «Por revisar» y «Sin tarea identificada» acompañan los registros, separados de la biblioteca sintética.
+La guía visual es la vista inicial del procedimiento; «Diagrama» es una alternativa del mismo contenido. El selector de vista usa texto, icono, estado presionado y borde inferior verde. La cantidad indicada corresponde a acciones. Biblioteca y el mapa de colección abren este mismo detalle individual; el selector «Diagrama» dentro del procedimiento sigue mostrando sus propias acciones, distinto de las relaciones entre procesos.
 
 Cada paso presenta número, título operativo y metadatos; después coloca la captura real junto a «Cómo hacerlo» y «Por qué se hace así». La captura conserva proporciones con ajuste `contain`, borde suave y radio de botón; su pie incluye tiempo, relación de momento cercano cuando corresponde y ampliación. La ausencia de captura se presenta como «Imagen pendiente». Un fallo de descarga indica «No pudimos cargar la imagen», aclara que la captura está registrada y ofrece «Reintentar imagen»; la variante compacta también conserva ese control. La carga muestra estado textual en una superficie con proporción (16:10), y la ampliación permanece deshabilitada hasta disponer de imagen. El contenedor de ausencia o error usa borde discontinuo; no representa una relación entre acciones. No se inventa una escena que simule evidencia.
 
@@ -323,6 +407,7 @@ El diálogo blanco usa radio de escenario, relleno de (28px) en escritorio y (22
 
 - **Do** mantener sincronizada la selección del mapa y su inspector al usar puntero, Enter o selector de pasos.
 - **Do** mantener título operativo, captura y motivo juntos; dejar la conversación en el desplegable secundario de evidencia.
+- **Do** mantener los mismos procesos y filtros entre Biblioteca y Mapas, con evidencia de acciones para explicar cada conexión.
 
 ### Don't:
 
@@ -333,6 +418,7 @@ El diálogo blanco usa radio de escenario, relleno de (28px) en escritorio y (22
 - **Don't** mostrar controles del cajón móvil en el escritorio ni dejar interactivo su contenido cuando esté cerrado.
 - **Don't** representar una variante como un paso habitual sin contexto, etiqueta ni distinción de forma.
 - **Don't** convertir mensajes del agente, saludos u observaciones aisladas en pasos de la guía ni sustituir capturas ausentes por escenas inventadas.
+- **Don't** representar las coincidencias del mapa de colección como una secuencia de pasos ni como reglas equivalentes.
 
 ## Mi espacio: conversación individual
 

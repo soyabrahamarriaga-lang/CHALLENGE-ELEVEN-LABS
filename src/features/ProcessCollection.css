@@ -1,0 +1,56 @@
+.process-collection-page { max-width: 1500px; margin: 0 auto; }
+.knowledge-filters { display: grid; grid-template-columns: minmax(220px, 1.3fr) minmax(160px, .8fr) minmax(190px, 1fr); gap: 16px; align-items: end; margin: 28px 0 18px; }
+.knowledge-filters > label:not(.flow-search), .knowledge-picker { display: grid; gap: 7px; font-size: 12px; font-weight: 650; color: #52604c; }
+.knowledge-filters select, .knowledge-toolbar select, .knowledge-picker select { width: 100%; min-width: 0; min-height: 42px; border: 1px solid #c8d1c1; border-radius: 8px; padding: 8px 12px; color: #283829; background: #fff; font: inherit; }
+.knowledge-filters .flow-search { height: 44px; margin: 0; }
+.collection-summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; color: #52604c; font-size: 13px; padding: 4px 0 18px; }
+.collection-department { margin-top: 24px; }
+.collection-department > h2 { display: flex; align-items: baseline; gap: 16px; font-size: 24px; letter-spacing: -.5px; border-bottom: 1px solid #ccd4c6; padding-bottom: 15px; }
+.collection-department > h2 span { font-size: 12px; font-weight: 500; color: #586751; letter-spacing: 0; }
+.collection-family { margin: 26px 0 34px; }
+.collection-family > h3 { margin: 0 0 12px; font-size: 13px; color: #52634d; font-weight: 650; }
+.collection-row { display: flex; align-items: center; border-top: 1px solid #e0e5db; background: #fff; }
+.collection-row:last-child { border-bottom: 1px solid #e0e5db; }
+.collection-open { display: flex; flex: 1; min-width: 0; align-items: center; justify-content: space-between; text-align: left; padding: 22px 20px; gap: 20px; border: 0; background: transparent; color: #29392a; }
+.collection-open:hover { background: #f0f4eb; }
+.collection-open > span { min-width: 0; }
+.collection-open strong { display: block; font-size: 15px; font-weight: 650; line-height: 1.55; overflow-wrap: anywhere; }
+.collection-open small { display: block; margin-top: 5px; color: #5d6957; font-size: 12px; }
+.collection-open svg { flex-shrink: 0; }
+.collection-bookmark { margin: 0 12px; flex-shrink: 0; color: #516b40; min-width: 40px; min-height: 44px; }
+.collection-bookmark[aria-pressed=true] { background: #edf2e6; }
+.knowledge-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid #d8dfd0; padding: 15px 0; }
+.knowledge-toolbar p { display: flex; gap: 8px; align-items: center; font-size: 12px; margin: 0; color: #52634d; }
+.knowledge-key { display: inline-block; width: 13px; height: 13px; border: 1px solid #809273; }
+.topic-key { background: #e5eddb; border-radius: 50%; margin-left: 8px; }
+.process-key { background: #fff; border-radius: 3px; }
+.knowledge-toolbar label { display: flex; align-items: center; gap: 10px; font-size: 12px; white-space: nowrap; color: #52634d; }
+.knowledge-toolbar select { width: auto; max-width: 220px; }
+.knowledge-layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; border: 1px solid #d0d8c9; border-radius: 12px; overflow: hidden; background: #fff; }
+.knowledge-canvas { height: 680px; min-width: 0; background: #f6f8f2; }
+.knowledge-canvas .react-flow__node { box-shadow: none; }
+.knowledge-canvas .knowledge-process-node { width: 290px; padding: 16px 18px; text-align: left; border: 1px solid #9dad90; border-radius: 10px; background: #fff; color: #29392a; }
+.knowledge-canvas .knowledge-topic-node { width: 240px; padding: 13px 18px; border: 1px solid #829976; border-radius: 24px; text-align: left; background: #eaf1e2; color: #29392a; }
+.knowledge-canvas .react-flow__node strong { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 15px; line-height: 1.5; font-weight: 650; overflow-wrap: anywhere; }
+.knowledge-canvas .react-flow__node small { display: block; color: #52634d; font-size: 10px; margin-bottom: 5px; }
+.knowledge-canvas .react-flow__node span { display: block; font-size: 11px; color: #52634d; margin-top: 7px; }
+.knowledge-canvas .react-flow__node.selected { border: 2px solid #3d654b; box-shadow: 0 0 0 3px #d7e4cd; }
+.knowledge-canvas .react-flow__node.related { border-color: #3d654b; }
+.knowledge-inspector { border-left: 1px solid #d0d8c9; padding: 22px; max-height: 680px; overflow-y: auto; overflow-wrap: anywhere; }
+.knowledge-picker { margin-bottom: 26px; }
+.knowledge-picker select { text-overflow: ellipsis; font-size: 12px; }
+.knowledge-inspector-heading { display: flex; align-items: center; gap: 8px; color: #52634d; font-size: 11px; }
+.knowledge-inspector h2 { font-size: 21px; line-height: 1.4; letter-spacing: -.4px; margin: 12px 0; }
+.knowledge-inspector p { color: #52604c; font-size: 13px; line-height: 1.75; }
+.knowledge-explanation { margin-bottom: 24px; }
+.knowledge-related { padding: 20px 0; border-top: 1px solid #dbe1d4; }
+.knowledge-related h3 { font-size: 14px; line-height: 1.6; margin: 0 0 14px; }
+.knowledge-proofs { list-style: none; padding: 0; margin: 0 0 16px; }
+.knowledge-proofs li { border-top: 1px solid #dbe1d4; padding-top: 12px; margin: 14px 0; }
+.knowledge-proofs strong { display: block; font-size: 12px; line-height: 1.6; font-weight: 650; }
+.knowledge-proofs span { display: block; font-size: 10px; color: #617057; margin-top: 8px; }
+.knowledge-proofs p { margin: 4px 0 0; }
+.knowledge-footnote, .knowledge-no-links { color: #52604c; font-size: 12px; line-height: 1.85; margin: 16px 0; max-width: 900px; }
+@media (max-width: 1100px) { .knowledge-layout { grid-template-columns: minmax(0, 1fr) 290px; } .knowledge-inspector { padding: 18px; } .knowledge-filters { grid-template-columns: 1fr 1fr; } .knowledge-filters .flow-search { grid-column: 1 / -1; } }
+@media (max-width: 800px) { .knowledge-layout { grid-template-columns: 1fr; } .knowledge-canvas { height: 480px; } .knowledge-inspector { border-left: 0; border-top: 1px solid #d0d8c9; max-height: none; padding: 22px; } }
+@media (max-width: 520px) { .knowledge-filters { grid-template-columns: 1fr; gap: 12px; margin-top: 22px; } .collection-summary, .knowledge-toolbar { align-items: flex-start; flex-direction: column; gap: 12px; } .knowledge-toolbar label { width: 100%; justify-content: space-between; } .knowledge-toolbar select { max-width: 195px; } .collection-open { padding: 18px 12px; gap: 12px; } .collection-open strong { font-size: 14px; } .collection-bookmark { margin: 0 4px; } .collection-department > h2 { font-size: 22px; } .knowledge-canvas { height: 440px; } .knowledge-canvas .react-flow__minimap { display: none; } }

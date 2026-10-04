@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "id": "20261004T054515Z-codex-14d6a645",
+  "at": "2026-10-04T05:45:15.750957Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "Biblioteca y grafo de una colección compartida",
+  "summary": "Unificar Biblioteca y Mapas sobre los procesos privados y representar temas y actividades compartidas con evidencia.",
+  "result": "Biblioteca agrupada por departamento y tipo; grafo bipartito con inspector, filtros comunes y marcadores reales. Guía por acciones dentro del procedimiento. Canvas global y relaciones en Obsidian; ediciones manuales conservadas. Ejemplos separados sin borrar su almacenamiento. Integrado sobre main eedaddd conservando Mi espacio, disponibilidad real y tutor de Intern de los PR15 y PR16.",
+  "files": [
+    ".impeccable/design.json",
+    "DESIGN.md",
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-0018.md",
+    "context/ontology.json",
+    "docs/PROCESS-MAPS.md",
+    "server/processFlow.test.mjs",
+    "server/processKnowledge.mjs",
+    "server/processKnowledge.test.mjs",
+    "server/vault.mjs",
+    "server/vaultCatalog.mjs",
+    "src/App.tsx",
+    "src/domain/processCollection.test.ts",
+    "src/domain/processCollection.ts",
+    "src/domain/processFlow.ts",
+    "src/features/AgentConversation.tsx",
+    "src/features/KnowledgeMap.tsx",
+    "src/features/ProcessCollection.css",
+    "src/features/ProcessCollection.tsx",
+    "src/features/ProcessMaps.tsx",
+    "src/services/processFlow.ts",
+    "src/services/useProcessCollection.ts"
+  ],
+  "decisions": [
+    "ADR-0018: una lectura compartida de la bóveda, hubs temáticos y códigos de actividad con pruebas por paso; vocabulario contable explícito y local para evitar relaciones inventadas y nuevas llamadas a proveedores.",
+    "PR14 ya integrado durante el trabajo; conservar cambios mediante checkpoint local y resolver App y documentación sobre main en nueva rama codex/shared-process-library."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0018.md"
+  ],
+  "ontology_review": "Añadir colección de procesos y tema o actividad compartida, sin cambiar versión 1. Misma identidad en ambas vistas; cada conexión conserva sustento; una coincidencia no implica secuencia ni política equivalente.",
+  "validation": [
+    "132 pruebas Vitest y build TypeScript/Vite correctos después de incorporar main; aviso de tamaño del chunk de agente. 28 pruebas Python correctas. QA navegador escritorio y móvil con cinco procesos sintéticos: filtros compartidos, tema 32-D con evidencia, marcador y apertura de guía; confirmación de navegación tras integrar main. Colección local de 13 registros leída. Revisión Impeccable ship tras dos correcciones; detector de fuentes emitió 42 avisos de tokens/rampas, documentados sin repetir escaneo."
+  ],
+  "next_steps": [
+    "Revisar e integrar el nuevo PR; confirmar contenido y asociaciones con experto; ampliar vocabulario si aparecen temas sin conexión. Procedimientos siguen siendo borradores."
+  ]
+}

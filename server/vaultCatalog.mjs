@@ -97,3 +97,33 @@ export async function writeProcessIndex(root, processes) {
       .join("");
   await writeLocal(dir, "Indice-generado.md", text);
 }
+
+// Dedicated generated artifacts; manual copies remain untouched.
+export async function writeKnowledgeIndex(root, processes, graph, canvas) {
+  const dir = await privateDirectory(root, "Procesos");
+  const link = (p) => `[[${p.catalogPath.replace(/\.md$/, "")}|${p.title.replace(/[\[\]|]/g, "")}]]`;
+  const sections = graph.facets.map((f) => {
+    const members = graph.memberships.filter((m) => m.facetId === f.id);
+    if (members.length < 2) return "";
+    return `## ${f.label}\n\n` + members.map((m) => {
+      const p = processes.find((p) => p.id === m.processId);
+      return `- ${link(p)}\n` + m.proofs.map((proof) =>
+        `  - ${proof.field}: ${proof.excerpt.replace(/\n/g, " ")} (paso: ${proof.stepTitle.replace(/\n/g, " ")})\n`).join("");
+    }).join("") + "\n";
+  }).join("");
+  await writeLocal(dir, "Relaciones-generadas.md", "# Temas compartidos\n\nÍndice generado: se actualiza desde la misma colección que Biblioteca. Las coincidencias enlazan acciones documentadas; no implican reglas iguales ni orden de ejecución. Guarda tus anotaciones en otra nota.\n\n[[Mapa-de-conocimiento-generado.canvas|Abrir grafo]]\n\n" + (sections || "Todavía no hay temas compartidos entre procesos.\n"));
+  // Preserve an edited graph and publish the refreshed derivation alongside it.
+  await mediaLock(dir + "-knowledge", async () => {
+    const name = "Mapa-de-conocimiento-generado.canvas";
+    const existing = await readLocal(dir, name);
+    const state = await readLocal(dir, "mapa-conocimiento-estado.json");
+    const previous = state ? JSON.parse(state.toString()) : null;
+    const output = JSON.stringify(canvas, null, 2) + "\n";
+    if (existing && (!previous || digest(existing) !== previous.digest)) {
+      await writeLocal(dir, "Mapa-de-conocimiento-actualizado.canvas", output);
+      return;
+    }
+    await writeLocal(dir, name, output);
+    await writeLocal(dir, "mapa-conocimiento-estado.json", JSON.stringify({ digest: digest(output) }) + "\n");
+  });
+}

@@ -204,6 +204,20 @@
       "definition": "Imagen persistida de pantalla compartida con tiempo; una asociación cercana requiere confirmar correspondencia con la acción.",
       "status": "confirmed",
       "evidence": "Solicitud del usuario; ADR-0017."
+    },
+    {
+      "id": "process_collection",
+      "name": "Colección de procesos",
+      "definition": "Conjunto único de procesos de la bóveda mostrado como biblioteca ordenada y grafo de relaciones; los ejemplos simulados no lo integran.",
+      "status": "confirmed",
+      "evidence": "Solicitud explícita del usuario; ADR-0018."
+    },
+    {
+      "id": "shared_process_topic",
+      "name": "Tema o actividad compartida",
+      "definition": "Coincidencia explícita en acciones documentadas o códigos del catálogo de al menos dos procesos, con referencias al paso y campo que la sustentan.",
+      "status": "confirmed",
+      "evidence": "Solicitud explícita del usuario; ADR-0018."
     }
   ],
   "relations": [
@@ -356,6 +370,18 @@
       "type": "illustrated_by",
       "to": "screen_capture",
       "meaning": "Una captura original próxima ilustra el paso como asociación por revisar."
+    },
+    {
+      "from": "process_collection",
+      "type": "contains",
+      "to": "process_flow_draft",
+      "meaning": "Biblioteca y Mapas comparten las mismas identidades y filtros."
+    },
+    {
+      "from": "process_flow_draft",
+      "type": "associated_through",
+      "to": "shared_process_topic",
+      "meaning": "Una asociación documentada permite explorar procesos afines sin atribuir secuencia ni reglas equivalentes."
     }
   ],
   "invariants": [
@@ -381,7 +407,10 @@
     "Una acción no es un turno de conversación; saludos y preguntas no se convierten en pasos.",
     "Una razón necesita evidencia de la persona, aunque esté en un turno posterior.",
     "Capturas y motivos faltantes se declaran; nunca se fabrican como evidencia.",
-    "La clasificación editable y un catálogo de reglas no ejecutan ni validan políticas contables o fiscales."
+    "La clasificación editable y un catálogo de reglas no ejecutan ni validan políticas contables o fiscales.",
+    "Biblioteca y Mapas son vistas de la misma colección; cambiar de vista no cambia los procesos ni mezcla ejemplos.",
+    "Toda conexión temática conserva el paso y campo que la sustenta; no implica causalidad, secuencia o políticas equivalentes.",
+    "Un proceso aislado o sin tarea identificada sigue siendo accesible aunque no tenga conexiones."
   ],
   "open_questions": [
     "¿Qué flujo y casos se usarán para demostrar transferencia?",
