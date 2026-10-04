@@ -35,6 +35,7 @@ export type AgentEvent =
   | { type: "speaking"; speaking: boolean }
   | { type: "ended" }
   | { type: "screen"; ok: boolean }
+  | { type: "voice"; active: boolean }
   | { type: "error"; code: "permission" | "connection" | "tool" };
 // Screen snapshots the agent accepts per conversation (agent file_input limit, ADR-0012).
 export const MAX_SCREEN_FRAMES = 10;
@@ -53,6 +54,8 @@ export function isAgentEvent(value: unknown): value is AgentEvent {
       return true;
     case "screen":
       return "ok" in value && typeof value.ok === "boolean";
+    case "voice":
+      return "active" in value && typeof value.active === "boolean";
     case "error":
       return (
         "code" in value &&
@@ -96,7 +99,7 @@ export function applyAgentEvent(
       error: "",
     };
   if (event.type === "speaking") return { ...state, speaking: event.speaking };
-  if (event.type === "screen") return state;
+  if (event.type === "screen" || event.type === "voice") return state;
   if (event.type === "ended")
     return { ...state, phase: "ended", speaking: false };
   if (event.type === "error")

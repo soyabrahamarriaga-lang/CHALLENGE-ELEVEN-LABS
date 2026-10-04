@@ -90,12 +90,20 @@ export function transcriptToMarkdown(conversation) {
   if (analysis.transcript_summary)
     body.push("## Resumen", "", clean(analysis.transcript_summary, 4000), "");
   body.push("## Conversación", "");
-  for (const turn of conversation.transcript || []) {
-    const who = turn.role === "agent" ? "Agente" : "Persona";
+  // ElevenLabs may list a long spoken turn after later ones; order by time, keeping ties stable.
+  const turns = (conversation.transcript || [])
+    .map((turn, index) => ({ turn, index }))
+    .sort((a, b) => (a.turn.time_in_call_secs ?? 0) - (b.turn.time_in_call_secs ?? 0) || a.index - b.index)
+    .map(({ turn }) => turn);
+  for (const turn of turns) {
+    const at = clock(turn.time_in_call_secs);
     const text = clean(stripVoiceTags(turn.message));
-    if (text) body.push(`**[${clock(turn.time_in_call_secs)}] ${who}:** ${text}`, "");
+    if (/^\[PANTALLA \d{2,}:\d{2}\]$/.test(text)) body.push(`**[${at}] Captura enviada al agente** ${text}`, "");
+    else if (text) body.push(`**[${at}] ${turn.role === "agent" ? "Agente" : "Persona"}:** ${text}`, "");
+    // Screen text arrives as contextual updates every second; it lives in eventos.md, not here.
     for (const call of turn.tool_calls || [])
-      body.push(`> [${clock(turn.time_in_call_secs)}] herramienta \`${clean(call.tool_name, 80)}\``, "");
+      if (call.tool_name !== "contextual_update")
+        body.push(`> [${at}] herramienta \`${clean(call.tool_name, 80)}\``, "");
   }
   body.push("## Enlaces", "", "- [[eventos]] · [[work-map]]", "");
   return head + "\n" + body.join("\n");

@@ -84,6 +84,21 @@ describe("vault formatting", () => {
     expect(md).toContain("herramienta `log_event`");
     expect(md).toContain("[[eventos]]");
   });
+  it("orders turns by time, labels snapshots and hides contextual updates", () => {
+    const md = transcriptToMarkdown({
+      ...conversation,
+      transcript: [
+        { role: "user", message: "[PANTALLA 00:27]", time_in_call_secs: 29 },
+        { role: "agent", message: "", time_in_call_secs: 29, tool_calls: [{ tool_name: "contextual_update" }] },
+        { role: "user", message: "Tiene 42 días y el máximo es 30.", time_in_call_secs: 24 },
+        { role: "agent", message: "", time_in_call_secs: 30, tool_calls: [{ tool_name: "buscar_politica" }] },
+      ],
+    });
+    const body = md.slice(md.indexOf("## Conversación"));
+    expect(body.indexOf("[00:24] Persona")).toBeLessThan(body.indexOf("[00:29] Captura enviada al agente** [PANTALLA 00:27]"));
+    expect(body).not.toContain("contextual_update");
+    expect(body).toContain("herramienta `buscar_politica`");
+  });
   it("drops expressive voice tags but keeps screen markers", () => {
     expect(stripVoiceTags("[slow] Entiendo. [laughs] Claro")).toBe("Entiendo. Claro");
     expect(stripVoiceTags("[PANTALLA 00:45]")).toBe("[PANTALLA 00:45]");

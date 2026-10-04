@@ -9,6 +9,28 @@ let session: Session | null = null;
 let sessionKey = "";
 let started = false;
 let framesSent = 0;
+let voiceTimer: ReturnType<typeof setInterval> | undefined;
+// Microphone level → "the expert is talking" for the snapshot timing (ADR-0015).
+function watchVoice(current: Session) {
+  let active = false;
+  let quietSince = 0;
+  voiceTimer = setInterval(() => {
+    let level = 0;
+    try {
+      level = current.getInputVolume();
+    } catch {
+      return;
+    }
+    const now = Date.now();
+    if (level > 0.05) {
+      quietSince = 0;
+      if (!active) emit({ type: "voice", active: (active = true) });
+    } else if (active) {
+      quietSince ||= now;
+      if (now - quietSince >= 400) emit({ type: "voice", active: (active = false) });
+    }
+  }, 150);
+}
 const origin = window.location.origin;
 function emit(event: AgentEvent) {
   window.parent.postMessage({ channel, sessionKey, event }, origin);
@@ -67,9 +89,14 @@ window.addEventListener("message", async (event) => {
         onConversationCreated: (created) => {
           session = created;
         },
-        onConnect: ({ conversationId }) =>
-          emit({ type: "connected", conversationId }),
-        onDisconnect: () => emit({ type: "ended" }),
+        onConnect: ({ conversationId }) => {
+          emit({ type: "connected", conversationId });
+          if (mode === "voice" && session) watchVoice(session);
+        },
+        onDisconnect: () => {
+          clearInterval(voiceTimer);
+          emit({ type: "ended" });
+        },
         onError: () => fail(null),
         onModeChange: ({ mode: activity }) =>
           emit({ type: "speaking", speaking: activity === "speaking" }),
@@ -153,5 +180,6 @@ window.addEventListener("message", async (event) => {
   }
 });
 window.addEventListener("pagehide", () => {
+  clearInterval(voiceTimer);
   void session?.endSession();
 });

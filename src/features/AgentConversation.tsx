@@ -26,6 +26,7 @@ import type {
 import { archiveConversation, logVaultEvent } from "../services/vault";
 import { clock } from "../services/screenDiff";
 import { startScreenWatch } from "../services/screenWatcher";
+import { TurnGate } from "../services/turnGate";
 import type { ScreenEvent, WatchStatus } from "../services/screenWatcher";
 import type { ArchiveResult } from "../services/vault";
 import "./AgentConversation.css";
@@ -68,6 +69,7 @@ export default function AgentConversation() {
   }>({ status: "idle", events: [], frames: 0 });
   const watch = useRef<{ stop: () => void } | null>(null);
   const framesSent = useRef(0);
+  const gate = useRef(new TurnGate<Blob>());
   const connectedAt = useRef(0);
   const busy = state.phase === "authorizing" || state.phase === "connecting";
   const active = busy || state.phase === "connected";
@@ -99,6 +101,26 @@ export default function AgentConversation() {
     }
   }, [state.phase]);
   useEffect(() => () => watch.current?.stop(), []);
+  // Sends the held snapshot once the expert has been quiet ~1.5 s and the agent is not talking.
+  useEffect(() => {
+    if (state.phase !== "connected" || screen.status !== "watching") return;
+    gate.current = new TurnGate<Blob>();
+    const conversationId = state.conversationId;
+    const timer = setInterval(() => {
+      const ready = gate.current.poll(Date.now());
+      if (!ready || framesSent.current >= MAX_SCREEN_FRAMES) return;
+      framesSent.current++;
+      const label = `[PANTALLA ${clock(ready.at)}]`;
+      post({ type: "screen", frame: ready.item, label });
+      void logVaultEvent(conversationId, {
+        kind: "note",
+        text: `captura enviada al agente ${label}`,
+        at: ready.at,
+      });
+      setScreen((previous) => ({ ...previous, frames: framesSent.current }));
+    }, 300);
+    return () => clearInterval(timer);
+  }, [state.phase, state.conversationId, screen.status]);
   useEffect(() => {
     const abort = new AbortController();
     let live = true;
@@ -143,6 +165,10 @@ export default function AgentConversation() {
       )
         return;
       const update = event.data.event;
+      if (update.type === "voice") gate.current.noteVoice(update.active, Date.now());
+      if (update.type === "speaking") gate.current.noteAgentSpeaking(update.speaking);
+      if (update.type === "message" && update.message.role === "user")
+        gate.current.noteVoice(false, Date.now());
       setState((previous) => applyAgentEvent(previous, update));
       if (update.type === "ended" || update.type === "error") {
         frameSession.current = null;
@@ -303,21 +329,10 @@ export default function AgentConversation() {
               events: [...previous.events, event].slice(-8),
             }));
           },
-          // At a pause: one snapshot so the agent can ask about what it sees.
+          // At a pause: one snapshot, held until the expert is quiet (see the gate effect).
           onPause: (frame, at) => {
-            if (framesSent.current >= MAX_SCREEN_FRAMES) return;
-            framesSent.current++;
-            const label = `[PANTALLA ${clock(at)}]`;
-            post({ type: "screen", frame, label });
-            void logVaultEvent(conversationId, {
-              kind: "note",
-              text: `captura enviada al agente ${label}`,
-              at,
-            });
-            setScreen((previous) => ({
-              ...previous,
-              frames: framesSent.current,
-            }));
+            if (framesSent.current < MAX_SCREEN_FRAMES)
+              gate.current.offer(frame, at, Date.now());
           },
         },
         { now: elapsed },
