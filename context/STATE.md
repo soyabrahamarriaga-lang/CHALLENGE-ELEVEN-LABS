@@ -29,7 +29,7 @@ Plan vigente: `docs/ROADMAP-15H.md`; método: `docs/WORKFLOW.md`; acceso: `docs/
 Transcripciones del agente se importan al terminar a una bóveda Obsidian privada (repo `userhelper-vault`, fuera de este repo público). API de eventos/notas lista para visión y Work Map. Ver docs/OBSIDIAN.md y ADR-0011. Pendiente: llamar eventos desde visión/client tools, retiro desde UI y redacción de datos personales.
 
 ## Visión
-El agente ElevenLabs (LLM `claude-haiku-4-5`, configurado por el usuario) ve capturas enviadas como `[PANTALLA mm:ss]` y pregunta por el cambio; verificado con `npm run check:vision` (docs/VISION.md, ADR-0012). Pendiente: captura en la UI con detección de pausa y campos de Data collection para el Work Map.
+El agente ElevenLabs (LLM `claude-haiku-4-5`, configurado por el usuario) ve capturas enviadas como `[PANTALLA mm:ss]` y pregunta por el cambio; verificado con `npm run check:vision` (docs/VISION.md, ADR-0012). La vista del agente comparte pantalla: OCR local cada segundo (texto al agente como contexto y a eventos.md) y captura en cada pausa (máx. 10), ADR-0013. Pendiente: prueba con conversación real desde la UI y campos de Data collection para el Work Map.
 
 ## Próximo trabajo después del prototipo
 1. Elegir el flujo de 5–10 minutos y un caso nuevo para evaluar transferencia.

@@ -1,5 +1,16 @@
 # Visión: el agente ElevenLabs ve la pantalla
 
+**Dos capas** ([ADR-0013](../context/decisions/ADR-0013.md)):
+1. **Cada segundo, OCR local:** el navegador lee solo el área que cambió y envía al agente `[OCR mm:ss] cambió «A» → «B»` como contexto (no habla, sin límite) y lo guarda en `eventos.md` de la bóveda.
+2. **En cada pausa, una captura:** `[PANTALLA mm:ss]` con imagen para que el agente pregunte (máx. 10, ADR-0012).
+
+Uso: en `#senior/agent`, inicia la conversación y pulsa **Compartir pantalla**. La primera vez descarga el OCR (unos segundos).
+
+Añadir al prompt del agente, en el bloque «Pantalla compartida»:
+```
+- También recibirás actualizaciones de contexto "[OCR mm:ss] ..." con el texto que cambia en pantalla cada segundo. Úsalas para saber qué está haciendo el experto y en qué minuto; no las leas en voz alta ni respondas a cada una.
+```
+
 Decisión: [ADR-0012](../context/decisions/ADR-0012.md). El agente usa un LLM con entrada de imágenes; la app le mostrará capturas **solo en pausas**, como `[PANTALLA mm:ss]`, y el agente responde con una pregunta breve sobre el cambio o «Mm-hm.».
 
 ## Configuración del agente (panel de ElevenLabs)

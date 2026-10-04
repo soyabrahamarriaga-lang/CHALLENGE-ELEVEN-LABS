@@ -254,3 +254,34 @@
   color: #385947;
   overflow-wrap: anywhere;
 }
+.agent-screen-status {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #385947;
+}
+.agent-screen-log {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--line, #e3e8e4);
+  border-radius: 12px;
+  background: var(--white, #fff);
+}
+.agent-screen-log h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.agent-screen-log ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.agent-screen-log time {
+  font-variant-numeric: tabular-nums;
+  color: #5b6b62;
+  margin-right: 6px;
+}

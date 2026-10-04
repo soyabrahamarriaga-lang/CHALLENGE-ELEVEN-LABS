@@ -3,11 +3,12 @@
 // requests and SDK work, without depending on startSession returning first.
 import { Conversation } from "@elevenlabs/client";
 import type { Conversation as Session } from "@elevenlabs/client";
-import { channel } from "./agentProtocol";
+import { MAX_SCREEN_FRAMES, SCREEN_LABEL, channel } from "./agentProtocol";
 import type { AgentEvent, AgentMode } from "./agentProtocol";
 let session: Session | null = null;
 let sessionKey = "";
 let started = false;
+let framesSent = 0;
 const origin = window.location.origin;
 function emit(event: AgentEvent) {
   window.parent.postMessage({ channel, sessionKey, event }, origin);
@@ -103,6 +104,41 @@ window.addEventListener("message", async (event) => {
       session.sendUserMessage(data.text.trim());
     } catch (error) {
       fail(error);
+    }
+  } else if (
+    data.sessionKey === sessionKey &&
+    session &&
+    data.type === "context" &&
+    typeof data.text === "string" &&
+    data.text.trim().length > 0 &&
+    data.text.length <= 2000
+  ) {
+    // Screen text every second: informs the agent without starting a turn (ADR-0013).
+    try {
+      session.sendContextualUpdate(data.text.trim());
+    } catch {
+      /* Connection close is reported separately. */
+    }
+  } else if (
+    data.sessionKey === sessionKey &&
+    session &&
+    data.type === "screen" &&
+    data.frame instanceof Blob &&
+    data.frame.size <= 5_000_000 &&
+    /^image\/(jpeg|png|webp)$/.test(data.frame.type) &&
+    typeof data.label === "string" &&
+    SCREEN_LABEL.test(data.label) &&
+    framesSent < MAX_SCREEN_FRAMES
+  ) {
+    // Snapshot at a pause: a user turn, so the agent may ask one question (ADR-0012).
+    framesSent++;
+    const current = session;
+    try {
+      const { fileId } = await current.uploadFile(data.frame);
+      current.sendMultimodalMessage({ text: data.label, fileIds: [fileId] });
+      emit({ type: "screen", ok: true });
+    } catch {
+      emit({ type: "screen", ok: false });
     }
   } else if (
     data.sessionKey === sessionKey &&

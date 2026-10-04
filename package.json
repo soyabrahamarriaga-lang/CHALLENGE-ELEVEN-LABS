@@ -18,7 +18,8 @@
     "livekit-server-sdk": "2.19.1",
     "lucide-react": "1.51.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "tesseract.js": "7.0.0"
   },
   "devDependencies": {
     "@types/node": "26.6.4",

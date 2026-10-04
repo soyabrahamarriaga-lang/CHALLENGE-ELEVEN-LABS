@@ -34,7 +34,11 @@ export type AgentEvent =
   | { type: "message"; message: AgentMessage }
   | { type: "speaking"; speaking: boolean }
   | { type: "ended" }
+  | { type: "screen"; ok: boolean }
   | { type: "error"; code: "permission" | "connection" | "tool" };
+// Screen snapshots the agent accepts per conversation (agent file_input limit, ADR-0012).
+export const MAX_SCREEN_FRAMES = 10;
+export const SCREEN_LABEL = /^\[PANTALLA \d{2,}:\d{2}\]$/;
 export const channel = "userhelper-elevenlabs-v1";
 export function isAgentEvent(value: unknown): value is AgentEvent {
   if (!value || typeof value !== "object" || !("type" in value)) return false;
@@ -47,6 +51,8 @@ export function isAgentEvent(value: unknown): value is AgentEvent {
       return "speaking" in value && typeof value.speaking === "boolean";
     case "ended":
       return true;
+    case "screen":
+      return "ok" in value && typeof value.ok === "boolean";
     case "error":
       return (
         "code" in value &&
@@ -90,6 +96,7 @@ export function applyAgentEvent(
       error: "",
     };
   if (event.type === "speaking") return { ...state, speaking: event.speaking };
+  if (event.type === "screen") return state;
   if (event.type === "ended")
     return { ...state, phase: "ended", speaking: false };
   if (event.type === "error")

@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "id": "20261004T005708Z-claude-133cd050",
+  "at": "2026-10-04T00:57:08.726102Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "screen-ocr",
+  "summary": "Transcribir la pantalla compartida cada segundo con OCR local y conectarla al agente y a la bóveda",
+  "result": "Compartir pantalla en #senior/agent: cada 1 s se detecta el área cambiada y se aplica OCR solo a ella; el texto va al agente como contextual_update y a eventos.md; en cada pausa se envía una captura [PANTALLA] (máx. 10). Verificado en Chromium con pantalla simulada; no probado aún con conversación real desde la UI (requiere código de equipo).",
+  "files": [
+    "context/STATE.md",
+    "context/decisions/ADR-0013.md",
+    "docs/VISION.md",
+    "package-lock.json",
+    "package.json",
+    "src/features/AgentConversation.css",
+    "src/features/AgentConversation.tsx",
+    "src/services/agentFrame.ts",
+    "src/services/agentProtocol.ts",
+    "src/services/screenDiff.test.ts",
+    "src/services/screenDiff.ts",
+    "src/services/screenWatcher.ts"
+  ],
+  "decisions": [
+    "OCR local con Tesseract.js en lugar de frames al agente o visión en la nube: sin límite ni coste por segundo y las capturas no salen del navegador (ADR-0013). Elegido tras preguntar el usuario por escalabilidad.",
+    "El texto por segundo usa contextual_update [OCR mm:ss] para no iniciar turnos; las capturas en pausa siguen ADR-0012."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0013.md"
+  ],
+  "ontology_review": "Sin cambio en ontology.json: screen_event se concreta como cambio de texto derivado por OCR con minuto; observación, no intención.",
+  "validation": [
+    "npm test: 64 pruebas pasaron (6 nuevas de screenDiff). npm run build completado; tsc sin errores.",
+    "Chromium (preview local, captureStream de factura ficticia): pantalla inicial transcrita en 0.4 s; cambio 4711→0400 descrito en 0.6 s; pausa a los 4 s con JPEG de 47 KB; consola sin errores en #senior/agent."
+  ],
+  "next_steps": [
+    "Probar desde la UI con una conversación real compartiendo pantalla y revisar eventos.md en la bóveda.",
+    "Añadir al prompt del agente la línea sobre [OCR mm:ss] (docs/VISION.md)."
+  ]
+}
