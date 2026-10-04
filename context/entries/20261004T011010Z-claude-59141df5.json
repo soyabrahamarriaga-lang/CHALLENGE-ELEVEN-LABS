@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "id": "20261004T011010Z-claude-59141df5",
+  "at": "2026-10-04T01:10:10.812009Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "agent-open-access",
+  "summary": "Permitir iniciar el agente sin código de equipo en la demo local",
+  "result": "Con AGENT_OPEN_ACCESS=true el agente se inicia sin código y la UI oculta el campo; origen, consentimiento y límite de intentos siguen activos; la videollamada sigue pidiendo código.",
+  "files": [
+    ".env.example",
+    "context/decisions/ADR-0014.md",
+    "docs/ELEVENLABS.md",
+    "server/livekit.mjs",
+    "server/livekit.test.mjs",
+    "server/main.mjs",
+    "src/features/AgentConversation.tsx"
+  ],
+  "decisions": [
+    "Modo opt-in por variable exacta, avisado al arrancar, en lugar de quitar el código siempre (ADR-0014). Pedido por el usuario para iniciar rápido."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0014.md"
+  ],
+  "ontology_review": "Sin cambio: decisión de acceso operativo, no del modelo de conocimiento.",
+  "validation": [
+    "npm test: 65 pruebas pasaron (1 nueva de acceso abierto; 2 actualizadas por requiresCode).",
+    "npm run build y tsc completados; archivos editados formateados con Prettier como el original."
+  ],
+  "next_steps": [
+    "Activar AGENT_OPEN_ACCESS=true en el .env de la máquina de la demo y reiniciar el backend."
+  ]
+}

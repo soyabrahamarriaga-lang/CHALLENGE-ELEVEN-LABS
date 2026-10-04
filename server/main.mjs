@@ -25,7 +25,13 @@ const host = process.env.LIVEKIT_TOKEN_HOST || "127.0.0.1";
 if (process.argv[1]?.endsWith("main.mjs")) {
   const vaultConfig = readVaultConfig();
   for (const problem of vaultProblems(vaultConfig)) console.warn(`[vault] ${problem}`);
-  if (!readConfig().ready) console.warn("[livekit] configuración incompleta: revisa LIVEKIT_* en .env");
+  const livekitConfig = readConfig();
+  if (!livekitConfig.ready) console.warn("[livekit] configuración incompleta: revisa LIVEKIT_* en .env");
+  if (livekitConfig.openAgent) {
+    console.warn("[agente] AGENT_OPEN_ACCESS=true: el agente se inicia sin código de equipo.");
+    if (!["127.0.0.1", "localhost", "::1"].includes(host))
+      console.warn(`[agente] ¡Cuidado! El backend escucha en ${host}: cualquiera en esa red podría gastar créditos de ElevenLabs.`);
+  }
   const server = createServer(createAppHandler());
   server.requestTimeout = 20000;
   server.headersTimeout = 10000;

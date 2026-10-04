@@ -29,6 +29,8 @@ export function readConfig(env = process.env) {
     apiKey: env.LIVEKIT_API_KEY || "",
     apiSecret: env.LIVEKIT_API_SECRET || "",
     joinCode: env.LIVEKIT_JOIN_CODE || "",
+    // Local demo only: start the agent without the team code (ADR-0014).
+    openAgent: env.AGENT_OPEN_ACCESS === "true",
     room: env.LIVEKIT_ROOM || "userhelper-team",
     origin: env.APP_ORIGIN || "http://127.0.0.1:5173",
   };
@@ -107,8 +109,10 @@ export function createHandler(config = readConfig(), options = {}) {
       if (req.method === "GET" && path === "/api/elevenlabs/status")
         return send(res, 200, {
           configured: Boolean(
-            agentConfig.ready && config.joinCode.length >= 16,
+            agentConfig.ready &&
+            (config.openAgent || config.joinCode.length >= 16),
           ),
+          requiresCode: !config.openAgent,
         });
       if (req.method === "GET" && path === "/api/livekit/status") {
         send(res, 200, {
@@ -131,7 +135,8 @@ export function createHandler(config = readConfig(), options = {}) {
         return send(res, 415, { error: "json_required" });
       if (
         !(isAgent
-          ? agentConfig.ready && config.joinCode.length >= 16
+          ? agentConfig.ready &&
+            (config.openAgent || config.joinCode.length >= 16)
           : config.ready)
       )
         return send(res, 503, { error: "not_configured" });
@@ -168,7 +173,10 @@ export function createHandler(config = readConfig(), options = {}) {
         /[\u0000-\u001f\u007f]/.test(displayName)
       )
         return send(res, 400, { error: "invalid_name" });
-      if (!sameSecret(body.joinCode, config.joinCode))
+      if (
+        !(isAgent && config.openAgent) &&
+        !sameSecret(body.joinCode, config.joinCode)
+      )
         return send(res, 401, { error: "invalid_code" });
       if (isAgent) {
         if (!["voice", "text"].includes(body.mode))
