@@ -51,6 +51,10 @@ Alternativa sin la app abierta: webhook post-llamada de ElevenLabs a `POST /api/
 
 Con `ELEVENLABS_TUTOR_AGENT_ID` en `.env`, el backend junta las notas de `Procesos/` (pasos, decisiones, motivos y límites del experto) en un documento y lo mantiene en la **base de conocimiento del tutor** en ElevenLabs. Solo lo reemplaza cuando las notas cambian y no toca su prompt. Forzarlo: `npm run tutor:knowledge`. Estado: `Procesos/tutor-conocimiento.json`. Decisión: [ADR-0016](../context/decisions/ADR-0016.md).
 
+## Tutorías
+
+Las conversaciones del tutor se guardan en `Tutorias/<fecha>-<id>/transcripcion.md` (Aprendiz / Tutor), separadas de `Sesiones/` para que el tutor no aprenda de sus propias respuestas. Decisión: [ADR-0017](../context/decisions/ADR-0017.md).
+
 ## Endpoints
 
 | Método y ruta | Uso |
