@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "id": "20261004T070550Z-claude-c4542f16",
+  "at": "2026-10-04T07:05:50.763306Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "faster-pause",
+  "summary": "Reacción más rápida a la pausa y capturas ligeras para el agente (opciones A y C)",
+  "result": "Pausa visual 1.5 s, silencio 1 s, captura al agente de 1024 px JPEG 0.7. En navegador: pausa a 2.5 s del cambio (antes 4–5 s).",
+  "files": [
+    "context/decisions/ADR-0018.md",
+    "src/services/screenWatcher.ts",
+    "src/services/turnGate.test.ts",
+    "src/services/turnGate.ts"
+  ],
+  "decisions": [
+    "Diagnóstico con métricas reales: la espera viene de reprocesar imágenes en memoria (LLM 2.6–7.7 s tras capturas vs 0.25 s antes); se reduce peso y tiempos y se recomienda max_files_in_memory=1 en el panel (ADR-0018). Opciones A y C elegidas por el usuario; D1 solo explicada."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0018.md"
+  ],
+  "ontology_review": "Sin cambio.",
+  "validation": [
+    "npm test: 139 pruebas pasaron; build y tsc completados.",
+    "Chromium, pantalla simulada: «Estado Borrador» → «Estado Rechazada» en 1.5 s; pausa 2.5 s tras el cambio; captura 1024x640."
+  ],
+  "next_steps": [
+    "Usuario: max_files_in_memory=1 en el panel y repetir la demo para medir latencia."
+  ]
+}
