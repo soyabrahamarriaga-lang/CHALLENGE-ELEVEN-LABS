@@ -13,6 +13,8 @@
 
 Se mantiene un máximo de 200 mensajes recientes en memoria, con 20 000 caracteres por mensaje recibido y 4 000 por mensaje enviado. No se guarda transcripción, código ni acceso temporal en localStorage. Si `VAULT_PATH` está configurado, al terminar se importa la transcripción a la bóveda Obsidian privada (docs/OBSIDIAN.md). Los eventos de transcripción dependen de la configuración del agente y pueden contener errores. Un mensaje del agente no acredita observación real de pantalla ni conocimiento validado.
 
+**Demo local sin código:** con `AGENT_OPEN_ACCESS=true` en `.env` el agente se inicia sin código de equipo y la pantalla oculta ese campo; solo con el backend en `127.0.0.1` y quitándolo antes de publicar ([ADR-0014](../context/decisions/ADR-0014.md)). La videollamada sigue pidiendo su código.
+
 ## Acceso y arquitectura
 
 El SDK oficial `@elevenlabs/client` se carga en `agent-session.html`, un documento del mismo origen creado solo durante una conversación. `AgentConversation.tsx` presenta consentimiento y estado; `agentFrame.ts` controla el SDK. Los mensajes entre ambos comprueban origen, ventana, identificador de sesión y estructura. Al cancelar, terminar, fallar o abandonar la vista se retira el iframe: su contexto de medios desaparece, incluso si el SDK todavía esperaba un permiso. El código invalida también respuestas tardías del backend. La cancelación no depende de que `startSession` haya devuelto una sesión.

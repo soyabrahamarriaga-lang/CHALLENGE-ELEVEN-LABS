@@ -177,6 +177,7 @@ describe("protected agent endpoint", () => {
     );
     expect(await (await api.agentStatus()).json()).toEqual({
       configured: true,
+      requiresCode: true,
     });
     expect((await api.agent({ mode: "text" })).status).toBe(200);
     expect(agentAccess).toHaveBeenCalledWith("text");
@@ -186,7 +187,41 @@ describe("protected agent endpoint", () => {
     );
     expect(await (await missing.agentStatus()).json()).toEqual({
       configured: false,
+      requiresCode: true,
     });
     expect((await missing.agent()).status).toBe(503);
+  });
+  it("starts the agent without the team code only when AGENT_OPEN_ACCESS is on", async () => {
+    const agentAccess = vi.fn(async () => ({
+      conversationToken: "test-token",
+    }));
+    const open = await setup(
+      { AGENT_OPEN_ACCESS: "true", LIVEKIT_JOIN_CODE: "" },
+      { agentConfig: { ready: true }, agentAccess },
+    );
+    expect(await (await open.agentStatus()).json()).toEqual({
+      configured: true,
+      requiresCode: false,
+    });
+    expect((await open.agent({ joinCode: "" })).status).toBe(200);
+    expect(agentAccess).toHaveBeenCalledWith("voice");
+    // Origin and consent are still enforced, and the LiveKit room still needs its code.
+    expect(
+      (await open.agent({ joinCode: "" }, { Origin: "https://evil.example" }))
+        .status,
+    ).toBe(403);
+    expect((await open.agent({ joinCode: "", consent: false })).status).toBe(
+      400,
+    );
+    const room = await setup(
+      { AGENT_OPEN_ACCESS: "true" },
+      { agentConfig: { ready: true }, agentAccess },
+    );
+    expect((await room.join({ joinCode: "" })).status).toBe(401);
+    const closed = await setup(
+      { AGENT_OPEN_ACCESS: "yes" },
+      { agentConfig: { ready: true }, agentAccess },
+    );
+    expect((await closed.agent({ joinCode: "" })).status).toBe(401);
   });
 });

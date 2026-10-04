@@ -52,6 +52,7 @@ export default function AgentConversation() {
   >("loading");
   const [retry, setRetry] = useState(0);
   const [code, setCode] = useState("");
+  const [requiresCode, setRequiresCode] = useState(true);
   const [consent, setConsent] = useState(false);
   const [draft, setDraft] = useState("");
   const [frame, setFrame] = useState<FrameSession | null>(null);
@@ -75,9 +76,11 @@ export default function AgentConversation() {
     if (state.phase !== "ended" || !state.conversationId) return;
     const abort = new AbortController();
     setArchive("saving");
-    archiveConversation(state.conversationId, { signal: abort.signal }).then((result) => {
-      if (!abort.signal.aborted) setArchive(result);
-    });
+    archiveConversation(state.conversationId, { signal: abort.signal }).then(
+      (result) => {
+        if (!abort.signal.aborted) setArchive(result);
+      },
+    );
     return () => abort.abort();
   }, [state.phase, state.conversationId]);
   useEffect(() => {
@@ -107,6 +110,7 @@ export default function AgentConversation() {
         return response.json();
       })
       .then((data) => {
+        if (live) setRequiresCode(data?.requiresCode !== false);
         if (live)
           setSetup(
             typeof data?.configured === "boolean"
@@ -188,7 +192,8 @@ export default function AgentConversation() {
     }));
   };
   const start = async (mode: AgentMode) => {
-    if (active || !code || !consent || setup !== "ready") return;
+    if (active || (requiresCode && !code) || !consent || setup !== "ready")
+      return;
     const attempt = ++generation.current;
     const abort = new AbortController();
     request.current = abort;
@@ -284,8 +289,15 @@ export default function AgentConversation() {
           },
           // Every second with changes: context for the agent (no turn) + line in eventos.md.
           onEvent: (event) => {
-            post({ type: "context", text: `[OCR ${clock(event.at)}] ${event.text}` });
-            void logVaultEvent(conversationId, { kind: "screen", text: event.text, at: event.at });
+            post({
+              type: "context",
+              text: `[OCR ${clock(event.at)}] ${event.text}`,
+            });
+            void logVaultEvent(conversationId, {
+              kind: "screen",
+              text: event.text,
+              at: event.at,
+            });
             setScreen((previous) => ({
               ...previous,
               events: [...previous.events, event].slice(-8),
@@ -297,8 +309,15 @@ export default function AgentConversation() {
             framesSent.current++;
             const label = `[PANTALLA ${clock(at)}]`;
             post({ type: "screen", frame, label });
-            void logVaultEvent(conversationId, { kind: "note", text: `captura enviada al agente ${label}`, at });
-            setScreen((previous) => ({ ...previous, frames: framesSent.current }));
+            void logVaultEvent(conversationId, {
+              kind: "note",
+              text: `captura enviada al agente ${label}`,
+              at,
+            });
+            setScreen((previous) => ({
+              ...previous,
+              frames: framesSent.current,
+            }));
           },
         },
         { now: elapsed },
@@ -357,8 +376,8 @@ export default function AgentConversation() {
         <p>
           <strong>Tú decides cuándo empezar.</strong> Tu voz y tus mensajes se
           envían a ElevenLabs, que puede conservar audio y transcripciones según
-          la configuración del agente. Si tu equipo activó la bóveda privada,
-          al terminar se guarda una copia de la transcripción en ella.
+          la configuración del agente. Si tu equipo activó la bóveda privada, al
+          terminar se guarda una copia de la transcripción en ella.
         </p>
       </div>
       {archive && (archive === "saving" || archive.status !== "disabled") && (
@@ -422,18 +441,20 @@ export default function AgentConversation() {
                   )}
                 </div>
               )}
-              <label className="agent-code" htmlFor="agent-code">
-                Código de acceso del equipo
-                <input
-                  id="agent-code"
-                  type="password"
-                  autoComplete="off"
-                  maxLength={256}
-                  placeholder="El mismo código de acceso del equipo"
-                  value={code}
-                  onChange={(event) => setCode(event.target.value)}
-                />
-              </label>
+              {requiresCode && (
+                <label className="agent-code" htmlFor="agent-code">
+                  Código de acceso del equipo
+                  <input
+                    id="agent-code"
+                    type="password"
+                    autoComplete="off"
+                    maxLength={256}
+                    placeholder="El mismo código de acceso del equipo"
+                    value={code}
+                    onChange={(event) => setCode(event.target.value)}
+                  />
+                </label>
+              )}
               <label className="rtc-consent">
                 <input
                   type="checkbox"
@@ -445,7 +466,9 @@ export default function AgentConversation() {
               </label>
               <button
                 className="button primary"
-                disabled={setup !== "ready" || !code || !consent}
+                disabled={
+                  setup !== "ready" || (requiresCode && !code) || !consent
+                }
                 onClick={() => {
                   void start("voice");
                 }}
@@ -455,7 +478,9 @@ export default function AgentConversation() {
               </button>
               <button
                 className="button secondary"
-                disabled={setup !== "ready" || !code || !consent}
+                disabled={
+                  setup !== "ready" || (requiresCode && !code) || !consent
+                }
                 onClick={() => {
                   void start("text");
                 }}
@@ -504,8 +529,8 @@ export default function AgentConversation() {
             Esta conversación no se escucha en la sala del equipo. Si compartes
             pantalla, tu navegador la lee cada segundo: el agente recibe el
             texto que cambia y una captura en cada pausa (máx.{" "}
-            {MAX_SCREEN_FRAMES}). Las capturas se suben a ElevenLabs; usa
-            datos ficticios.
+            {MAX_SCREEN_FRAMES}). Las capturas se suben a ElevenLabs; usa datos
+            ficticios.
           </p>
         </section>
         <section
