@@ -103,7 +103,7 @@
     {
       "id": "step",
       "name": "Paso",
-      "definition": "Unidad del Work Map vinculada a una situación de pantalla, decisión y fundamento.",
+      "definition": "Acción operativa del Work Map con instrucciones, imagen cuando existe, decisión y motivo documentado; no corresponde a un turno de conversación.",
       "status": "confirmed",
       "evidence": "Brief, p. 4, ejemplo de paso."
     },
@@ -180,9 +180,30 @@
     {
       "id": "process_flow_draft",
       "name": "Borrador de flujo de proceso",
-      "definition": "Grafo derivado de una conversación y sus observaciones, con citas atribuidas; su orden temporal y clasificación no acreditan causalidad ni validación experta.",
+      "definition": "Procedimiento por acciones de trabajo, imágenes originales, instrucciones y razones atribuidas. Conversación como evidencia secundaria; requiere revisión experta.",
       "status": "confirmed",
-      "evidence": "Solicitud del usuario de diagramas en UserHelper y Obsidian; ADR-0016."
+      "evidence": "Corrección del usuario y catálogo Contabilidad; ADR-0017 sustituye extracción de ADR-0016."
+    },
+    {
+      "id": "department",
+      "name": "Departamento",
+      "definition": "Área propietaria de un proceso; Contabilidad como valor inicial confirmado, editable.",
+      "status": "confirmed",
+      "evidence": "Solicitud del usuario; ADR-0017."
+    },
+    {
+      "id": "task_category",
+      "name": "Tipo de tarea",
+      "definition": "Familia funcional editable que agrupa actividades; distinta del nombre de una ejecución.",
+      "status": "confirmed",
+      "evidence": "Solicitud del usuario; ADR-0017."
+    },
+    {
+      "id": "screen_capture",
+      "name": "Captura original",
+      "definition": "Imagen persistida de pantalla compartida con tiempo; una asociación cercana requiere confirmar correspondencia con la acción.",
+      "status": "confirmed",
+      "evidence": "Solicitud del usuario; ADR-0017."
     }
   ],
   "relations": [
@@ -317,6 +338,24 @@
       "type": "contextualized_by",
       "to": "screen_event",
       "meaning": "Las observaciones visuales cercanas son contexto y requieren comprobar su relación con el paso."
+    },
+    {
+      "from": "process_flow_draft",
+      "type": "classified_in",
+      "to": "department",
+      "meaning": "Un proceso tiene departamento editable."
+    },
+    {
+      "from": "process_flow_draft",
+      "type": "classified_as",
+      "to": "task_category",
+      "meaning": "El tipo agrupa actividades del catálogo, sin validar reglas."
+    },
+    {
+      "from": "step",
+      "type": "illustrated_by",
+      "to": "screen_capture",
+      "meaning": "Una captura original próxima ilustra el paso como asociación por revisar."
     }
   ],
   "invariants": [
@@ -338,7 +377,11 @@
     "Un mensaje del agente que afirma observar no demuestra que la pantalla haya sido enviada o interpretada.",
     "Un borrador de flujo no equivale a un Work Map confirmado; el orden temporal no demuestra causalidad.",
     "Una alternativa que no está expresada no se inventa para completar un diagrama.",
-    "Los diagramas derivados de transcripciones privadas permanecen en la bóveda privada."
+    "Los diagramas derivados de transcripciones privadas permanecen en la bóveda privada.",
+    "Una acción no es un turno de conversación; saludos y preguntas no se convierten en pasos.",
+    "Una razón necesita evidencia de la persona, aunque esté en un turno posterior.",
+    "Capturas y motivos faltantes se declaran; nunca se fabrican como evidencia.",
+    "La clasificación editable y un catálogo de reglas no ejecutan ni validan políticas contables o fiscales."
   ],
   "open_questions": [
     "¿Qué flujo y casos se usarán para demostrar transferencia?",

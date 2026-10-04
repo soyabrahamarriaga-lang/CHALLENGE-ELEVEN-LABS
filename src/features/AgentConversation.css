@@ -282,3 +282,12 @@
   color: #5b6b62;
   margin-right: 6px;
 }
+
+.agent-capture-warning {
+  padding: 15px 20px;
+  background: #f4f0e2;
+  color: #675326;
+  font-size: 13px;
+  border-radius: 9px;
+  line-height: 1.8;
+}
