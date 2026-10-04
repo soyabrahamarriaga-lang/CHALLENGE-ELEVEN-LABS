@@ -33,9 +33,28 @@ Aplicar por separado a **Senior / observador** (`agent_2001m41w9r5jendtg1cfvgcpt
 
 El selector explícito no requiere activar la herramienta de detección automática de idioma. Esta app deja el idioma elegido fijo durante la conversación; evitar cambios disparados por voces de fondo.
 
-**Comprobación del 4 de octubre de 2026:** ambos agentes devolvieron `language: es`, ningún `language_presets` y override de idioma desactivado. Esta tarea consultó su configuración, sin modificarla. Por eso el inicio en inglés permanece deshabilitado con una explicación hasta completar los pasos. No se ha verificado una llamada real en inglés.
+**Comprobación inicial del 4 de octubre de 2026, antes de la configuración del usuario:** ambos agentes devolvieron `language: es`, ningún `language_presets` y override de idioma desactivado. Esta tarea consultó su configuración, sin modificarla. Por eso el inicio en inglés permanece deshabilitado con una explicación hasta completar los pasos. No se ha verificado una llamada real en inglés.
 
 Fuentes oficiales: [idiomas, saludos localizados y selección por SDK](https://elevenlabs.io/docs/eleven-agents/customization/voice/customization/language), [permisos de overrides](https://elevenlabs.io/docs/eleven-agents/customization/personalization/overrides).
+
+## Verificación real tras configurar los agentes (2026-10-04, 11:44 UTC)
+
+El usuario añadió English y actualizó los prompts en ambos agentes. GET del proveedor y la API local confirmaron español como idioma principal, preset English con saludo traducido y permiso Language habilitado. La interfaz muestra English disponible. La existencia del preset verifica la configuración, no garantiza que el LLM respete el idioma en cada respuesta.
+
+Se abrieron cinco conversaciones reales **por texto**, con preguntas ficticias de verificación, a través del acceso temporal del backend local y WebSocket. Resultados:
+
+| Perfil | Español | Inglés |
+| --- | --- | --- |
+| Senior / observador | Saludo y respuesta en español | Saludo inglés, primera respuesta en español: **falla de comportamiento** |
+| Intern / tutor | Saludo y respuesta en español | Saludo y respuestas en inglés, incluida explicación de una nota fuente española |
+
+La conversación fallida de Senior registró `conversation_config_override.agent.language = en` y `metadata.main_language = en`; el idioma llegó al proveedor. En una conversación adicional, pedir inglés explícitamente dentro de la pregunta produjo una respuesta inglesa. Esto indica capacidad del modelo para inglés y apunta a una instrucción de idioma insuficientemente explícita; no demuestra la causa interna del LLM ni justifica por sí solo sustituirlo.
+
+Ajuste recomendado para la siguiente tarea: enlazar el idioma elegido con una variable dinámica explícita del prompt, manteniendo el override de idioma, y repetir la prueba en ambos idiomas. Todavía no implementado ni desplegado. Referencia: [variables dinámicas de ElevenLabs](https://elevenlabs.io/docs/eleven-agents/customization/personalization/dynamic-variables).
+
+Hallazgo adicional: Senior conserva `background_voice_detection: true` y reglas `skip_turn`; Intern devuelve `background_voice_detection: false` y no contiene esas reglas en su prompt. Conviene alinear esa protección antes de probar voces ajenas. La voz física, WebRTC, pronunciación y filtrado de televisión no se verifican mediante estas pruebas por texto.
+
+No se modificó la configuración remota durante la verificación. Las tres conversaciones sintéticas nuevas de Senior se marcaron fuera de la colección antes de su importación automática; cero sesiones de estas pruebas visibles en la biblioteca y cero fallas de lectura. No se retiraron procesos del usuario.
 
 ## Mantenimiento y comprobación
 
