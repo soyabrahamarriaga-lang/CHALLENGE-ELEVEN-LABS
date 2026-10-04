@@ -49,6 +49,9 @@ Seis familias: compras/OC, proveedores, CFDI, retenciones, seguimiento/materiali
 ## Visión
 El agente ElevenLabs (LLM `claude-haiku-4-5`, configurado por el usuario) ve capturas enviadas como `[PANTALLA mm:ss]` y pregunta por el cambio; verificado con `npm run check:vision` (docs/VISION.md, ADR-0012). La vista del agente comparte pantalla: OCR local cada segundo (texto al agente como contexto y a eventos.md) y captura en cada pausa (máx. 10), ADR-0013. Data collection configurado para procedimientos visuales (ADR-0017); pendiente prueba física completa de conversación/pantalla desde UI y Work Map confirmado.
 
+## Tutor
+El tutor (Intern) usa como base de conocimiento las notas de proceso de la bóveda, sincronizadas automáticamente (ADR-0016). Verificado con un caso nuevo: detuvo la aprobación de una OC de 35 días y pidió el correo del director de finanzas. Sus conversaciones se guardan en `Tutorias/` (ADR-0017). Pendiente: resumen de dominio y práctica del aprendiz.
+
 ## Próximo trabajo después del prototipo
 1. Elegir el flujo de 5–10 minutos y un caso nuevo para evaluar transferencia.
 2. Definir entidades/evidencia del Work Map y criterios observables de cierre del debrief.

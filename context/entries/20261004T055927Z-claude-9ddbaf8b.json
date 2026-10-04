@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "id": "20261004T055927Z-claude-9ddbaf8b",
+  "at": "2026-10-04T05:59:27.286118Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "tutor-sessions",
+  "summary": "Guardar las conversaciones del tutor en la bóveda, en Tutorias/",
+  "result": "El backend copia cada conversación terminada del tutor a Tutorias/<fecha>-<id>/transcripcion.md con turnos Aprendiz/Tutor. Real: 2 tutorías guardadas, ninguna en Sesiones/, segunda pasada sin cambios.",
+  "files": [
+    "context/STATE.md",
+    "context/decisions/ADR-0017.md",
+    "docs/OBSIDIAN.md",
+    "server/main.mjs",
+    "server/tutorSessions.mjs",
+    "server/tutorSessions.test.mjs"
+  ],
+  "decisions": [
+    "Carpeta separada de Sesiones/ para evitar que el tutor aprenda de sus propias respuestas vía Procesos/ (ADR-0017). Pedido por el usuario."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0017.md"
+  ],
+  "ontology_review": "Sin cambio en ontology.json: distingue sesión de captura y sesión de enseñanza.",
+  "validation": [
+    "npm test: 131 pruebas pasaron (3 nuevas).",
+    "Sincronización real con el tutor: 2 importadas a Tutorias/, 0 en Sesiones/, segunda pasada skipped=2."
+  ],
+  "next_steps": [
+    "Resumir en cada tutoría qué domina el aprendiz y qué debe practicar (TEA-04)."
+  ]
+}
