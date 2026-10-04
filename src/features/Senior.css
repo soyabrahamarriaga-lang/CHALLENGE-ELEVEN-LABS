@@ -1,0 +1,40 @@
+.personal-space {
+  min-height: min(64vh, 640px);
+  display: grid;
+  place-items: center;
+}
+
+.personal-space .personal-space-start {
+  min-height: 56px;
+  max-width: 100%;
+  padding: 16px 24px;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.personal-space-start svg {
+  flex-shrink: 0;
+}
+.personal-space-entry {
+  display: grid;
+  justify-items: center;
+  justify-content: center;
+  gap: 24px;
+  max-width: 100%;
+  text-align: center;
+}
+.personal-space-entry .agent-health {
+  justify-content: center;
+}
+
+@media (max-width: 700px) {
+  .personal-space {
+    min-height: 60svh;
+  }
+
+  .personal-space .personal-space-start {
+    padding: 16px 20px;
+    font-size: 14px;
+  }
+}

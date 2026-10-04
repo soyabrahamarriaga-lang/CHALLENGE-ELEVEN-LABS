@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "id": "20261004T040928Z-codex-0723f3e1",
+  "at": "2026-10-04T04:17:41.786639Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "agent-availability",
+  "summary": "Mostrar disponibilidad real de ElevenLabs y distinguirla de una conversación conectada",
+  "result": "Indicador real en Mi espacio y conversación, lectura autenticada del agente sin emitir tokens, caducidad, modo de texto, reintento y recuperación. Se confirmó una conexión real por texto y su cierre, y se probó la caída y recuperación automática del backend local.",
+  "files": [
+    "server/agentAvailability.mjs",
+    "server/agentAvailability.test.mjs",
+    "server/elevenlabs.mjs",
+    "server/livekit.mjs",
+    "src/services/agentAvailability.ts",
+    "src/services/agentAvailability.test.ts",
+    "src/services/useAgentAvailability.ts",
+    "src/services/agentProtocol.ts",
+    "src/components/AgentStatus.tsx",
+    "src/components/AgentStatus.css",
+    "src/features/Senior.tsx",
+    "src/features/Senior.css",
+    "src/features/AgentConversation.tsx",
+    "docs/ELEVENLABS.md",
+    "DESIGN.md",
+    "context/STATE.md",
+    "context/decisions/ADR-agent-availability.md"
+  ],
+  "decisions": [
+    "Conservar /status para compatibilidad; nueva verificación de solo lectura en /availability sin emitir credenciales temporales ni reservar capacidad. Agente accesible no garantiza cupo de llamada.",
+    "Caché 15 s, validez máxima 30 s y sondeo visible cada 20 s; caducidad conservadora y respuestas antiguas invalidadas al perder internet.",
+    "Conectado depende de onConnect del SDK con ID válido; fallo local se comunica como disponibilidad sin confirmar.",
+    "Continuar el frontend aprobado en el worktree aislado, conservando el avance de mapas copiado como base."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-agent-availability.md"
+  ],
+  "ontology_review": "Se preserva agent_connection: configuración, acceso verificado y conversación activa son estados distintos.",
+  "validation": [
+    "npm test: 111 pruebas aprobadas en 16 archivos.",
+    "npm run build: TypeScript y Vite completados; aviso existente del tamaño del SDK.",
+    "python3 scripts/harness.py check y git diff --check completados.",
+    "API real: lectura autenticada del agente verificada. Se descartó el sondeo con tokens WebRTC tras observar un límite de capacidad; la implementación final no los solicita. Navegador: conexión por texto, saludo recibido, cierre y estado sin conversación activa. Micrófono y pantalla apagados.",
+    "Se detuvo únicamente el backend local de esta vista: el sondeo retiró la disponibilidad y bloqueó el inicio. Al reiniciar, recuperó disponibilidad y botón automáticamente.",
+    "Escritorio 1280px y móvil 390px sin desbordamiento. Detector visual: dos avisos de colores heredados, iguales a los de error y aviso del formulario existente."
+  ],
+  "next_steps": [
+    "Vista activa en http://127.0.0.1:5175/#senior/home; accesible no equivale a una llamada iniciada ni garantiza cupo.",
+    "Integrar el parche acumulado con el aporte de mapas cuando se consolide. No publicado en main."
+  ]
+}

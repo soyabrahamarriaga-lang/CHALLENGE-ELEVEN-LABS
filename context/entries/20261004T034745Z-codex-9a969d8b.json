@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "20261004T034745Z-codex-9a969d8b",
+  "at": "2026-10-04T03:49:36.160398Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "mi-espacio-agente",
+  "summary": "Integrar la conversación del agente en Mi espacio y retirar la videollamada del frontend",
+  "result": "Mi espacio muestra un único botón de inicio y abre el agente dentro de la misma sección. Menú con Mi espacio, Biblioteca, Guardadas y Mapas de procesos; rutas antiguas de agente y sala redirigidas. Cambio local aislado, pendiente de integrar con el trabajo de mapas del otro chat.",
+  "files": [
+    "src/App.tsx",
+    "src/features/Senior.tsx",
+    "src/features/Senior.css",
+    "src/features/AgentConversation.tsx",
+    "src/features/AgentConversation.css",
+    "src/domain/navigation.ts",
+    "src/domain/navigation.test.ts",
+    "scripts/demo.mjs",
+    "README.md",
+    "PRODUCT.md",
+    "DESIGN.md",
+    "context/STATE.md",
+    "context/decisions/ADR-mi-espacio-agente.md"
+  ],
+  "decisions": [
+    "Conservar la conversación existente y su consentimiento, con una entrada única en Mi espacio.",
+    "Preparar el cambio en codex/mi-espacio-agente con una copia del avance local de mapas para no modificar el checkout ocupado.",
+    "Los cambios de mapas copiados como base no son aportes de esta tarea; el parche se calcula contra esa copia base."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-mi-espacio-agente.md"
+  ],
+  "ontology_review": "No cambia el significado de conversación ni de evidencia. La sala de equipo queda fuera de los recorridos de UI; infraestructura histórica conservada.",
+  "validation": [
+    "npm test: 92 pruebas aprobadas en 14 archivos, incluidas rutas antiguas y enlaces a mapas.",
+    "npm run build: TypeScript y Vite completados; aviso existente del tamaño del SDK del agente.",
+    "Navegador integrado: escritorio y móvil de 390px sin desbordamiento, entrada por teclado, foco, consentimiento y botones habilitados; biblioteca, guardadas y listado de mapas navegables; sin errores de consola.",
+    "Detector visual: solo avisos de diseño; se corrige el tamaño nuevo de botón a 14px y se conservan valores heredados del formulario. CLI agent-browser no disponible; verificación realizada con cua_repl.",
+    "No se inició una llamada real ni se activaron micrófono o pantalla durante esta revisión."
+  ],
+  "next_steps": [
+    "Integrar el parche de frontend sobre el aporte de mapas una vez consolidado; no publicado en main.",
+    "Continuar las siguientes modificaciones del usuario sobre la vista local en http://127.0.0.1:5175/#senior/home."
+  ]
+}

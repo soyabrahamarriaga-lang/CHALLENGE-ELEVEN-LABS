@@ -1,5 +1,13 @@
 # Estado compartido
 
+## Disponibilidad real del agente (2026-10-03)
+
+Mi espacio consulta el agente real en ElevenLabs en modo lectura, sin generar tokens ni reservar sesiones; presenta hora, caducidad y recuperación. «Agente accesible» confirma respuesta del servicio, sin prometer capacidad para la siguiente llamada. Conectado depende exclusivamente del evento real del SDK; las variables locales ya no se presentan como prueba de disponibilidad. Se validó una conexión real por texto y su cierre sin usar micrófono ni pantalla. Ver ADR-agent-availability.md y la bitácora de agent-availability. El aporte se publica en `codex/mi-espacio-agente`, sobre el commit de mapas `64af4c3` del PR #14; su revisión mantiene separados los cambios de Mi espacio y del estado del agente. Las dos bitácoras anteriores conservan la evidencia de desarrollo local.
+
+## Simplificación de Mi espacio (2026-10-03)
+
+Cambio solicitado por el usuario: la app se centra en conversar individualmente con el chatbot. Mi espacio tiene un único botón de inicio y aloja la conversación de ElevenLabs. La navegación retira Tu aprendiz de IA y Videollamada; las rutas antiguas vuelven a Mi espacio. Se elimina la llamada simulada del inicio y su control global. Biblioteca, Guardadas y Mapas de procesos continúan disponibles. Ver ADR-mi-espacio-agente.md. El código heredado de tokens LiveKit permanece como infraestructura compartida del backend; ya no existe entrada a salas desde el frontend.
+
 ## Objetivo confirmado
 Construir el AI Apprentice del brief de ocho páginas de ElevenLabs × Hack-Nation: Capture, Map y Teach. Preservar criterio, razones, excepciones y condiciones para detenerse; transferirlos a una persona que resuelva un caso no mostrado por el experto.
 

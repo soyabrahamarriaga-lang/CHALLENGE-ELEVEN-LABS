@@ -312,10 +312,12 @@ El diálogo blanco usa radio de escenario, relleno de (28px) en escritorio y (22
 - **Don't** representar una variante como un paso habitual sin contexto, etiqueta ni distinción de forma.
 - **Don't** dibujar el orden observado con la misma línea sólida que una condición explícita ni ocultar el estado de borrador del mapa.
 
-## Extensión de videollamada
+## Mi espacio: conversación individual
 
-La sala LiveKit mantiene tipografía, superficies claras y acentos verdes existentes. «Videollamada real» identifica el recorrido; el estado de conexión, el aviso de transmisión y la ausencia/presencia de agente son visibles por separado. El lobby explica acceso y consentimiento; al conectar, los participantes y pantallas sustituyen el formulario. Dispositivos apagados por defecto, controles con estado textual, pausa y salida siempre accesibles. La biblioteca conserva sus indicaciones de datos sintéticos.
+El botón de inicio lleva encima un indicador compacto con icono y texto: agente accesible, conexión activa, comprobación, error o estado sin confirmar. Debajo se muestra el alcance de la comprobación, su hora y «Volver a comprobar». Verde significa respuesta autenticada del agente o conversación confirmada, siempre diferenciadas con texto. La lectura del agente no se presenta como una reserva de cupo para una llamada. Los estados desconocidos y errores no conservan verde. El mismo componente acompaña la conversación; el inicio permanece deshabilitado sin acceso vigente. No se añaden tarjetas ni métricas.
+
+La entrada senior queda reducida a un botón primario centrado: «Iniciar conversación con el agente», sin tarjetas de llamada del equipo, llamada simulada, eslogan ni sesiones recientes. Conserva Manrope, verde bosque y el fondo claro; botón de 56px de alto, texto de 14px y foco visible. En móvil conserva el menú en cajón y ajusta el texto sin ensanchar el documento.
 
 ## Extensión de conversación individual
 
-«Tu aprendiz de IA» conserva Manrope, verde salvia y superficies claras. El panel de inicio reúne código, consentimiento y alternativas de voz/texto; al conectar muestra estado y cierre. Los mensajes aparecen en una columna propia con autor y hora; en móvil los paneles se apilan. Aviso visible de envío a ElevenLabs y posible conservación, sin prometer pantalla observada ni mapa generado. La conversación y la videollamada del equipo tienen navegación distinta.
+Al pulsar el botón de Mi espacio se abre el formulario existente de ElevenLabs, con foco en el encabezado, consentimiento, alternativas de voz/texto, estado de conexión, pantalla compartida y transcripción. El inicio no abre dispositivos. La navegación principal conserva Mi espacio, Biblioteca, Guardadas y Mapas de procesos; las rutas históricas de agente y videollamada se normalizan a Mi espacio. La ayuda distingue la conversación real de los ejemplos de biblioteca.

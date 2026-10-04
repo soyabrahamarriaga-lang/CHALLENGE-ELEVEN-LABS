@@ -18,6 +18,10 @@ Senior que comparte experiencia mientras trabaja; intern que explora sesiones y 
 
 Transferir criterio y conocimiento tácito, además de la secuencia de pasos. En esta entrega se prueba la experiencia mediante un prototipo navegable con datos de ejemplo.
 
+### Entrada actual: Mi espacio
+
+Por petición del usuario (2026-10-03), Mi espacio se centra en una única acción: «Iniciar conversación con el agente». La conversación real con ElevenLabs se abre dentro de esa sección. No se ofrecen salas ni videollamadas entre personas. Se retiran el inicio de llamada simulada, las tarjetas promocionales del inicio y la entrada independiente Tu aprendiz de IA. Biblioteca, Guardadas y Mapas de procesos conservan sus recorridos. Esta decisión sustituye la llamada de demostración como entrada principal descrita en el contexto original.
+
 ## Operating Context
 
 Escritorio como superficie principal para acompañar trabajo habitual; biblioteca y sesiones accesibles también en tablet y móvil. El plazo del proyecto es el 4 de octubre de 2026 a las 06:00 America/Mexico_City.

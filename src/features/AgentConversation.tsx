@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   AudioLines,
   CircleAlert,
-  LoaderCircle,
   MessageCircle,
   Mic,
   MonitorOff,
@@ -20,6 +19,7 @@ import {
 } from "../services/agentProtocol";
 import type {
   AgentAccess,
+  AgentPhase,
   AgentMode,
   AgentState,
 } from "../services/agentProtocol";
@@ -29,31 +29,27 @@ import { startScreenWatch } from "../services/screenWatcher";
 import { TurnGate } from "../services/turnGate";
 import type { ScreenEvent, WatchStatus } from "../services/screenWatcher";
 import type { ArchiveResult } from "../services/vault";
+import { AgentStatus } from "../components/AgentStatus";
+import { canStartAgent } from "../services/agentAvailability";
+import type { AgentAvailabilityControl } from "../services/useAgentAvailability";
 import "./AgentConversation.css";
-const labels = {
-  idle: "Listo para comenzar",
-  authorizing: "Preparando acceso…",
-  connecting: "Conectando con tu agente…",
-  connected: "Conectado",
-  ended: "Conversación terminada",
-  error: "Sin conexión",
-};
 type FrameSession = { key: string; mode: AgentMode; access: AgentAccess };
 const accessErrors: Record<number, string> = {
-  401: "El código de acceso no es correcto. Usa el código de tu equipo.",
-  403: "Abre la aplicación desde la dirección autorizada por tu equipo.",
+  401: "El código de acceso no es correcto. Revisa el código e inténtalo de nuevo.",
+  403: "Abre la aplicación desde su dirección autorizada.",
   429: "Hay demasiados intentos o el agente está ocupado. Espera un minuto y vuelve a intentarlo.",
-  503: "Falta configurar ElevenLabs. Pide al equipo que complete la clave y el ID del agente.",
+  503: "El agente aún no está configurado. Revisa la configuración de ElevenLabs.",
   502: "ElevenLabs no pudo autorizar la conversación. Revisa la clave, el agente y su disponibilidad.",
 };
-export default function AgentConversation() {
+export default function AgentConversation({ health, onPhaseChange }: {
+  health: AgentAvailabilityControl;
+  onPhaseChange: (phase: AgentPhase) => void;
+}) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => { headingRef.current?.focus(); }, []);
   const [state, setState] = useState<AgentState>(initialAgentState);
-  const [setup, setSetup] = useState<
-    "loading" | "ready" | "missing" | "offline"
-  >("loading");
-  const [retry, setRetry] = useState(0);
   const [code, setCode] = useState("");
-  const [requiresCode, setRequiresCode] = useState(true);
+  const requiresCode = health.status.requiresCode;
   const [consent, setConsent] = useState(false);
   const [draft, setDraft] = useState("");
   const [frame, setFrame] = useState<FrameSession | null>(null);
@@ -73,7 +69,20 @@ export default function AgentConversation() {
   const connectedAt = useRef(0);
   const busy = state.phase === "authorizing" || state.phase === "connecting";
   const active = busy || state.phase === "connected";
-  // Copy the finished conversation into the private Obsidian vault, when the team enabled it.
+  useEffect(() => { onPhaseChange(state.phase); }, [state.phase, onPhaseChange]);
+  useEffect(() => {
+    if (health.online || !active) return;
+    generation.current++;
+    request.current?.abort();
+    request.current = null;
+    frameSession.current = null;
+    setFrame(null);
+    setState((previous) => ({
+      ...previous, phase: "error", speaking: false,
+      error: "Se perdió la conexión a internet. Vuelve a iniciar cuando se recupere.",
+    }));
+  }, [health.online, active]);
+  // Copy the finished conversation into the private Obsidian vault, when enabled.
   useEffect(() => {
     if (state.phase !== "ended" || !state.conversationId) return;
     const abort = new AbortController();
@@ -121,37 +130,6 @@ export default function AgentConversation() {
     }, 300);
     return () => clearInterval(timer);
   }, [state.phase, state.conversationId, screen.status]);
-  useEffect(() => {
-    const abort = new AbortController();
-    let live = true;
-    const timeout = setTimeout(() => abort.abort(), 8000);
-    setSetup("loading");
-    fetch("/api/elevenlabs/status", { signal: abort.signal, cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) throw new Error();
-        return response.json();
-      })
-      .then((data) => {
-        if (live) setRequiresCode(data?.requiresCode !== false);
-        if (live)
-          setSetup(
-            typeof data?.configured === "boolean"
-              ? data.configured
-                ? "ready"
-                : "missing"
-              : "offline",
-          );
-      })
-      .catch(() => {
-        if (live) setSetup("offline");
-      })
-      .finally(() => clearTimeout(timeout));
-    return () => {
-      live = false;
-      abort.abort();
-      clearTimeout(timeout);
-    };
-  }, [retry]);
   useEffect(() => {
     const receive = (event: MessageEvent) => {
       const current = frameSession.current;
@@ -218,7 +196,7 @@ export default function AgentConversation() {
     }));
   };
   const start = async (mode: AgentMode) => {
-    if (active || (requiresCode && !code) || !consent || setup !== "ready")
+    if (active || (requiresCode && !code) || !consent || !health.online || !canStartAgent(health.status, mode))
       return;
     const attempt = ++generation.current;
     const abort = new AbortController();
@@ -368,30 +346,17 @@ export default function AgentConversation() {
     <div className="agent-page">
       <div className="page-heading">
         <div>
-          <h1>Cuéntale cómo lo haces.</h1>
+          <h1 tabIndex={-1} ref={headingRef}>Conversación con el agente</h1>
           <p>Una conversación individual con tu agente de ElevenLabs.</p>
         </div>
-        <span
-          className={
-            "rtc-connection " +
-            (state.phase === "connected" ? "connected" : "disconnected")
-          }
-          role="status"
-        >
-          {busy ? (
-            <LoaderCircle size={16} className="spin" />
-          ) : (
-            <AudioLines size={17} />
-          )}
-          {labels[state.phase]}
-        </span>
       </div>
+      <AgentStatus health={health} phase={state.phase} />
       <div className="rtc-disclosure">
         <ShieldCheck size={21} />
         <p>
           <strong>Tú decides cuándo empezar.</strong> Tu voz y tus mensajes se
           envían a ElevenLabs, que puede conservar audio y transcripciones según
-          la configuración del agente. Si tu equipo activó la bóveda privada, al
+          la configuración del agente. Si la bóveda privada está activada, al
           terminar se guarda una copia de la transcripción en ella.
         </p>
       </div>
@@ -417,7 +382,6 @@ export default function AgentConversation() {
       )}
       <div className="agent-layout">
         <section className="agent-controls-panel">
-          <span className="agent-eyebrow">APRENDIZ · ELEVENLABS</span>
           <div
             className={"agent-symbol " + (state.speaking ? "is-speaking" : "")}
             aria-hidden="true"
@@ -444,32 +408,15 @@ export default function AgentConversation() {
           </p>
           {!active && (
             <>
-              {setup !== "ready" && (
-                <div className="agent-setup" role="status">
-                  {setup === "loading"
-                    ? "Comprobando configuración…"
-                    : setup === "missing"
-                      ? "El agente aún no está configurado."
-                      : "El servicio de conexión no está disponible."}
-                  {setup !== "loading" && (
-                    <button
-                      className="text-button"
-                      onClick={() => setRetry((value) => value + 1)}
-                    >
-                      Volver a comprobar
-                    </button>
-                  )}
-                </div>
-              )}
               {requiresCode && (
                 <label className="agent-code" htmlFor="agent-code">
-                  Código de acceso del equipo
+                  Código de acceso
                   <input
                     id="agent-code"
                     type="password"
                     autoComplete="off"
                     maxLength={256}
-                    placeholder="El mismo código de acceso del equipo"
+                    placeholder="Introduce tu código de acceso"
                     value={code}
                     onChange={(event) => setCode(event.target.value)}
                   />
@@ -487,7 +434,7 @@ export default function AgentConversation() {
               <button
                 className="button primary"
                 disabled={
-                  setup !== "ready" || (requiresCode && !code) || !consent
+                  !health.online || !canStartAgent(health.status, "voice") || (requiresCode && !code) || !consent
                 }
                 onClick={() => {
                   void start("voice");
@@ -499,7 +446,7 @@ export default function AgentConversation() {
               <button
                 className="button secondary"
                 disabled={
-                  setup !== "ready" || (requiresCode && !code) || !consent
+                  !health.online || !canStartAgent(health.status, "text") || (requiresCode && !code) || !consent
                 }
                 onClick={() => {
                   void start("text");
@@ -546,8 +493,7 @@ export default function AgentConversation() {
             </button>
           )}
           <p className="agent-scope">
-            Esta conversación no se escucha en la sala del equipo. Si compartes
-            pantalla, tu navegador la lee cada segundo: el agente recibe el
+            Si compartes pantalla, tu navegador la lee cada segundo: el agente recibe el
             texto que cambia y una captura en cada pausa (máx.{" "}
             {MAX_SCREEN_FRAMES}). Las capturas se suben a ElevenLabs; usa datos
             ficticios.

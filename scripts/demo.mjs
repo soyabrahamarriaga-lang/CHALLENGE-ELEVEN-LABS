@@ -84,7 +84,7 @@ say("Levantando backend (puerto 3001) y app (puerto 5173)…");
 run("El backend", ["dev:token"]);
 run("La app", ["dev"]);
 
-const url = "http://127.0.0.1:5173/#senior/agent";
+const url = "http://127.0.0.1:5173/#senior/home";
 for (let i = 0; i < 60 && !stopping; i++) {
   await new Promise((r) => setTimeout(r, 1000));
   const ok = await fetch("http://127.0.0.1:5173/").then((r) => r.ok, () => false);
