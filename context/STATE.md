@@ -1,8 +1,12 @@
 # Estado compartido
 
+## Voces de fondo (2026-10-04)
+
+El usuario pidió ignorar automáticamente voces de otras personas o televisión, sin pulsar para hablar. El observador tiene filtro de fondo activado, prompt de escucha dirigida y herramienta `skip_turn` para guardar silencio ante contenido ajeno. Como el ruido podía interrumpir antes de clasificarse, termina sus respuestas antes de tomar otro turno, manteniendo transcripción de intervenciones mientras habla. El timeout para volver a preguntar por silencio pasa de 3 a 30 s y el prompt descarta esas entradas sin hablar. El ajuste aplica a nuevas conversaciones sin recompilar; no modifica el tutor. Perfil en `config/observer-audio.json`, prompt versionado y decisión en `ADR-agent-background-voices.md`. No es identificación de hablante: voces pertinentes a la tarea aún pueden confundirse y el audio de fondo puede seguir en la transcripción. Pendiente calibración física del operador.
+
 ## Respuesta del observador y pantalla (2026-10-04)
 
-Corrección en `codex/agent-response-fix`, sobre main con PR #21 integrado. El agente ya tenía Gemini 3.5 Flash-Lite; se acortó su prompt y redujo el esfuerzo de high a minimal, máximo 256 tokens. Ensayo con los mismos tres mensajes: 2 751 → 563 ms de media por texto; no demuestra esa latencia en audio. Dos imágenes ficticias recibidas y reconocidas, y 26 eventos VAD reales con audio sintético silencioso. La app usa probabilidad de voz, conserva capturas durante explicaciones largas, cancela imágenes obsoletas, muestra subida/fallo y ofrece envío manual. Prompt del tutor conservado; ambos agentes emiten VAD. Configuración remota aplicada y releída; el commit no la despliega automáticamente. Ver `docs/VISION.md` y `ADR-agent-response.md`. Pendiente el ensayo físico de pantalla + micrófono + altavoz del operador.
+Corrección integrada en main por PR #22 (ca75feb), sobre la entrada visual de PR #21. El agente ya tenía Gemini 3.5 Flash-Lite; se acortó su prompt y redujo el esfuerzo de high a minimal, máximo 256 tokens. Ensayo con los mismos tres mensajes: 2 751 → 563 ms de media por texto; no demuestra esa latencia en audio. Dos imágenes ficticias recibidas y reconocidas, y 26 eventos VAD reales con audio sintético silencioso. La app usa probabilidad de voz, conserva capturas durante explicaciones largas, cancela imágenes obsoletas, muestra subida/fallo y ofrece envío manual. Prompt del tutor conservado; ambos agentes emiten VAD. Configuración remota aplicada y releída; el commit no la despliega automáticamente. Ver `docs/VISION.md` y `ADR-agent-response.md`. Pendiente el ensayo físico de pantalla + micrófono + altavoz del operador.
 
 ## Frontend y entrada visual (2026-10-04)
 
