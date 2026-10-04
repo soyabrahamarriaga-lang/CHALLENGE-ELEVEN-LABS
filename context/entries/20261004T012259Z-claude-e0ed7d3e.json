@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "id": "20261004T012259Z-claude-e0ed7d3e",
+  "at": "2026-10-04T01:22:59.454823Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "screen-ocr-polish",
+  "summary": "Corregir ruido de scroll en la transcripción de pantalla, espera de archivado y etiquetas de voz",
+  "result": "Con más de 6 líneas cambiadas se reporta «vista nueva o desplazamiento: …» con el contenido nuevo; la app espera hasta 60 s a que ElevenLabs procese antes de archivar; las etiquetas expresivas como [slow] se quitan al escribir la transcripción.",
+  "files": [
+    "server/vault.mjs",
+    "server/vault.test.mjs",
+    "src/services/screenDiff.test.ts",
+    "src/services/screenDiff.ts",
+    "src/services/screenWatcher.ts",
+    "src/services/vault.ts"
+  ],
+  "decisions": [
+    "Corrige problemas observados en la primera llamada real del usuario (conv_4701…): eventos ilegibles al hacer scroll, transcripción no archivada al colgar y [slow] en el texto. Sin cambio de arquitectura respecto a ADR-0011/0013."
+  ],
+  "adr_refs": [],
+  "ontology_review": "Sin cambio.",
+  "validation": [
+    "npm test: 68 pruebas pasaron (3 nuevas). npm run build y tsc completados.",
+    "Observación previa en la llamada real: OCR en Chrome generó eventos a 00:54, 00:58 y 01:03; transcripción importada manualmente porque el procesamiento superó 24 s."
+  ],
+  "next_steps": [
+    "Ensayar la demo con el ERP Compras compartiendo solo su ventana y pausando tras cada decisión."
+  ]
+}

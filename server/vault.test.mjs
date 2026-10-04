@@ -10,6 +10,7 @@ import {
   createVaultHandler,
   syncAgentConversations,
   readVaultConfig,
+  stripVoiceTags,
   transcriptToMarkdown,
   vaultProblems,
   verifyWebhookSignature,
@@ -82,6 +83,15 @@ describe("vault formatting", () => {
     expect(md).toContain("**[03:15] Persona:** Equipo arriba de 5,000 euros es capex.");
     expect(md).toContain("herramienta `log_event`");
     expect(md).toContain("[[eventos]]");
+  });
+  it("drops expressive voice tags but keeps screen markers", () => {
+    expect(stripVoiceTags("[slow] Entiendo. [laughs] Claro")).toBe("Entiendo. Claro");
+    expect(stripVoiceTags("[PANTALLA 00:45]")).toBe("[PANTALLA 00:45]");
+    const md = transcriptToMarkdown({
+      ...conversation,
+      transcript: [{ role: "agent", message: "[slow] ¿Por qué?", time_in_call_secs: 1 }],
+    });
+    expect(md).toContain("**[00:01] Agente:** ¿Por qué?");
   });
   it("formats clocks and reports missing configuration by name only", () => {
     expect(clock(0)).toBe("00:00");
