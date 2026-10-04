@@ -6,7 +6,7 @@ Proyecto para el Challenge 01 del 7th Global AI Hackathon (Hack-Nation × Eleven
 
 ## Publicar rápido en Vercel
 
-Preset **Vite**, rama main. [Guía de despliegue de conversaciones](docs/VERCEL-DEMO.md): incluye funciones para ambos agentes e inicio sin código de acceso. Esta modalidad permite voz/texto/pantalla y ES/EN; la bóveda y el guardado de procesos siguen en la versión local.
+Preset **Vite**, rama main. [Guía de despliegue de conversaciones](docs/VERCEL-DEMO.md): incluye funciones para ambos agentes e inicio sin código de acceso. Esta modalidad permite voz/texto/pantalla y ES/EN; puedes conectar una carpeta local desde Chrome/Edge para leer y guardar procesos en esa computadora. [Conexión de bóveda local](docs/LOCAL-BROWSER-VAULT.md).
 
 ## Ejecutar el prototipo
 

@@ -1,6 +1,8 @@
 import { AgentLanguage } from "../components/AgentLanguage";
 import { t, dateLocale, language, type Language } from "../i18n";
 import { cloudDemo } from "../services/deployment";
+import { browserVault, useBrowserVault } from '../services/browserVaultConnection';
+import type { BrowserVault, BrowserRecording } from '../services/browserVault';
 import { useEffect, useRef, useState } from "react";
 import {
   AudioLines,
@@ -57,7 +59,11 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
   role?: Role;
 }) {
   const profile = agentProfiles[role];
-  const persistEvidence = profile.persistEvidence && !cloudDemo;
+  const localVault = useBrowserVault();
+  const persistEvidence = profile.persistEvidence && (!cloudDemo || !!localVault);
+  const recordingTarget = useRef<BrowserVault | null>(null);
+  const localRecording = useRef<BrowserRecording | null>(null);
+  const [localSaveError, setLocalSaveError] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => { headingRef.current?.focus(); }, []);
   const [state, setState] = useState<AgentState>(initialAgentState);
@@ -110,14 +116,23 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
     const abort = new AbortController();
     setArchive("saving");
     Promise.allSettled([...pendingCaptures.current])
-      .then(() =>
-        archiveConversation(state.conversationId, { signal: abort.signal }),
-      )
+      .then(() => {
+        if (!cloudDemo) return archiveConversation(state.conversationId, { signal: abort.signal });
+        if (!localRecording.current) return { status: 'disabled' as const };
+        localRecording.current.upsert(state.messages);
+        return localRecording.current.save(true);
+      })
       .then((result) => {
         if (!abort.signal.aborted) setArchive(result);
-      });
+      }).catch(() => { if (!abort.signal.aborted) setArchive({ status: 'failed', reason: 'local_save_failed' }); });
     return () => abort.abort();
   }, [state.phase, state.conversationId, persistEvidence]);
+  useEffect(() => {
+    const recording = localRecording.current;
+    if (!cloudDemo || !recording || state.phase !== 'connected' || !state.messages.length) return;
+    recording.upsert(state.messages);
+    void recording.save().catch(() => setLocalSaveError(true));
+  }, [state.messages, state.phase]);
   useEffect(() => {
     if (state.phase === "authorizing") setArchive(null);
   }, [state.phase]);
@@ -174,7 +189,13 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
       )
         return;
       const update = event.data.event;
-      if (update.type === "connected") conversationIdRef.current = update.conversationId;
+      if (update.type === "connected") {
+        conversationIdRef.current = update.conversationId;
+        if (cloudDemo && recordingTarget.current) {
+          try { localRecording.current = recordingTarget.current.record(update.conversationId, Date.now()); }
+          catch { setLocalSaveError(true); }
+        }
+      }
       if (update.type === "voice") {
         gate.current.noteVoice(update.status, Date.now());
         if (lastVoiceStatus.current !== update.status) {
@@ -262,6 +283,9 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
       return;
     // Snapshot before authorizing: changing the UI language never changes this call.
     const selectedLanguage = language();
+    recordingTarget.current = cloudDemo && profile.persistEvidence ? browserVault() : null;
+    localRecording.current = null;
+    setLocalSaveError(false);
     const overrideLanguage = selectedLanguage === health.status.defaultLanguage ? undefined : selectedLanguage;
     setConversationLanguage(selectedLanguage);
     const attempt = ++generation.current;
@@ -339,6 +363,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
       );
   };
   function recordScreen(text: string, at = (Date.now() - connectedAt.current) / 1000) {
+    if (cloudDemo) { localRecording.current?.event('note', text, at); return; }
     if (persistEvidence && conversationIdRef.current)
       void logVaultEvent(conversationIdRef.current, { kind: "note", text, at });
   }
@@ -437,7 +462,8 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
               type: "context",
               text: `[OCR ${clock(event.at)}] ${event.text}`,
             });
-            if (persistEvidence) void logVaultEvent(conversationId, {
+            if (cloudDemo) localRecording.current?.event('screen', event.text, event.at);
+            else if (persistEvidence) void logVaultEvent(conversationId, {
               kind: "screen",
               text: event.text,
               at: event.at,
@@ -449,8 +475,8 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
           },
           // Store evidence independently of the agent's 10-image conversation limit.
           onCapture: (capture, at) => {
-            if (!isCurrent() || cloudDemo) return;
-            const saving = archiveScreenCapture(conversationId, capture, at);
+            if (!isCurrent() || (cloudDemo && !localRecording.current)) return;
+            const saving = cloudDemo ? localRecording.current!.capture(capture, at).catch(() => false) : archiveScreenCapture(conversationId, capture, at);
             pendingCaptures.current.add(saving);
             void saving
               .then((ok) => {
@@ -519,6 +545,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
           <strong>{t("Tú decides cuándo empezar.")}</strong>{" "}{t("Tu voz y tus mensajes se envían a ElevenLabs, que puede conservar audio y transcripciones según la configuración del agente.")}{persistEvidence && t(" Si la bóveda privada está activada, al terminar se guarda una copia de la transcripción en ella.")}
         </p>
       </div>
+      {localSaveError && <p className="agent-archive" role="alert">{t('No pudimos guardar en la carpeta local. Revisa el permiso y el espacio disponible; la conversación puede continuar.')}</p>}
       {archive && (archive === "saving" || archive.status !== "disabled") && (
         <p className="agent-archive" role="status">
           {archive === "saving"
@@ -576,7 +603,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
                 : t("El micrófono está apagado. Escribe para conversar con el mismo agente.")
               : role === "intern"
                 ? t("Cuéntale qué necesitas aprender y pregúntale por el siguiente paso.")
-                : cloudDemo ? t("Explica una tarea, sus decisiones y sus motivos. Puedes compartir pantalla para que el agente te acompañe.")
+                : cloudDemo && !persistEvidence ? t("Explica una tarea, sus decisiones y sus motivos. Puedes compartir pantalla para que el agente te acompañe.")
                 : t("Explica una tarea, sus decisiones y sus motivos. Al compartir pantalla se guardan capturas de los cambios en la bóveda privada para ilustrar cada paso.")}
           </p>
           {!active && (
@@ -660,7 +687,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
             </button>
           )}
           <p className="agent-scope">{t("Si compartes pantalla, tu navegador la lee cada segundo: el agente recibe el texto que cambia y capturas cuando detectamos una pausa, o cuando las envías con el botón (máx.")}{" "}
-            {MAX_SCREEN_FRAMES}{cloudDemo ? t("). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.") : t("). Además, se conservan capturas de los cambios en tu bóveda privada para ilustrar el procedimiento. Usa datos ficticios.")}</p>
+            {MAX_SCREEN_FRAMES}{cloudDemo && !persistEvidence ? t("). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.") : t("). Además, se conservan capturas de los cambios en tu bóveda privada para ilustrar el procedimiento. Usa datos ficticios.")}</p>
         </section>
         <section
           className="agent-transcript"

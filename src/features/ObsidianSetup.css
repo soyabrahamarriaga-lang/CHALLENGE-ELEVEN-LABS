@@ -11,3 +11,9 @@
 .obsidian-links > a:not(.button) { color: var(--green); text-decoration: underline; text-underline-offset: 4px; }
 .obsidian-setup .obsidian-scope { border-top: 1px solid var(--line); padding-top: 22px; margin: 26px 0 20px; max-width: 740px; }
 @media (max-width: 640px) { .obsidian-installers { grid-template-columns: 1fr; } }
+.vault-connection { display: flex; align-items: flex-start; justify-content: space-between; gap: 22px; padding: 20px; margin-bottom: 30px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+.vault-connection strong { color: var(--ink); font-size: 15px; }
+.vault-connection p { color: var(--muted); font-size: 12px; line-height: 1.6; margin-top: 7px; max-width: 670px; }
+.vault-connection-actions { display: grid; gap: 8px; flex-shrink: 0; }
+.vault-connection [role=alert] { color: #ffb4a7; }
+@media (max-width: 700px) { .vault-connection { flex-direction: column; } .vault-connection-actions { width: 100%; } }
