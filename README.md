@@ -22,6 +22,10 @@ npm run build
 
 El build queda en `dist/` y no se versiona. El contrato, recorrido de prueba y puntos de integración están en [FRONTEND-PROTOTYPE.md](docs/FRONTEND-PROTOTYPE.md); la decisión de alcance está en [ADR-0008](context/decisions/ADR-0008.md).
 
+## Español e inglés
+
+El selector de idioma está en la entrada y en la cabecera de cada perfil. Conserva la preferencia y cambia la interfaz sin reiniciar una conversación. Los procesos reales permanecen en su idioma original. Para habilitar inglés en ambos agentes, seguir [Idiomas y configuración de ElevenLabs](docs/LANGUAGES.md); añadir English y permitir Language en Overrides. La app comprueba la configuración antes de habilitar el inicio en ese idioma.
+
 ## Conversación desde Mi espacio
 
 La entrada principal es **Mi espacio → Iniciar conversación con el agente**. La aplicación se centra en conversar individualmente con ElevenLabs. Ya no ofrece videollamadas del equipo ni un inicio de llamada simulada. Biblioteca, Guardadas y Mapas de procesos siguen disponibles. Los enlaces antiguos del agente y de videollamada llevan a Mi espacio. Decisión: [ADR-mi-espacio-agente](context/decisions/ADR-mi-espacio-agente.md).

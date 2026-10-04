@@ -1,3 +1,4 @@
+import type { Language } from "../i18n";
 import type { AgentMode, AgentPhase } from "./agentProtocol";
 
 export type Availability = "checking" | "available" | "limited" | "unavailable" |
@@ -8,10 +9,13 @@ export interface AgentAvailability {
   checkedAt: string | null;
   freshUntil: number;
   requiresCode: boolean;
+  defaultLanguage: Language | null;
+  selectableLanguages: Language[];
   modes: Record<AgentMode, { available: boolean; reason: string | null }>;
 }
 export const initialAvailability: AgentAvailability = {
   availability: "checking", reason: null, checkedAt: null, freshUntil: 0, requiresCode: true,
+  defaultLanguage: null, selectableLanguages: [],
   modes: { voice: { available: false, reason: null }, text: { available: false, reason: null } },
 };
 export function parseAvailability(value: unknown, now = Date.now()): AgentAvailability {
@@ -38,7 +42,11 @@ export function parseAvailability(value: unknown, now = Date.now()): AgentAvaila
     (!data.configured && data.availability !== "unconfigured") ||
     (availableCount > 0 && (!data.checkedAt || !data.validForMs)))
     throw new Error("invalid_status");
+  const defaultLanguage = data.defaultLanguage === 'es' || data.defaultLanguage === 'en' ? data.defaultLanguage : null;
+  const selectableLanguages: Language[] = Array.isArray(data.selectableLanguages)
+    ? data.selectableLanguages.filter((item): item is Language => item === 'es' || item === 'en') : [];
   return {
+    defaultLanguage, selectableLanguages,
     availability: data.availability as Availability, reason: data.reason as string | null,
     checkedAt: data.checkedAt as string | null, freshUntil: now + data.validForMs,
     requiresCode: data.requiresCode, modes,
@@ -47,6 +55,9 @@ export function parseAvailability(value: unknown, now = Date.now()): AgentAvaila
 export function canStartAgent(status: AgentAvailability, mode: AgentMode, now = Date.now()) {
   return ["available", "limited"].includes(status.availability) &&
     status.freshUntil > now && status.modes[mode].available;
+}
+export function canStartAgentInLanguage(status: AgentAvailability, mode: AgentMode, selected: Language, now = Date.now()) {
+  return canStartAgent(status, mode, now) && status.selectableLanguages.includes(selected);
 }
 const reasons: Record<string, string> = {
   agent_not_configured: "Falta completar la configuración del agente.",

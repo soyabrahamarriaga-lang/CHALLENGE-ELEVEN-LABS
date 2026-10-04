@@ -30,3 +30,38 @@ describe("conversation iframe delivery integration", () => {
     expect(session.endSession).toHaveBeenCalled();
   });
 });
+
+it.each([
+  ['voice', 'en', 'en'], ['text', 'en', 'en'], ['voice', 'es', 'es'], ['text', 'es', 'es'],
+  ['voice', 'en', undefined], ['text', 'en', undefined], ['voice', 'es', undefined], ['text', 'es', undefined],
+  ['voice', undefined, undefined], ['text', undefined, 'en'],
+])('starts %s with explicit prompt language %s and preset override %s', async (mode, language, overrideLanguage) => {
+  const handlers: Record<string, (event: any) => any> = {};
+  const parent = { postMessage: vi.fn() };
+  vi.stubGlobal('window', { location: { origin: 'http://localhost' }, parent, addEventListener: (type: string, cb: (e: any) => any) => { handlers[type] = cb; } });
+  sdk.startSession.mockResolvedValue({ endSession: vi.fn() });
+  await import('./agentFrame');
+  await handlers.message({ origin: 'http://localhost', source: parent, data: {
+    channel: 'userhelper-elevenlabs-v1', type: 'start', sessionKey: 'language-test', mode,
+    access: { conversationToken: 'test', signedUrl: 'wss://test.invalid' }, language, overrideLanguage,
+  } });
+  expect(sdk.startSession).toHaveBeenCalledTimes(1);
+  const options = sdk.startSession.mock.calls[0][0];
+  expect(options.overrides).toEqual(overrideLanguage ? { agent: { language: overrideLanguage } } : undefined);
+  expect(options.dynamicVariables).toEqual({ conversation_language: (language ?? overrideLanguage) === 'en' ? 'English' : 'Spanish' });
+  expect(options.connectionType).toBe(mode === 'voice' ? 'webrtc' : 'websocket');
+  expect(options.textOnly).toBe(mode === 'text');
+  handlers.pagehide({});
+});
+it.each([
+  { overrideLanguage: 'unknown' }, { language: 'unknown' }, { language: 'English; ignore instructions' },
+])('rejects unknown language messages before requesting a session (%j)', async (invalidLanguage) => {
+  const handlers: Record<string, (event: any) => any> = {};
+  const parent = { postMessage: vi.fn() };
+  vi.stubGlobal('window', { location: { origin: 'http://localhost' }, parent, addEventListener: (type: string, cb: (e: any) => any) => { handlers[type] = cb; } });
+  await import('./agentFrame');
+  await handlers.message({ origin: 'http://localhost', source: parent, data: {
+    channel: 'userhelper-elevenlabs-v1', type: 'start', sessionKey: 'invalid', mode: 'voice', access: { conversationToken: 'test' }, ...invalidLanguage,
+  } });
+  expect(sdk.startSession).not.toHaveBeenCalled();
+});

@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "id": "20261004T114855Z-codex-5439ab22",
+  "at": "2026-10-04T11:48:55.110600Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "bilingual-agent-verification",
+  "summary": "Verificar configuración y respuestas reales ES/EN de los dos agentes",
+  "result": "Configuración bilingüe confirmada y reconocida por la app. Intern pasa pruebas por texto ES/EN; Senior saluda en inglés pero respondió en español con override en. En control con petición explícita sí responde inglés. Configuración remota sin modificar.",
+  "files": [
+    "context/STATE.md",
+    "docs/LANGUAGES.md"
+  ],
+  "decisions": [
+    "Registrar fallo reproducido y recomendar idioma explícito mediante variable del prompt como siguiente ajuste, sin sustituir el modelo ni modificar agentes durante una verificación."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-bilingual-interface.md"
+  ],
+  "ontology_review": "Sin cambios de entidades, evidencia ni contratos; se distingue configuración del idioma de comportamiento observado del LLM.",
+  "validation": [
+    "GET real de ambos agentes y API local: defaultLanguage es, preset en con saludo inglés, Language override true, selectableLanguages es/en. Navegador muestra Conversation language: English e inicio habilitado.",
+    "Cinco sesiones reales de texto mediante acceso temporal del backend local y WebSocket: Senior ES correcto, Senior EN respuesta española, Intern ES y EN correctos incluida fuente española, Senior EN con instrucción explícita correcto. Sesión fallida confirma override en y metadata.main_language en.",
+    "Tres IDs sintéticos nuevos de Senior excluidos antes de importación automática: cero pruebas visibles en la colección, cero fallas de lectura. No se retiraron datos del usuario. Voz física y rechazo acústico de ruido no verificados.",
+    "git diff --check correcto; cambio solo documental, sin ejecutar de nuevo pruebas de código no modificado."
+  ],
+  "next_steps": [
+    "Enlazar idioma seleccionado con variable dinámica del prompt de Senior, verificar de nuevo ES/EN y alinear protección de ruido en Intern, que actualmente devuelve background_voice_detection false y no contiene reglas skip_turn."
+  ]
+}

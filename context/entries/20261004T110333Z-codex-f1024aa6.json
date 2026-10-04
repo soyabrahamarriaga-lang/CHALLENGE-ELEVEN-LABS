@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "id": "20261004T110333Z-codex-f1024aa6",
+  "at": "2026-10-04T11:03:33.116636Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "bilingual-interface",
+  "summary": "Interfaz intercambiable español/inglés y selección de idioma verificada para nuevas conversaciones",
+  "result": "PR #24 integrado en main; nueva rama codex/bilingual-interface con selector persistente, UI y ejemplos traducidos, evidencia original conservada y guía para habilitar inglés. Agentes remotos consultados sin modificarlos: ambos siguen solo en español; inicio EN deshabilitado hasta configurar presets y permiso.",
+  "files": [
+    "README.md",
+    "config/observer-prompt.txt",
+    "context/STATE.md",
+    "context/decisions/ADR-bilingual-interface.md",
+    "docs/LANGUAGES.md",
+    "package-lock.json",
+    "package.json",
+    "server/agentAvailability.mjs",
+    "server/agentAvailability.test.mjs",
+    "src/App.tsx",
+    "src/components/AgentLanguage.tsx",
+    "src/components/AgentStatus.tsx",
+    "src/components/LanguageSelect.tsx",
+    "src/components/Shared.tsx",
+    "src/components/VoiceField.tsx",
+    "src/domain/processCollection.test.ts",
+    "src/domain/processCollection.ts",
+    "src/features/AgentConversation.tsx",
+    "src/features/AgentSpace.tsx",
+    "src/features/DeleteProcess.tsx",
+    "src/features/KnowledgeMap.tsx",
+    "src/features/Library.tsx",
+    "src/features/ProcessCollection.tsx",
+    "src/features/ProcessMaps.tsx",
+    "src/features/SessionDetail.tsx",
+    "src/features/SignIn.tsx",
+    "src/i18n/en.json",
+    "src/i18n/es.json",
+    "src/i18n/examples.ts",
+    "src/i18n/i18n.test.ts",
+    "src/i18n/index.ts",
+    "src/services/agentAvailability.test.ts",
+    "src/services/agentAvailability.ts",
+    "src/services/agentFrame.test.ts",
+    "src/services/agentFrame.ts",
+    "src/studio.css"
+  ],
+  "decisions": [
+    "i18next con catálogos ES/EN; el cambio de UI no remonta sesiones. Idiomas disponibles derivados de GET real y overrides del proveedor; snapshot antes de autorización y únicamente override de idioma en SDK."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-bilingual-interface.md"
+  ],
+  "ontology_review": "Sin nuevas entidades ni cambios en evidencia o IDs; idioma como preferencia de presentación y parámetro de la nueva conversación. Filtros y clasificaciones conservan valores canónicos.",
+  "validation": [
+    "npm test: 200 pruebas en 29 archivos correctas. npm run build correcto; aviso previo de tamaño del bundle del SDK.",
+    "python3 -m unittest discover -s tests -v: 28 pruebas correctas. git diff --check correcto.",
+    "Navegador: persistencia tras recargar, sincronización entre pestañas, nombre/rol de entrada, filtro, diálogo de eliminación cancelado y paso 2 del ejemplo conservados al cambiar idioma. Biblioteca, mapas, controles y ejemplos en inglés; originales sin traducir. ES permite preparar inicio y EN bloqueado por configuración real en ambos agentes.",
+    "Escritorio de 1280 y móvil de 390 px: selector accesible y controles sin desbordamiento; corregido enlace redundante del encabezado móvil. API local: 26 procesos, cero fallas; ambos agentes reportan defaultLanguage es y selectableLanguages [es]. Ninguna conversación real nueva ni eliminación de registros durante la prueba."
+  ],
+  "next_steps": [
+    "Revisar PR de la rama bilingüe. Seguir docs/LANGUAGES.md en ambos agentes y probar conversaciones nuevas por voz/texto en inglés; esa validación remota sigue pendiente."
+  ]
+}

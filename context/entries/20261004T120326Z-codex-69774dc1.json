@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "id": "20261004T120326Z-codex-69774dc1",
+  "at": "2026-10-04T12:03:26.811260Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "bilingual-language-fix",
+  "summary": "Conectar la selección ES/EN con el idioma explícito del prompt en Senior e Intern",
+  "result": "SDK transmite conversation_language; ambos agentes remotos conservan el idioma seleccionado en pruebas reales, incluida pregunta española respondida en inglés. Otros ajustes preservados.",
+  "files": [
+    "config/observer-prompt.txt",
+    "context/STATE.md",
+    "context/decisions/ADR-agent-session-language.md",
+    "docs/LANGUAGES.md",
+    "src/features/AgentConversation.tsx",
+    "src/services/agentFrame.test.ts",
+    "src/services/agentFrame.ts"
+  ],
+  "decisions": [
+    "Sustituir puntos 4-5 de ADR-bilingual-interface por idioma capturado y variable dinámica. Política remota al final del prompt. No cambiar voces de fondo por solicitud explícita."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-agent-session-language.md"
+  ],
+  "ontology_review": "Sin cambios de entidades ni evidencia: idioma como preferencia de sesión, documentos originales intactos.",
+  "validation": [
+    "207 tests Vitest; build de producción; 28 tests Python; 4 sesiones finales ES/EN, 2 preguntas cruzadas, prueba real en navegador con metadata en/English y 2 sesiones heredadas sin variable; GET remoto confirmó preservación; colección sin pruebas sintéticas y sin fallas."
+  ],
+  "next_steps": [
+    "Probar voz física y pronunciación con el usuario; PR #25 permanece separado de main. La selección durante llamada aplica a la próxima conversación."
+  ]
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canStartAgent, describeAgentStatus, initialAvailability, parseAvailability } from "./agentAvailability";
+import { canStartAgent, canStartAgentInLanguage, describeAgentStatus, initialAvailability, parseAvailability } from "./agentAvailability";
 import { isAgentEvent } from "./agentProtocol";
 const now = 100000;
 const response = {
@@ -52,4 +52,15 @@ describe("truthful availability in the UI", () => {
       { ...response, modes: { voice: { available: false }, text: { available: true } } },
     ]) expect(() => parseAvailability(invalid, now)).toThrow();
   });
+});
+
+it('blocks unconfigured languages, accepts verified presets, and preserves expiry', () => {
+  const status = parseAvailability({ ...response, defaultLanguage: 'es', selectableLanguages: ['es'] }, now);
+  expect(canStartAgentInLanguage(status, 'voice', 'es', now)).toBe(true);
+  expect(canStartAgentInLanguage(status, 'text', 'en', now)).toBe(false);
+  const bilingual = parseAvailability({ ...response, defaultLanguage: 'es', selectableLanguages: ['es', 'en', 'fr', 3] }, now);
+  expect(bilingual.selectableLanguages).toEqual(['es', 'en']);
+  expect(canStartAgentInLanguage(bilingual, 'text', 'en', now)).toBe(true);
+  expect(canStartAgentInLanguage(bilingual, 'voice', 'en', now + 30000)).toBe(false);
+  expect(canStartAgentInLanguage(parseAvailability(response, now), 'voice', 'en', now)).toBe(false);
 });

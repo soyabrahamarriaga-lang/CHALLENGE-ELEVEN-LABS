@@ -4,13 +4,13 @@ import { createAgentAvailability, probeAgentAvailability } from "./agentAvailabi
 import { readElevenLabsConfig, ElevenLabsError } from "./elevenlabs.mjs";
 import { createHandler, readConfig } from "./livekit.mjs";
 const config = readElevenLabsConfig({ ELEVENLABS_API_KEY: "private-test-key", ELEVENLABS_AGENT_ID: "agent_test" });
-const available = { availability: "available", reason: null,
+const available = { availability: "available", reason: null, defaultLanguage: "es", selectableLanguages: ["es"],
   modes: { voice: { available: true, reason: null }, text: { available: true, reason: null } } };
 function upstream({ agent = 200, archived = false, wrongAgent = false, textOnly = false } = {}) {
   return vi.fn(async (url) => {
     if (url.includes("/agents/")) return Response.json({
       agent_id: wrongAgent ? "wrong-agent" : config.agentId,
-      conversation_config: { conversation: { text_only: textOnly } }, platform_settings: { archived },
+      conversation_config: { agent: { language: "es" }, conversation: { text_only: textOnly } }, platform_settings: { archived },
       privatePrompt: "do-not-expose-this",
     }, { status: agent });
     throw new Error("Availability must not request conversation credentials");
@@ -101,4 +101,22 @@ describe("real agent availability preflight", () => {
       await new Promise((resolve) => server.close(resolve));
     }
   });
+});
+
+const languageAgent = (primary, presets, override) => async () => Response.json({
+  agent_id: config.agentId,
+  conversation_config: { agent: { language: primary }, language_presets: presets },
+  platform_settings: { overrides: { conversation_config_override: { agent: { language: override } } } },
+});
+it.each([
+  ['es', {}, false, ['es']],
+  ['es', { en: {} }, false, ['es']],
+  ['es', {}, true, ['es']],
+  ['es', { en: {}, fr: {} }, true, ['es', 'en']],
+  ['en', { es: {} }, true, ['es', 'en']],
+  [undefined, {}, undefined, []],
+])('reports configured session languages without inventing support (%s)', async (primary, presets, override, expected) => {
+  const result = await probeAgentAvailability(config, languageAgent(primary, presets, override));
+  expect(result.selectableLanguages).toEqual(expected);
+  expect(result.defaultLanguage).toBe(primary || null);
 });

@@ -34,3 +34,10 @@ it('removes a process and its relationships from the shared cache without changi
   expect(data.processes).toHaveLength(3);
   expect(data.graph.memberships).toHaveLength(2);
 });
+
+it('searches displayed department labels while keeping canonical filter values and source records', () => {
+  const localized = filterProcesses(processes, graph, { ...emptyProcessFilters, department: 'Contabilidad', query: 'Accounting' }, (value) => value === 'Contabilidad' ? 'Accounting' : value);
+  expect(localized).toEqual(processes);
+  expect(localized[0]).toBe(processes[0]);
+  expect(processes[0].department).toBe('Contabilidad');
+});

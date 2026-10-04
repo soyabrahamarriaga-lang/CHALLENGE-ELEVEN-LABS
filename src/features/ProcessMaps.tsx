@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 import DeleteProcess, { type OnProcessDeleted } from "./DeleteProcess";
 import { useEffect, useState, useRef } from "react";
 import {
@@ -89,8 +90,8 @@ function ScreenImage({
     return (
       <div className={"step-image-empty " + (compact ? "compact" : "")}>
         <ImageOff size={24} />
-        <strong>Imagen pendiente</strong>
-        {!compact && <p>No se conservó una captura asociada a esta acción.</p>}
+        <strong>{t("Imagen pendiente")}</strong>
+        {!compact && <p>{t("No se conservó una captura asociada a esta acción.")}</p>}
       </div>
     );
   if (error)
@@ -100,16 +101,14 @@ function ScreenImage({
         role="status"
       >
         <ImageOff size={24} />
-        <strong>No pudimos cargar la imagen</strong>
+        <strong>{t("No pudimos cargar la imagen")}</strong>
         {!compact && (
-          <p>La captura está registrada. Vuelve a intentar cargarla.</p>
+          <p>{t("La captura está registrada. Vuelve a intentar cargarla.")}</p>
         )}
         <button
           className="text-button nodrag"
           onClick={() => setRetry((v) => v + 1)}
-        >
-          Reintentar imagen
-        </button>
+        >{t("Reintentar imagen")}</button>
       </div>
     );
   return (
@@ -118,51 +117,46 @@ function ScreenImage({
         <img
           src={url}
           alt={
-            "Pantalla capturada a las " +
+            t("Pantalla capturada a las ") +
             flowClock(frame.at) +
             (frame.association === "manual"
               ? ""
-              : " ; asociación con la acción pendiente de confirmar")
+              : t(" ; asociación con la acción pendiente de confirmar"))
           }
         />
       ) : (
-        <p className="step-image-loading" role="status">
-          Cargando imagen…
-        </p>
+        <p className="step-image-loading" role="status">{t("Cargando imagen…")}</p>
       )}
       {!compact && (
         <>
           <figcaption>
-            <span>
-              Captura · {flowClock(frame.at)}
-              {frame.association === "nearby" ? " · momento cercano" : ""}
+            <span>{t("Captura ·")}{" "}{flowClock(frame.at)}
+              {frame.association === "nearby" ? t(" · momento cercano") : ""}
             </span>
             <button
               className="text-button"
               disabled={!url}
               onClick={() => viewer.current?.showModal()}
             >
-              <Expand size={14} />
-              Ampliar imagen
-            </button>
+              <Expand size={14} />{t("Ampliar imagen")}</button>
           </figcaption>
           <dialog
             ref={viewer}
             className="screen-viewer"
-            aria-label={"Captura original de " + flowClock(frame.at)}
+            aria-label={t("Captura original de ") + flowClock(frame.at)}
             onClick={(e) => {
               if (e.target === e.currentTarget) viewer.current?.close();
             }}
           >
             <div className="screen-viewer-heading">
               <div>
-                <strong>Captura · {flowClock(frame.at)}</strong>
-                <p>Imagen a tamaño original. Desliza para recorrerla.</p>
+                <strong>{t("Captura ·")}{" "}{flowClock(frame.at)}</strong>
+                <p>{t("Imagen a tamaño original. Desliza para recorrerla.")}</p>
               </div>
               <button
                 autoFocus
                 className="icon-button"
-                aria-label="Cerrar imagen"
+                aria-label={t("Cerrar imagen")}
                 onClick={() => viewer.current?.close()}
               >
                 <X size={22} />
@@ -172,12 +166,12 @@ function ScreenImage({
               className="screen-viewer-media"
               tabIndex={0}
               role="region"
-              aria-label="Imagen original desplazable"
+              aria-label={t("Imagen original desplazable")}
             >
               {url && (
                 <img
                   src={url}
-                  alt={"Captura original a las " + flowClock(frame.at)}
+                  alt={t("Captura original a las ") + flowClock(frame.at)}
                 />
               )}
             </div>
@@ -193,16 +187,16 @@ function Evidence({ flow, node }: { flow: ProcessFlow; node: ProcessNode }) {
   );
   return (
     <details className="step-sources">
-      <summary>Consultar evidencia de este paso</summary>
+      <summary>{t("Consultar evidencia de este paso")}</summary>
       {items.map((e) => (
         <article key={e.id}>
           <strong>
             {e.role === "expert"
-              ? "Experto"
+              ? t("Experto")
               : e.role === "agent"
                 ? "Agente"
-                : "Observación"}{" "}
-            · {e.at === null ? "Sin tiempo" : flowClock(e.at)}
+                : t("Observación")}{" "}
+            · {e.at === null ? t("Sin tiempo") : flowClock(e.at)}
           </strong>
           <p>{e.text}</p>
         </article>
@@ -213,7 +207,7 @@ function Evidence({ flow, node }: { flow: ProcessFlow; node: ProcessNode }) {
 function StepDetails({ flow, node }: { flow: ProcessFlow; node: ProcessNode }) {
   return (
     <div className="step-explanation">
-      <h3>Cómo hacerlo</h3>
+      <h3>{t("Cómo hacerlo")}</h3>
       {node.instructions.length ? (
         <ol>
           {node.instructions.map((s, i) => (
@@ -221,24 +215,24 @@ function StepDetails({ flow, node }: { flow: ProcessFlow; node: ProcessNode }) {
           ))}
         </ol>
       ) : (
-        <p>Instrucciones pendientes de completar con el experto.</p>
+        <p>{t("Instrucciones pendientes de completar con el experto.")}</p>
       )}
       {node.decision && (
         <>
-          <h3>Decisión</h3>
+          <h3>{t("Decisión")}</h3>
           <p>{node.decision}</p>
         </>
       )}
       <div className="step-reason">
-        <h3>Por qué se hace así</h3>
+        <h3>{t("Por qué se hace así")}</h3>
         <p>
           {node.reason ||
-            "El experto todavía no explicó el motivo. Pendiente de confirmar."}
+            t("El experto todavía no explicó el motivo. Pendiente de confirmar.")}
         </p>
       </div>
       {!!node.alternatives?.length && (
         <>
-          <h3>Alternativas explicadas</h3>
+          <h3>{t("Alternativas explicadas")}</h3>
           <ul>
             {node.alternatives.map((a, i) => (
               <li key={i}>
@@ -250,7 +244,7 @@ function StepDetails({ flow, node }: { flow: ProcessFlow; node: ProcessNode }) {
       )}
       {!!node.guardrails.length && (
         <>
-          <h3>Cuándo detenerse o consultar</h3>
+          <h3>{t("Cuándo detenerse o consultar")}</h3>
           <ul>
             {node.guardrails.map((g, i) => (
               <li key={i}>{g}</li>
@@ -271,16 +265,16 @@ function VisualGuide({ flow }: { flow: ProcessFlow }) {
       {steps.map((node, i) => (
         <section className="process-step" key={node.id}>
           <header>
-            <span className="step-number" aria-label={"Paso " + (i + 1)}>
+            <span className="step-number" aria-label={t("Paso ") + (i + 1)}>
               {i + 1}
             </span>
             <div>
               <h2>{node.title}</h2>
               <p>
                 {node.activityCode
-                  ? "Actividad " + node.activityCode + " · "
+                  ? t("Actividad ") + node.activityCode + " · "
                   : ""}
-                {flowLabels[node.kind]} · {flowClock(node.at)}
+                {t(flowLabels[node.kind])} · {flowClock(node.at)}
               </p>
             </div>
           </header>
@@ -296,21 +290,20 @@ function VisualGuide({ flow }: { flow: ProcessFlow }) {
 function FlowExplorer({ flow }: { flow: ProcessFlow }) {
   const [selectedId, setSelectedId] = useState(flow.nodes[1]?.id || "start");
   const [instance, setInstance] = useState<ReactFlowInstance | null>(null);
-  const [nodes, , onNodesChange] = useNodesState<Node>(
-    flow.nodes.map((node) => ({
+  const localizedNodes: Node[] = flow.nodes.map((node) => ({
       id: node.id,
       position: node.position,
       type: "default",
       sourcePosition: Position.Bottom,
       targetPosition: Position.Top,
       className: "process-node " + node.kind,
-      ariaLabel: flowLabels[node.kind] + ": " + node.title,
+      ariaLabel: t(flowLabels[node.kind]) + ": " + node.title,
       data: {
         label: (
           <>
             <strong>{node.title}</strong>
             <span className="process-node-meta">
-              {flowLabels[node.kind]} · {flowClock(node.at)}
+              {t(flowLabels[node.kind])} · {flowClock(node.at)}
             </span>
             {["step", "decision"].includes(node.kind) && (
               <>
@@ -320,15 +313,15 @@ function FlowExplorer({ flow }: { flow: ProcessFlow }) {
                   compact
                 />
                 <p className="node-reason">
-                  {node.reason || "Motivo pendiente de confirmar"}
+                  {node.reason || t("Motivo pendiente de confirmar")}
                 </p>
               </>
             )}
           </>
         ),
       },
-    })),
-  );
+    }));
+  const [nodes, , onNodesChange] = useNodesState<Node>(localizedNodes);
   const selected = flow.nodes.find((n) => n.id === selectedId) || flow.nodes[0];
   const index = flow.nodes.indexOf(selected);
   const choose = (id: string, focus = false) => {
@@ -350,19 +343,17 @@ function FlowExplorer({ flow }: { flow: ProcessFlow }) {
   }));
   return (
     <div className="flow-explorer">
-      <section className="flow-board" aria-label="Diagrama de acciones">
+      <section className="flow-board" aria-label={t("Diagrama de acciones")}>
         <div className="flow-board-tools">
-          <p>Selecciona una acción para consultar cómo y por qué se realiza.</p>
+          <p>{t("Selecciona una acción para consultar cómo y por qué se realiza.")}</p>
           <button
             className="text-button"
             onClick={() => void instance?.fitView({ padding: 0.15 })}
-          >
-            Ver todo
-          </button>
+          >{t("Ver todo")}</button>
         </div>
         <div className="flow-canvas">
           <ReactFlow
-            nodes={nodes.map((n) => ({ ...n, selected: n.id === selectedId }))}
+            nodes={nodes.map((n) => ({ ...n, data: localizedNodes.find((localized) => localized.id === n.id)!.data, ariaLabel: localizedNodes.find((localized) => localized.id === n.id)!.ariaLabel, selected: n.id === selectedId }))}
             edges={edges}
             onNodesChange={(changes) => {
               onNodesChange(changes);
@@ -382,32 +373,30 @@ function FlowExplorer({ flow }: { flow: ProcessFlow }) {
             nodesConnectable={false}
             deleteKeyCode={null}
             ariaLabelConfig={{
-              "controls.zoomIn.ariaLabel": "Acercar",
-              "controls.zoomOut.ariaLabel": "Alejar",
-              "controls.fitView.ariaLabel": "Ajustar diagrama",
+              "controls.zoomIn.ariaLabel": t("Acercar"),
+              "controls.zoomOut.ariaLabel": t("Alejar"),
+              "controls.fitView.ariaLabel": t("Ajustar diagrama"),
               "node.a11yDescription.default":
-                "Pulsa Enter para seleccionar. Usa las flechas para mover el nodo.",
+                t("Pulsa Enter para seleccionar. Usa las flechas para mover el nodo."),
             }}
           >
             <Background color="#cdd9cf" gap={24} size={1} />
             <Controls showInteractive={false} />
-            <MiniMap pannable zoomable ariaLabel="Vista general del proceso" />
+            <MiniMap pannable zoomable ariaLabel={t("Vista general del proceso")} />
           </ReactFlow>
         </div>
       </section>
-      <aside className="flow-inspector" aria-label="Detalle de la acción">
+      <aside className="flow-inspector" aria-label={t("Detalle de la acción")}>
         <div className="flow-step-navigation">
           <button
             className="icon-button"
-            aria-label="Paso anterior"
+            aria-label={t("Paso anterior")}
             disabled={index === 0}
             onClick={() => choose(flow.nodes[index - 1].id, true)}
           >
             <ArrowLeft size={18} />
           </button>
-          <label className="sr-only" htmlFor="flow-step">
-            Seleccionar acción
-          </label>
+          <label className="sr-only" htmlFor="flow-step">{t("Seleccionar acción")}</label>
           <select
             id="flow-step"
             value={selectedId}
@@ -421,7 +410,7 @@ function FlowExplorer({ flow }: { flow: ProcessFlow }) {
           </select>
           <button
             className="icon-button"
-            aria-label="Paso siguiente"
+            aria-label={t("Paso siguiente")}
             disabled={index === flow.nodes.length - 1}
             onClick={() => choose(flow.nodes[index + 1].id, true)}
           >
@@ -431,7 +420,7 @@ function FlowExplorer({ flow }: { flow: ProcessFlow }) {
         <div className="flow-detail" aria-live="polite">
           <h2>{selected.title}</h2>
           {["start", "end"].includes(selected.kind) ? (
-            <p>Límite del procedimiento registrado.</p>
+            <p>{t("Límite del procedimiento registrado.")}</p>
           ) : (
             <StepDetails flow={flow} node={selected} />
           )}
@@ -471,14 +460,9 @@ function MetadataEditor({
   };
   return (
     <form className="process-metadata" onSubmit={(e) => void save(e)}>
-      <h2>Nombre y clasificación</h2>
-      <p>
-        El nombre describe la tarea. Las categorías se pueden escribir o elegir
-        del catálogo.
-      </p>
-      <label>
-        Nombre del proceso
-        <input
+      <h2>{t("Nombre y clasificación")}</h2>
+      <p>{t("El nombre describe la tarea. Las categorías se pueden escribir o elegir del catálogo.")}</p>
+      <label>{t("Nombre del proceso")}<input
           required
           maxLength={120}
           value={value.name}
@@ -486,9 +470,7 @@ function MetadataEditor({
         />
       </label>
       <div className="metadata-fields">
-        <label>
-          Departamento
-          <input
+        <label>{t("Departamento")}<input
             required
             list="process-departments"
             maxLength={80}
@@ -498,9 +480,7 @@ function MetadataEditor({
             }
           />
         </label>
-        <label>
-          Tipo de tarea
-          <input
+        <label>{t("Tipo de tarea")}<input
             required
             list="process-types"
             maxLength={80}
@@ -513,28 +493,26 @@ function MetadataEditor({
       </div>
       <datalist id="process-departments">
         {flow.catalog.departments.map((d) => (
-          <option key={d} value={d} />
+          <option key={d} value={d} label={t(d)} />
         ))}
       </datalist>
       <datalist id="process-types">
         {flow.catalog.families.map((f) => (
-          <option key={f.id} value={f.name} />
+          <option key={f.id} value={f.name} label={t(f.name)} />
         ))}
       </datalist>
-      {error && <p role="alert">{error}</p>}
+      {error && <p role="alert">{t(error)}</p>}
       <div className="flow-actions">
         <button className="button primary" disabled={saving} type="submit">
           <Check size={16} />
-          {saving ? "Guardando…" : "Guardar clasificación"}
+          {saving ? t("Guardando…") : t("Guardar clasificación")}
         </button>
         <button
           className="button secondary"
           type="button"
           onClick={onClose}
           disabled={saving}
-        >
-          Cancelar
-        </button>
+        >{t("Cancelar")}</button>
       </div>
     </form>
   );
@@ -594,18 +572,16 @@ export default function ProcessMaps({
     <div className="process-maps-page">
       {id && (
         <button className="text-button flow-back" onClick={() => onOpen("")}>
-          <ArrowLeft size={16} />
-          Volver a la biblioteca
-        </button>
+          <ArrowLeft size={16} />{t("Volver a la biblioteca")}</button>
       )}
       <div className="page-heading">
         <div>
-          <h1>{data ? data.flow.title : "Los procesos, paso a paso."}</h1>
+          <h1>{data ? data.flow.title : t("Los procesos, paso a paso.")}</h1>
           <p>
             {data
               ? data.flow.objective ||
-                "Acciones, decisiones y los motivos del experto."
-              : "Encuentra una tarea y consulta cómo ejecutarla, con sus imágenes y criterios."}
+                t("Acciones, decisiones y los motivos del experto.")
+              : t("Encuentra una tarea y consulta cómo ejecutarla, con sus imágenes y criterios.")}
           </p>
         </div>
         <button
@@ -613,39 +589,31 @@ export default function ProcessMaps({
           disabled={loading}
           onClick={() => setRetry((v) => v + 1)}
         >
-          <RefreshCw size={16} />
-          Actualizar
-        </button>
+          <RefreshCw size={16} />{t("Actualizar")}</button>
       </div>
       {loading && (
-        <p className="flow-loading" role="status">
-          Preparando tus procesos…
-        </p>
+        <p className="flow-loading" role="status">{t("Preparando tus procesos…")}</p>
       )}
       {error && (
         <div className="flow-error" role="alert">
-          <h2>No pudimos abrir los procesos</h2>
-          <p>{error}</p>
+          <h2>{t("No pudimos abrir los procesos")}</h2>
+          <p>{t(error)}</p>
           <button
             className="button secondary"
             onClick={() => setRetry((v) => v + 1)}
-          >
-            Volver a intentar
-          </button>
+          >{t("Volver a intentar")}</button>
         </div>
       )}
       {!loading && !error && data && (
         <>
           <div className="process-classification">
-            <span>{data.flow.department}</span>
-            <span>{data.flow.taskType}</span>
+            <span>{t(data.flow.department)}</span>
+            <span>{t(data.flow.taskType)}</span>
             <button
               className="text-button"
               onClick={() => setEditing((v) => !v)}
             >
-              <Pencil size={15} />
-              Editar nombre y categoría
-            </button>
+              <Pencil size={15} />{t("Editar nombre y categoría")}</button>
             <DeleteProcess id={data.flow.id} title={data.flow.title} onDeleted={onDeleted}/>
           </div>
           {editing && (
@@ -658,50 +626,37 @@ export default function ProcessMaps({
           )}
           <div className="flow-context">
             <p>
-              <strong>Procedimiento por revisar.</strong> Confirma las acciones
-              y sus motivos con el experto.
-            </p>
+              <strong>{t("Procedimiento por revisar.")}</strong>{" "}{t("Confirma las acciones y sus motivos con el experto.")}</p>
             <div className="flow-actions">
               <a className="button secondary" href={data.obsidianUri}>
-                <ExternalLink size={16} />
-                Abrir en Obsidian
-              </a>
+                <ExternalLink size={16} />{t("Abrir en Obsidian")}</a>
               <button
                 className="button secondary"
                 onClick={() => downloadCanvas(data.canvas)}
               >
-                <Download size={16} />
-                Descargar Canvas
-              </button>
+                <Download size={16} />{t("Descargar Canvas")}</button>
             </div>
           </div>
           {(data.flow.canvasEdited || data.flow.catalogEdited) && (
-            <p className="flow-warning">
-              Conservamos las ediciones manuales de Obsidian. Esta vista muestra
-              la extracción actualizada.
-            </p>
+            <p className="flow-warning">{t("Conservamos las ediciones manuales de Obsidian. Esta vista muestra la extracción actualizada.")}</p>
           )}
           {count > 0 ? (
             <>
               <div
                 className="process-view-switch"
-                aria-label="Vista del proceso"
+                aria-label={t("Vista del proceso")}
               >
                 <button
                   aria-pressed={view === "guide"}
                   onClick={() => setView("guide")}
                 >
-                  <ListOrdered size={17} />
-                  Guía visual
-                </button>
+                  <ListOrdered size={17} />{t("Guía visual")}</button>
                 <button
                   aria-pressed={view === "diagram"}
                   onClick={() => setView("diagram")}
                 >
-                  <GitBranch size={17} />
-                  Diagrama
-                </button>
-                <span>{count} acciones</span>
+                  <GitBranch size={17} />{t("Diagrama")}</button>
+                <span>{t("{{count}} acción", { count })}</span>
               </div>
               {view === "guide" ? (
                 <VisualGuide flow={data.flow} />
@@ -711,24 +666,18 @@ export default function ProcessMaps({
             </>
           ) : (
             <div className="flow-empty">
-              <h2>Este registro no describe una tarea ejecutada</h2>
-              <p>
-                La transcripción se conserva como evidencia. No convertimos
-                saludos ni preguntas del agente en acciones.
-              </p>
+              <h2>{t("Este registro no describe una tarea ejecutada")}</h2>
+              <p>{t("La transcripción se conserva como evidencia. No convertimos saludos ni preguntas del agente en acciones.")}</p>
             </div>
           )}
           <details className="flow-limitations">
-            <summary>Qué falta confirmar</summary>
+            <summary>{t("Qué falta confirmar")}</summary>
             <ul>
               {data.flow.warnings.map((w) => (
                 <li key={w}>{w}</li>
               ))}
             </ul>
-            <p>
-              Los cambios de posición en UserHelper son temporales. Las
-              ediciones hechas directamente en Obsidian se conservan allí.
-            </p>
+            <p>{t("Los cambios de posición en UserHelper son temporales. Las ediciones hechas directamente en Obsidian se conservan allí.")}</p>
           </details>
         </>
       )}

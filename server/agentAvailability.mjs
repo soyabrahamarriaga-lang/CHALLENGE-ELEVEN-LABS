@@ -22,6 +22,12 @@ export async function probeAgentAvailability(config, fetcher = fetch) {
   return {
     availability: textOnly ? "limited" : "available",
     reason: null,
+    defaultLanguage: ['es', 'en'].includes(agent.conversation_config.agent?.language)
+      ? agent.conversation_config.agent.language : null,
+    selectableLanguages: ['es', 'en'].filter((language) =>
+      language === agent.conversation_config.agent?.language ||
+      (agent.platform_settings?.overrides?.conversation_config_override?.agent?.language === true &&
+        Object.hasOwn(agent.conversation_config.language_presets || {}, language))),
     modes: {
       voice: { available: !textOnly, reason: textOnly ? "agent_text_only" : null },
       text: { available: true, reason: null },

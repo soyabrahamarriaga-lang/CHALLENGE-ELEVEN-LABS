@@ -1,3 +1,4 @@
+import { t, dateLocale } from "../i18n";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -75,10 +76,8 @@ export function SessionDetail({
     <div className={"example-player " + session.color}>
       <div className="player-topline">
         <span>
-          <span className="status-dot" />
-          Grabación de ejemplo
-        </span>
-        <span>SIN AUDIO REAL</span>
+          <span className="status-dot" />{t("Grabación de ejemplo")}</span>
+        <span>{t("SIN AUDIO REAL")}</span>
       </div>
       <div className="player-workspace">
         <div className="workspace-sidebar">
@@ -92,21 +91,20 @@ export function SessionDetail({
         </div>
         <div className="workspace-body">
           <div className="workspace-breadcrumb">
-            {session.category}
-            <span>/</span>Proceso de ejemplo
-          </div>
-          <h3>{step?.title || "Proceso de ejemplo"}</h3>
+            {t(session.category)}
+            <span>/</span>{t("Proceso de ejemplo")}</div>
+          <h3>{step?.title || t("Proceso de ejemplo")}</h3>
           <div className="workspace-record">
             <FileText size={23} />
             <div>
               <b>
                 {session.id === "accesos"
-                  ? "Solicitud #4821"
-                  : "Documento de trabajo"}
+                  ? t("Solicitud #4821")
+                  : t("Documento de trabajo")}
               </b>
-              <small>Contenido ficticio para explorar la sesión</small>
+              <small>{t("Contenido ficticio para explorar la sesión")}</small>
             </div>
-            <span className="record-status">En revisión</span>
+            <span className="record-status">{t("En revisión")}</span>
           </div>
           <div className="workspace-text">
             <span />
@@ -115,19 +113,15 @@ export function SessionDetail({
           </div>
           <div className="workspace-checks">
             <span>
-              <CircleCheck size={15} />
-              Contexto revisado
-            </span>
+              <CircleCheck size={15} />{t("Contexto revisado")}</span>
             <span>
-              <CircleCheck size={15} />
-              Criterio documentado
-            </span>
+              <CircleCheck size={15} />{t("Criterio documentado")}</span>
           </div>
           <div className="workspace-current">
             <StepIcon kind={step?.kind || "step"} />
             <span>
               {step?.action ||
-                "No hay fragmentos conservados en esta demostración."}
+                t("No hay fragmentos conservados en esta demostración.")}
             </span>
           </div>
         </div>
@@ -138,8 +132,8 @@ export function SessionDetail({
           <strong>{session.senior}</strong>
           <small>
             {playing
-              ? "Recorrido visual en reproducción"
-              : "Recorrido visual pausado"}
+              ? t("Recorrido visual en reproducción")
+              : t("Recorrido visual pausado")}
           </small>
         </span>
         <span className="caption-time">{timeLabel(position)}</span>
@@ -149,9 +143,7 @@ export function SessionDetail({
   return (
     <>
       <button className="back-link" onClick={onBack}>
-        <ArrowLeft size={16} />
-        Volver a la biblioteca
-      </button>
+        <ArrowLeft size={16} />{t("Volver a la biblioteca")}</button>
       <div className="detail-heading">
         <div>
           <h1>{session.title}</h1>
@@ -165,7 +157,7 @@ export function SessionDetail({
           aria-pressed={saved}
         >
           <Bookmark size={17} fill={saved ? "currentColor" : "none"} />
-          {saved ? "Guardada" : "Guardar en mi biblioteca"}
+          {saved ? "Guardada" : t("Guardar en mi biblioteca")}
         </button>
       </div>
       <div className="detail-byline">
@@ -175,7 +167,7 @@ export function SessionDetail({
           <small>{session.role}</small>
         </span>
         <span className="byline-date">
-          {new Date(session.date).toLocaleDateString("es-MX", {
+          {new Date(session.date).toLocaleDateString(dateLocale(), {
             day: "numeric",
             month: "long",
             year: "numeric",
@@ -187,7 +179,7 @@ export function SessionDetail({
         <div className="detail-main">
           <section
             className="player-section"
-            aria-label="Reproducción visual simulada"
+            aria-label={t("Reproducción visual simulada")}
           >
             {video}
             <div className="player-controls">
@@ -196,8 +188,8 @@ export function SessionDetail({
                 onClick={togglePlayback}
                 aria-label={
                   playing
-                    ? "Pausar reproducción de ejemplo"
-                    : "Reproducir ejemplo"
+                    ? t("Pausar reproducción de ejemplo")
+                    : t("Reproducir ejemplo")
                 }
               >
                 {playing ? (
@@ -212,7 +204,7 @@ export function SessionDetail({
                   setPosition(0);
                   setPlaying(false);
                 }}
-                aria-label="Volver al inicio"
+                aria-label={t("Volver al inicio")}
               >
                 <SkipBack size={17} />
               </button>
@@ -221,7 +213,7 @@ export function SessionDetail({
                 <span> / {timeLabel(duration)}</span>
               </span>
               <label className="scrubber">
-                <span className="sr-only">Posición de la reproducción</span>
+                <span className="sr-only">{t("Posición de la reproducción")}</span>
                 <input
                   type="range"
                   min="0"
@@ -237,7 +229,7 @@ export function SessionDetail({
               </label>
               <select
                 className="playback-speed"
-                aria-label="Velocidad de reproducción"
+                aria-label={t("Velocidad de reproducción")}
                 value={speed}
                 onChange={(e) => setSpeed(Number(e.target.value))}
               >
@@ -248,7 +240,7 @@ export function SessionDetail({
               <button
                 className="icon-button"
                 onClick={() => setExpanded(true)}
-                aria-label="Ampliar reproducción de ejemplo"
+                aria-label={t("Ampliar reproducción de ejemplo")}
               >
                 <Maximize2 size={16} />
               </button>
@@ -259,17 +251,16 @@ export function SessionDetail({
               <h2>{step.title}</h2>
               <div className="insight-heading">
                 <StepBadge kind={step.kind} />
-                <span>
-                  Paso {index + 1} de {session.steps.length}
+                <span>{t("Paso")}{" "}{index + 1}{" "}{t("de")}{" "}{session.steps.length}
                 </span>
               </div>
               <div className="insight-sections">
                 <div>
-                  <h3>Qué hizo</h3>
+                  <h3>{t("Qué hizo")}</h3>
                   <p>{step.action}</p>
                 </div>
                 <div>
-                  <h3>Para qué</h3>
+                  <h3>{t("Para qué")}</h3>
                   <p>{step.purpose}</p>
                 </div>
               </div>
@@ -278,7 +269,7 @@ export function SessionDetail({
                 <div>
                   <blockquote>“{step.quote}”</blockquote>
                   <span>
-                    {session.senior} <span>· explicación de ejemplo</span>
+                    {session.senior} <span>{t("· explicación de ejemplo")}</span>
                   </span>
                 </div>
               </div>
@@ -286,7 +277,7 @@ export function SessionDetail({
                 <p className="context-note">
                   <ShieldCheck size={16} />
                   <span>
-                    <strong>En este contexto:</strong> {step.context}
+                    <strong>{t("En este contexto:")}</strong> {step.context}
                   </span>
                 </p>
               )}
@@ -297,9 +288,7 @@ export function SessionDetail({
                     onClick={() => setVariantOpen(!variantOpen)}
                   >
                     <GitBranch size={17} />
-                    <strong>
-                      Un camino diferente cuando cambia el contexto
-                    </strong>
+                    <strong>{t("Un camino diferente cuando cambia el contexto")}</strong>
                     <ChevronDown
                       className={variantOpen ? "rotated" : ""}
                       size={18}
@@ -314,16 +303,12 @@ export function SessionDetail({
                   disabled={index === 0}
                   onClick={() => jump(session.steps[index - 1].at)}
                 >
-                  <ArrowLeft size={15} />
-                  Paso anterior
-                </button>
+                  <ArrowLeft size={15} />{t("Paso anterior")}</button>
                 {index < session.steps.length - 1 ? (
                   <button
                     className="text-button"
                     onClick={() => jump(session.steps[index + 1].at)}
-                  >
-                    Siguiente paso
-                    <ArrowRight size={15} />
+                  >{t("Siguiente paso")}<ArrowRight size={15} />
                   </button>
                 ) : (
                   <button
@@ -332,32 +317,26 @@ export function SessionDetail({
                   >
                     <Check size={16} />
                     {reviewed
-                      ? "Recorrido revisado"
-                      : "Marcar recorrido como revisado"}
+                      ? t("Recorrido revisado")
+                      : t("Marcar recorrido como revisado")}
                   </button>
                 )}
               </div>
             </section>
           ) : (
             <div className="no-fragments">
-              <h2>No quedan fragmentos en esta demo.</h2>
-              <p>
-                Los fragmentos excluidos no se incorporan al recorrido guardado.
-              </p>
+              <h2>{t("No quedan fragmentos en esta demo.")}</h2>
+              <p>{t("Los fragmentos excluidos no se incorporan al recorrido guardado.")}</p>
             </div>
           )}
           {reviewed && (
             <div className="reviewed-note" role="status">
               <CircleCheck size={20} />
-              <span>
-                Terminaste de explorar este recorrido. El siguiente paso es
-                practicar: revisar una sesión no demuestra todavía dominio de la
-                tarea.
-              </span>
+              <span>{t("Terminaste de explorar este recorrido. El siguiente paso es practicar: revisar una sesión no demuestra todavía dominio de la tarea.")}</span>
               <button
                 className="icon-button"
                 onClick={() => setReviewed(false)}
-                aria-label="Cerrar aviso"
+                aria-label={t("Cerrar aviso")}
               >
                 <X size={15} />
               </button>
@@ -368,7 +347,7 @@ export function SessionDetail({
           <div
             className="process-tabs"
             role="tablist"
-            aria-label="Explorar contenido de sesión"
+            aria-label={t("Explorar contenido de sesión")}
           >
             <button
               role="tab"
@@ -385,9 +364,7 @@ export function SessionDetail({
               aria-controls="flow-content"
               onClick={() => setTab("flow")}
             >
-              <GitBranch size={16} />
-              Flujo de trabajo
-            </button>
+              <GitBranch size={16} />{t("Flujo de trabajo")}</button>
             <button
               role="tab"
               tabIndex={tab === "conversation" ? 0 : -1}
@@ -403,15 +380,13 @@ export function SessionDetail({
               aria-controls="conversation-content"
               onClick={() => setTab("conversation")}
             >
-              <MessageCircle size={16} />
-              Conversación
-            </button>
+              <MessageCircle size={16} />{t("Conversación")}</button>
           </div>
           {tab === "flow" ? (
             <div role="tabpanel" id="flow-content" aria-labelledby="flow-tab">
               <div className="process-panel-heading">
-                <h2>El proceso, con sus porqués.</h2>
-                <p>Selecciona un momento para explorarlo.</p>
+                <h2>{t("El proceso, con sus porqués.")}</h2>
+                <p>{t("Selecciona un momento para explorarlo.")}</p>
               </div>
               <ol className="process-timeline">
                 {session.steps.map((item, i) => (
@@ -433,10 +408,10 @@ export function SessionDetail({
                       <span className="timeline-item-content">
                         <span className="timeline-kind">
                           {item.kind === "step"
-                            ? "Paso habitual"
+                            ? t("Paso habitual")
                             : item.kind === "decision"
-                              ? "Punto de decisión"
-                              : "Variante del proceso"}
+                              ? t("Punto de decisión")
+                              : t("Variante del proceso")}
                         </span>
                         <strong>{item.title}</strong>
                         <span className="timeline-time">
@@ -450,17 +425,11 @@ export function SessionDetail({
               </ol>
               <div className="timeline-legend">
                 <span>
-                  <span className="legend-dot" />
-                  Paso
-                </span>
+                  <span className="legend-dot" />{t("Paso")}</span>
                 <span>
-                  <GitBranch size={12} />
-                  Decisión
-                </span>
+                  <GitBranch size={12} />{t("Decisión")}</span>
                 <span>
-                  <span className="legend-dash" />
-                  Variante
-                </span>
+                  <span className="legend-dash" />{t("Variante")}</span>
               </div>
             </div>
           ) : (
@@ -470,8 +439,8 @@ export function SessionDetail({
               aria-labelledby="conversation-tab"
               className="transcript"
             >
-              <h2>En palabras del senior</h2>
-              <p>Fragmentos escritos de ejemplo, sin audio real.</p>
+              <h2>{t("En palabras del senior")}</h2>
+              <p>{t("Fragmentos escritos de ejemplo, sin audio real.")}</p>
               {session.steps.map((item) => (
                 <button
                   className={item.id === step?.id ? "selected" : ""}
@@ -490,33 +459,25 @@ export function SessionDetail({
           )}
           <div className="context-reminder">
             <Quote size={19} />
-            <p>
-              Una forma de hacerlo, con su contexto. Otras personas pueden
-              seguir otro camino.
-            </p>
+            <p>{t("Una forma de hacerlo, con su contexto. Otras personas pueden seguir otro camino.")}</p>
           </div>
         </aside>
       </div>
-      <DemoNote>
-        Las escenas, explicaciones y personas de esta sesión son ejemplos. No
-        proceden de una grabación real.
-      </DemoNote>
+      <DemoNote>{t("Las escenas, explicaciones y personas de esta sesión son ejemplos. No proceden de una grabación real.")}</DemoNote>
       {expanded && (
         <Modal
-          title="Recorrido visual de ejemplo"
+          title={t("Recorrido visual de ejemplo")}
           className="wide-modal"
           onClose={() => setExpanded(false)}
         >
           {video}
           <p className="modal-description">
-            {step?.action || "Sin fragmentos conservados."}
+            {step?.action || t("Sin fragmentos conservados.")}
           </p>
           <button
             className="button secondary"
             onClick={() => setExpanded(false)}
-          >
-            Volver al proceso
-          </button>
+          >{t("Volver al proceso")}</button>
         </Modal>
       )}
     </>

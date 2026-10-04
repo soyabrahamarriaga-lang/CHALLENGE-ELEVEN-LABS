@@ -59,6 +59,8 @@ window.addEventListener("message", async (event) => {
     const access = data.access;
     if (
       !["voice", "text"].includes(mode) ||
+      (data.language !== undefined && !["es", "en"].includes(data.language)) ||
+      (data.overrideLanguage !== undefined && !["es", "en"].includes(data.overrideLanguage)) ||
       !access ||
       (mode === "voice"
         ? typeof access.conversationToken !== "string"
@@ -80,6 +82,12 @@ window.addEventListener("message", async (event) => {
               signedUrl: access.signedUrl,
               connectionType: "websocket" as const,
             }),
+        ...(data.overrideLanguage ? { overrides: { agent: { language: data.overrideLanguage } } } : {}),
+        // The language override selects the provider preset; the prompt also needs
+        // an explicit language. Fall back only for older cached Spanish clients.
+        dynamicVariables: {
+          conversation_language: (data.language ?? data.overrideLanguage ?? "es") === "en" ? "English" : "Spanish",
+        },
         textOnly: mode === "text",
         useWakeLock: false,
         clientTools: {},
