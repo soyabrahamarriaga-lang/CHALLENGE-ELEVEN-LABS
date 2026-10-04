@@ -49,6 +49,13 @@ describe("agent conversation events", () => {
     expect(state.messages.map((m) => m.text)).toEqual(["corrected", "test"]);
     expect(state.messages[1].id).toBe("user-2");
   });
+  it("validates delivery IDs and statuses and does not mistake missing speech data for quiet", () => {
+    expect(isAgentEvent({ type: "screen", id: "one", stage: "sent" })).toBe(true);
+    expect(isAgentEvent({ type: "screen", ok: true })).toBe(false);
+    expect(isAgentEvent({ type: "screen", id: "one", stage: "invented" })).toBe(false);
+    expect(isAgentEvent({ type: "voice", status: "unknown" })).toBe(true);
+    expect(isAgentEvent({ type: "voice", active: false })).toBe(false);
+  });
   it("bounds visible message memory and rejects malformed events", () => {
     let state = connected;
     for (let i = 0; i < 205; i++)

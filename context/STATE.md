@@ -1,8 +1,12 @@
 # Estado compartido
 
+## Respuesta del observador y pantalla (2026-10-04)
+
+Corrección en `codex/agent-response-fix`, sobre main con PR #21 integrado. El agente ya tenía Gemini 3.5 Flash-Lite; se acortó su prompt y redujo el esfuerzo de high a minimal, máximo 256 tokens. Ensayo con los mismos tres mensajes: 2 751 → 563 ms de media por texto; no demuestra esa latencia en audio. Dos imágenes ficticias recibidas y reconocidas, y 26 eventos VAD reales con audio sintético silencioso. La app usa probabilidad de voz, conserva capturas durante explicaciones largas, cancela imágenes obsoletas, muestra subida/fallo y ofrece envío manual. Prompt del tutor conservado; ambos agentes emiten VAD. Configuración remota aplicada y releída; el commit no la despliega automáticamente. Ver `docs/VISION.md` y `ADR-agent-response.md`. Pendiente el ensayo físico de pantalla + micrófono + altavoz del operador.
+
 ## Frontend y entrada visual (2026-10-04)
 
-Trabajo local en `codex/login-frontend`: el usuario eligió gradium.ai como referencia. Entrada de demostración con nombre/perfil, acceso a la interfaz existente y salida; no autentica cuentas ni cambia permisos de APIs. Escenario negro, tipografía grande y cinta original de partículas; escritorio y móvil revisados. `npm test`: 156 pruebas; build correcto. El preview 5183 recibe rechazo de origen de la bóveda del backend existente; falta configurar un entorno completo con origen coincidente para verificar datos privados desde esta rama. Ver `docs/FRONTEND-STUDIO.md` y `context/decisions/ADR-login-studio.md`. Entrega preparada en rama separada, sin integrar en main.
+Trabajo local en `codex/login-frontend`: el usuario eligió gradium.ai como referencia. Entrada de demostración con nombre/perfil, acceso a la interfaz existente y salida; no autentica cuentas ni cambia permisos de APIs. Escenario negro, tipografía grande y cinta original de partículas; escritorio y móvil revisados. `npm test`: 156 pruebas; build correcto. El preview 5183 recibe rechazo de origen de la bóveda del backend existente; falta configurar un entorno completo con origen coincidente para verificar datos privados desde esta rama. Ver `docs/FRONTEND-STUDIO.md` y `context/decisions/ADR-login-studio.md`. Integrado posteriormente en main mediante PR #21 (e283515). Preview local 5175 y backend 3003 con origen coincidente; entrada y conversación real por texto verificadas.
 
 ## Tutor de procesos en Intern (2026-10-03)
 
@@ -51,7 +55,7 @@ Transcripciones del agente se importan al terminar a una bóveda Obsidian privad
 Seis familias: compras/OC, proveedores, CFDI, retenciones, seguimiento/materialidad y negociación. Las reglas contables/fiscales recibidas se registran como propuestas no validadas, sin automatización de aprobaciones, bloqueos, impuestos ni pagos. Ver docs/ACCOUNTING-CATALOG.md, docs/PROCESS-MAPS.md y ADR-0017 (sustituye extracción/presentación de ADR-0016). Se conservan notas y Canvas manuales. Pendientes: validación experta, editor completo de pasos y confirmar asociaciones de imágenes desde la app.
 
 ## Visión
-El agente ElevenLabs (LLM `claude-haiku-4-5`, configurado por el usuario) ve capturas enviadas como `[PANTALLA mm:ss]` y pregunta por el cambio; verificado con `npm run check:vision` (docs/VISION.md, ADR-0012). La vista del agente comparte pantalla: OCR local cada segundo (texto al agente como contexto y a eventos.md) y captura en cada pausa (máx. 10), ADR-0013. Data collection configurado para procedimientos visuales (ADR-0017); pendiente prueba física completa de conversación/pantalla desde UI y Work Map confirmado.
+El agente ElevenLabs (actualmente `gemini-3.5-flash-lite`; la comprobación original usó Haiku) ve capturas enviadas como `[PANTALLA mm:ss]` y pregunta por el cambio; verificado con `npm run check:vision` (docs/VISION.md, ADR-0012). La vista del agente comparte pantalla: OCR local cada segundo (texto al agente como contexto y a eventos.md) y captura en cada pausa (máx. 10), ADR-0013. Data collection configurado para procedimientos visuales (ADR-0017); pendiente prueba física completa de conversación/pantalla desde UI y Work Map confirmado.
 
 ## Tutor
 El tutor (Intern) usa como base de conocimiento las notas de proceso de la bóveda, sincronizadas automáticamente (ADR-0016). Verificado con un caso nuevo: detuvo la aprobación de una OC de 35 días y pidió el correo del director de finanzas. Sus conversaciones se guardan en `Tutorias/` (ADR-0017). Pendiente: resumen de dominio y práctica del aprendiz.

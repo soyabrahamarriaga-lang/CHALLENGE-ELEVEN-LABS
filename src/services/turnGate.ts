@@ -1,41 +1,43 @@
-// Holds a pause snapshot until it is a good moment to interrupt (ADR-0015):
-// the expert has been quiet for `quietMs` (1 s, ADR-0018) and the agent is not speaking.
-// A snapshot is a user turn; sent while the expert talks, the agent stays silent and it is wasted.
-
+import type { VoiceStatus } from "./voiceActivity";
+export type GateStatus = "idle" | "voice-unavailable" | "speech" | "agent" | "settling" | "ready";
+// Only the latest unchanged screen is retained. New visual activity invalidates it;
+// a long explanation does not silently discard it. No upload until a safe turn.
 export class TurnGate<T> {
-  private pending: { item: T; at: number; since: number } | null = null;
-  private voiceActive = false;
+  private pending: { item: T; at: number } | null = null;
+  private voice: VoiceStatus;
+  private voiceAt = -Infinity;
   private lastVoice = -Infinity;
   private agentSpeaking = false;
-  private quietMs: number;
-  private maxWaitMs: number;
-  constructor(quietMs = 1000, maxWaitMs = 20000) {
-    this.quietMs = quietMs;
-    this.maxWaitMs = maxWaitMs;
+  private responseUntil = -Infinity;
+  constructor(private quietMs = 700, private requireVoice = false) {
+    this.voice = requireVoice ? "unknown" : "quiet";
   }
-  noteVoice(active: boolean, now: number) {
-    if (active || this.voiceActive) this.lastVoice = now;
-    this.voiceActive = active;
+  noteVoice(status: VoiceStatus, now: number) {
+    if (status === "speech" || this.voice === "speech") this.lastVoice = now;
+    this.voice = status;
+    this.voiceAt = now;
   }
   noteAgentSpeaking(speaking: boolean) {
     this.agentSpeaking = speaking;
+    if (speaking) this.responseUntil = -Infinity;
   }
-  // A newer pause replaces an older one: the latest screen is the one worth asking about.
-  offer(item: T, at: number, now: number) {
-    this.pending = { item, at, since: now };
+  // Give a verbal answer priority over an automatically generated picture turn.
+  noteUserTurn(now: number) { this.responseUntil = now + 3500; }
+  offer(item: T, at: number) { this.pending = { item, at }; }
+  clear() { this.pending = null; }
+  status(now: number): GateStatus {
+    if (!this.pending) return "idle";
+    if (this.requireVoice && (this.voice === "unknown" || now - this.voiceAt > 2500)) return "voice-unavailable";
+    if (this.voice === "speech") return "speech";
+    if (this.agentSpeaking || now < this.responseUntil) return "agent";
+    if (now - this.lastVoice < this.quietMs) return "settling";
+    return "ready";
   }
   poll(now: number): { item: T; at: number } | null {
-    if (!this.pending) return null;
-    if (now - this.pending.since > this.maxWaitMs) {
-      this.pending = null;
-      return null;
-    }
-    if (this.voiceActive || this.agentSpeaking || now - this.lastVoice < this.quietMs) return null;
-    const { item, at } = this.pending;
+    if (this.status(now) !== "ready") return null;
+    const ready = this.pending;
     this.pending = null;
-    return { item, at };
+    return ready;
   }
-  get waiting() {
-    return this.pending !== null;
-  }
+  get waiting() { return this.pending !== null; }
 }

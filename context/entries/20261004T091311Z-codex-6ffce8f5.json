@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "id": "20261004T091311Z-codex-6ffce8f5",
+  "at": "2026-10-04T09:13:11.499623Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "agent-response-fix",
+  "summary": "Corregir espera de voz y entrega de capturas; reducir latencia del observador",
+  "result": "VAD real en lugar de volumen, capturas retenidas durante explicaciones largas, envío manual y confirmación de subida/despacho. Prompt y esfuerzo del observador ajustados en ElevenLabs; tutor solo recibe evento VAD. Preview local responde por texto.",
+  "files": [
+    "config/observer-prompt.txt",
+    "context/STATE.md",
+    "context/decisions/ADR-agent-response.md",
+    "docs/VISION.md",
+    "scripts/agent_vision.mjs",
+    "src/features/AgentConversation.tsx",
+    "src/services/agentFrame.test.ts",
+    "src/services/agentFrame.ts",
+    "src/services/agentProtocol.test.ts",
+    "src/services/agentProtocol.ts",
+    "src/services/screenDelivery.test.ts",
+    "src/services/screenDelivery.ts",
+    "src/services/screenWatcher.test.ts",
+    "src/services/screenWatcher.ts",
+    "src/services/turnGate.test.ts",
+    "src/services/turnGate.ts",
+    "src/services/voiceActivity.test.ts",
+    "src/services/voiceActivity.ts"
+  ],
+  "decisions": [
+    "Usar estados de voz explícitos y una entrega cancelable con identificador, timeout y cuota conservadora; conservar el modelo Gemini que ya estaba seleccionado y reducir prompt/esfuerzo."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-agent-response.md"
+  ],
+  "ontology_review": "Sin nuevas entidades. La captura archivada no demuestra recepción por el agente y el conocimiento sigue requiriendo validación experta.",
+  "validation": [
+    "npm test: 171 pruebas, 27 archivos; Python unittest: 28 pruebas; npm run build y git diff --check correctos. Aviso preexistente de chunk SDK mayor a 500 kB.",
+    "Pruebas reales: mismos 3 mensajes por texto de 2751 a 563 ms de media; dos imágenes recibidas con file_input.used true; 26 eventos VAD con PCM silencioso; conexión, respuesta y cierre desde navegador 5175 sin errores de consola."
+  ],
+  "next_steps": [
+    "Repetir la demo física con micrófono, pantalla y altavoz para medir latencia de voz, pausas e interrupciones. Abrir PR y comprobar CI."
+  ]
+}

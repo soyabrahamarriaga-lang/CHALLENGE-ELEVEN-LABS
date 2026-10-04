@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import {
   MAX_SCREEN_FRAMES,
+  SCREEN_LABEL,
   applyAgentEvent,
   channel,
   initialAgentState,
@@ -74,7 +75,13 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
     events: ScreenEvent[];
     frames: number;
   }>({ status: "idle", events: [], frames: 0 });
-  const watch = useRef<{ stop: () => void } | null>(null);
+  const watch = useRef<{ stop: () => void; captureNow: () => Promise<Blob | null> } | null>(null);
+  const screenGeneration = useRef(0);
+  const inFlight = useRef<{ id: string; at: number; manual: boolean } | null>(null);
+  const uploadsExhausted = useRef(false);
+  const conversationIdRef = useRef("");
+  const lastVoiceStatus = useRef("");
+  const [screenHint, setScreenHint] = useState("");
   const framesSent = useRef(0);
   const gate = useRef(new TurnGate<Blob>());
   const connectedAt = useRef(0);
@@ -116,34 +123,40 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
     else {
       watch.current?.stop();
       watch.current = null;
+      screenGeneration.current++;
     }
     if (state.phase === "authorizing") {
       framesSent.current = 0;
+      inFlight.current = null;
+      uploadsExhausted.current = false;
+      conversationIdRef.current = "";
+      lastVoiceStatus.current = "";
+      setScreenHint("");
       setCaptureWarning(false);
       setScreen({ status: "idle", events: [], frames: 0 });
     }
   }, [state.phase]);
   useEffect(() => () => watch.current?.stop(), []);
-  // Sends the held snapshot once the expert has been quiet ~1.5 s and the agent is not talking.
+  // Detector state survives starting/stopping screen sharing. Never reset a
+  // speech=true signal just because OCR finished loading.
   useEffect(() => {
     if (state.phase !== "connected" || screen.status !== "watching") return;
-    gate.current = new TurnGate<Blob>();
-    const conversationId = state.conversationId;
+    const hints = {
+      "voice-unavailable": "No llega la señal de voz. Puedes enviar la pantalla con el botón.",
+      speech: "Captura pendiente: esperando a que termines de hablar.",
+      agent: "Captura pendiente: esperando la respuesta del agente.",
+      settling: "Captura pendiente: esperando una pausa breve.",
+      ready: "", idle: "",
+    };
     const timer = setInterval(() => {
+      if (inFlight.current || uploadsExhausted.current || framesSent.current >= MAX_SCREEN_FRAMES) return;
+      const status = gate.current.status(Date.now());
+      if (status !== "idle") setScreenHint(hints[status]);
       const ready = gate.current.poll(Date.now());
-      if (!ready || framesSent.current >= MAX_SCREEN_FRAMES) return;
-      framesSent.current++;
-      const label = `[PANTALLA ${clock(ready.at)}]`;
-      post({ type: "screen", frame: ready.item, label });
-      if (persistEvidence) void logVaultEvent(conversationId, {
-        kind: "note",
-        text: `captura enviada al agente ${label}`,
-        at: ready.at,
-      });
-      setScreen((previous) => ({ ...previous, frames: framesSent.current }));
-    }, 300);
+      if (ready) sendScreen(ready.item, ready.at, false);
+    }, 250);
     return () => clearInterval(timer);
-  }, [state.phase, state.conversationId, screen.status, persistEvidence]);
+  }, [state.phase, screen.status]);
   useEffect(() => {
     const receive = (event: MessageEvent) => {
       const current = frameSession.current;
@@ -157,15 +170,44 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
       )
         return;
       const update = event.data.event;
-      if (update.type === "voice")
-        gate.current.noteVoice(update.active, Date.now());
+      if (update.type === "connected") conversationIdRef.current = update.conversationId;
+      if (update.type === "voice") {
+        gate.current.noteVoice(update.status, Date.now());
+        if (lastVoiceStatus.current !== update.status) {
+          lastVoiceStatus.current = update.status;
+          recordScreen(`voz: ${update.status}`);
+        }
+      }
+      const uploading = inFlight.current;
+      if (update.type === "screen" && uploading && uploading.id === update.id) {
+        const at = uploading.at;
+        if (update.stage === "sent") {
+          framesSent.current++;
+          setScreen((previous) => ({ ...previous, frames: framesSent.current }));
+          setScreenHint("Imagen subida y enviada al agente.");
+          recordScreen(`captura subida y mensaje enviado [PANTALLA ${clock(at)}]`, at);
+        } else if (update.stage === "failed") {
+          setScreenHint("No se pudo enviar la imagen. Puedes reintentar con el botón.");
+          recordScreen("falló el envío de la captura", at);
+        } else if (update.stage === "limit") {
+          uploadsExhausted.current = true;
+          setScreenHint("Se alcanzó el límite de imágenes. Puedes seguir hablando o escribiendo.");
+          recordScreen("límite de subidas alcanzado", at);
+        } else if (update.stage === "waiting") {
+          setScreenHint("Imagen subida: esperando una pausa para enviarla.");
+          recordScreen("imagen subida; mensaje pendiente de pausa", at);
+        }
+        if (["sent", "failed", "cancelled", "limit"].includes(update.stage)) inFlight.current = null;
+      }
       if (update.type === "speaking")
         gate.current.noteAgentSpeaking(update.speaking);
-      if (update.type === "message" && update.message.role === "user")
-        gate.current.noteVoice(false, Date.now());
+      if (update.type === "message" && update.message.role === "user" && !SCREEN_LABEL.test(update.message.text))
+        gate.current.noteUserTurn(Date.now());
       setState((previous) => applyAgentEvent(previous, update));
       if (update.type === "ended" || update.type === "error") {
         frameSession.current = null;
+        inFlight.current = null;
+        gate.current.clear();
         setFrame(null);
       }
     };
@@ -215,6 +257,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
     if (active || (requiresCode && !code) || !consent || !health.online || !canStartAgent(health.status, mode))
       return;
     const attempt = ++generation.current;
+    gate.current = new TurnGate<Blob>(700, mode === "voice");
     const abort = new AbortController();
     request.current = abort;
     const timeout = setTimeout(() => abort.abort(), 12000);
@@ -285,8 +328,48 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
         window.location.origin,
       );
   };
+  function recordScreen(text: string, at = (Date.now() - connectedAt.current) / 1000) {
+    if (persistEvidence && conversationIdRef.current)
+      void logVaultEvent(conversationIdRef.current, { kind: "note", text, at });
+  }
+  function sendScreen(blob: Blob, at: number, manual: boolean) {
+    if (!frameSession.current || inFlight.current || uploadsExhausted.current || framesSent.current >= MAX_SCREEN_FRAMES) return;
+    const id = crypto.randomUUID();
+    inFlight.current = { id, at, manual };
+    setScreenHint("Subiendo imagen al agente…");
+    recordScreen(`subida solicitada (${manual ? "manual" : "pausa"})`, at);
+    post({ type: "screen", id, frame: blob, label: `[PANTALLA ${clock(at)}]`, manual });
+  }
+  const sendCurrentScreen = async () => {
+    if (inFlight.current) {
+      inFlight.current.manual = true;
+      post({ type: "send-screen-now", id: inFlight.current.id });
+      return;
+    }
+    const watcher = watch.current;
+    const key = frameSession.current?.key;
+    if (!watcher || !key) return;
+    const blob = await watcher.captureNow();
+    if (watch.current !== watcher || frameSession.current?.key !== key) return;
+    if (blob) { gate.current.clear(); sendScreen(blob, (Date.now() - connectedAt.current) / 1000, true); }
+    else setScreenHint("No pudimos capturar la pantalla. Vuelve a compartirla.");
+  };
+  function invalidateScreen() {
+    if (gate.current.waiting) recordScreen("captura pendiente reemplazada por un cambio de pantalla");
+    gate.current.clear();
+    if (inFlight.current && !inFlight.current.manual) {
+      post({ type: "cancel-screen" });
+      inFlight.current = null;
+      recordScreen("envío cancelado por cambio de pantalla");
+      setScreenHint("Esperando a que la pantalla se estabilice.");
+    }
+  }
   const shareScreen = async () => {
     if (watch.current || state.phase !== "connected") return;
+    const key = frameSession.current?.key;
+    if (!key) return;
+    const attempt = ++screenGeneration.current;
+    const isCurrent = () => screenGeneration.current === attempt && frameSession.current?.key === key;
     let stream: MediaStream;
     try {
       stream = await navigator.mediaDevices.getDisplayMedia({
@@ -294,21 +377,52 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
         audio: false,
       });
     } catch {
-      setScreen((previous) => ({ ...previous, status: "denied" }));
+      if (isCurrent()) setScreen((previous) => ({ ...previous, status: "denied" }));
+      return;
+    }
+    if (!isCurrent()) {
+      for (const track of stream.getTracks()) track.stop();
       return;
     }
     const conversationId = state.conversationId;
+    const screenAbort = new AbortController();
+    let cancelled = false;
+    // Stop remains effective while the OCR module/languages are loading.
+    watch.current = {
+      captureNow: async () => null,
+      stop: () => {
+        cancelled = true;
+        screenAbort.abort();
+        for (const track of stream.getTracks()) track.stop();
+        if (screenGeneration.current === attempt) {
+          screenGeneration.current++;
+          watch.current = null;
+          setScreen((previous) => ({ ...previous, status: "ended" }));
+        }
+      },
+    };
     const elapsed = () => (Date.now() - connectedAt.current) / 1000;
     try {
-      watch.current = await startScreenWatch(
+      const ready = await startScreenWatch(
         stream,
         {
           onStatus: (status) => {
-            if (status === "ended") watch.current = null;
+            if (screenGeneration.current !== attempt || (status !== "ended" && !isCurrent())) return;
+            if (status === "ended") {
+              cancelled = true;
+              screenGeneration.current++;
+              gate.current.clear();
+              post({ type: "cancel-screen" });
+              inFlight.current = null;
+              watch.current = null;
+              setScreenHint("");
+            }
             setScreen((previous) => ({ ...previous, status }));
           },
+          onChange: () => { if (isCurrent()) invalidateScreen(); },
           // Every second with changes: context for the agent (no turn) + line in eventos.md.
           onEvent: (event) => {
+            if (!isCurrent()) return;
             post({
               type: "context",
               text: `[OCR ${clock(event.at)}] ${event.text}`,
@@ -325,6 +439,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
           },
           // Store evidence independently of the agent's 10-image conversation limit.
           onCapture: (capture, at) => {
+            if (!isCurrent()) return;
             const saving = archiveScreenCapture(conversationId, capture, at);
             pendingCaptures.current.add(saving);
             void saving
@@ -335,25 +450,35 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
           },
           // At a pause: one snapshot, held until the expert is quiet (see the gate effect).
           onPause: (frame, at) => {
-            if (framesSent.current < MAX_SCREEN_FRAMES)
-              gate.current.offer(frame, at, Date.now());
+            if (!isCurrent()) return;
+            if (framesSent.current < MAX_SCREEN_FRAMES && !uploadsExhausted.current) {
+              gate.current.offer(frame, at);
+              recordScreen("pausa visual detectada; captura pendiente", at);
+            }
           },
         },
-        { now: elapsed },
+        { now: elapsed, signal: screenAbort.signal },
       );
+      if (cancelled || !isCurrent()) ready.stop();
+      else watch.current = ready;
     } catch {
       for (const track of stream.getTracks()) track.stop();
-      setScreen((previous) => ({ ...previous, status: "error" }));
+      if (isCurrent() && !cancelled) {
+        watch.current = null;
+        setScreen((previous) => ({ ...previous, status: "error" }));
+      }
     }
   };
   const stopScreen = () => {
     watch.current?.stop();
     watch.current = null;
+    screenGeneration.current++;
   };
   const send = (event: React.FormEvent) => {
     event.preventDefault();
     const text = draft.trim();
     if (!text || state.phase !== "connected") return;
+    gate.current.noteUserTurn(Date.now());
     post({ type: "message", text });
     setState((previous) =>
       applyAgentEvent(previous, {
@@ -522,13 +647,22 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
               {screen.status === "loading"
                 ? "Preparando la lectura de pantalla… la primera vez descarga el OCR."
                 : screen.status === "watching"
-                  ? `Leyendo tu pantalla cada segundo · capturas al agente ${screen.frames}/${MAX_SCREEN_FRAMES}`
+                  ? `Leyendo tu pantalla · imágenes enviadas ${screen.frames}/${MAX_SCREEN_FRAMES}`
                   : screen.status === "denied"
                     ? "No se compartió la pantalla."
                     : screen.status === "error"
                       ? "No se pudo leer la pantalla. Deja de compartir y vuelve a intentarlo."
                       : "Pantalla dejó de compartirse."}
             </p>
+          )}
+          {screen.status === "watching" && (
+            <>
+              <p className="agent-screen-status" role="status">{screenHint}</p>
+              <button className="button secondary" onClick={() => void sendCurrentScreen()}
+                disabled={uploadsExhausted.current || screen.frames >= MAX_SCREEN_FRAMES}>
+                Enviar esta pantalla ahora
+              </button>
+            </>
           )}
           {active && (
             <button className="button end-button" onClick={stop}>
@@ -538,7 +672,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
           )}
           <p className="agent-scope">
             Si compartes pantalla, tu navegador la lee cada segundo: el agente recibe el
-            texto que cambia y una captura en cada pausa (máx.{" "}
+            texto que cambia y capturas cuando detectamos una pausa, o cuando las envías con el botón (máx.{" "}
             {MAX_SCREEN_FRAMES}). Además, se conservan capturas de los cambios
             en tu bóveda privada para ilustrar el procedimiento. Usa datos
             ficticios.

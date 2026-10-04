@@ -1,3 +1,5 @@
+import type { VoiceStatus } from "./voiceActivity";
+import type { DeliveryStage } from "./screenDelivery";
 export type AgentMode = "voice" | "text";
 export type AgentPhase =
   | "idle"
@@ -34,8 +36,8 @@ export type AgentEvent =
   | { type: "message"; message: AgentMessage }
   | { type: "speaking"; speaking: boolean }
   | { type: "ended" }
-  | { type: "screen"; ok: boolean }
-  | { type: "voice"; active: boolean }
+  | { type: "screen"; id: string; stage: DeliveryStage }
+  | { type: "voice"; status: VoiceStatus }
   | { type: "error"; code: "permission" | "connection" | "tool" };
 // Screen snapshots the agent accepts per conversation (agent file_input limit, ADR-0012).
 export const MAX_SCREEN_FRAMES = 10;
@@ -54,9 +56,10 @@ export function isAgentEvent(value: unknown): value is AgentEvent {
     case "ended":
       return true;
     case "screen":
-      return "ok" in value && typeof value.ok === "boolean";
+      return "id" in value && typeof value.id === "string" && /^[a-zA-Z0-9-]{1,80}$/.test(value.id) &&
+        "stage" in value && ["uploading", "waiting", "sent", "failed", "cancelled", "limit"].includes(String(value.stage));
     case "voice":
-      return "active" in value && typeof value.active === "boolean";
+      return "status" in value && ["speech", "quiet", "unknown"].includes(String(value.status));
     case "error":
       return (
         "code" in value &&
