@@ -49,3 +49,8 @@ Brief original: docs/CHALLENGE.md. Solicitud de interfaz del usuario: docs/FRONT
 ## Accessibility & Inclusion
 
 Controles por teclado, foco visible, contraste legible, estados con texto e iconos y no solo color. Respetar reducción de movimiento. Etiquetas y anuncios de estado útiles sin leer cada segundo del temporizador.
+
+
+## Referencia visual confirmada — 2026-10-04
+
+El usuario eligió gradium.ai para el frontend: fondo negro, tipografía sans grande, acentos lima, partículas y controles compactos. Se conserva UserHelper como marca propia. El recorrido nuevo es una entrada de demostración con nombre y perfil que abre la interfaz; no acredita identidad ni añade cuentas. Autenticación real pendiente de definición. La elección visual reemplaza la dirección verde/clara anterior, manteniendo funcionalidad y permisos existentes. Construcción directa en código según la preferencia ya registrada.

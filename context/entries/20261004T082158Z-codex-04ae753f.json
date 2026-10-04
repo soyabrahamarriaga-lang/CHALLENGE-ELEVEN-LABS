@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "id": "20261004T082158Z-codex-04ae753f",
+  "at": "2026-10-04T08:21:58.692507Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "login-frontend",
+  "summary": "Añadir entrada de demostración y frontend inspirado en Gradium",
+  "result": "Entrada con nombre y perfil, continuidad con interfaz, salida y tema oscuro adaptativo. Revisión visual ship; titular corregido. Biblioteca privada rechaza el origen del nuevo preview.",
+  "files": [
+    ".impeccable/design.json",
+    ".impeccable/surfaces/src-app-tsx.md",
+    "DESIGN.md",
+    "PRODUCT.md",
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-login-studio.md",
+    "docs/FRONTEND-STUDIO.md",
+    "index.html",
+    "src/App.tsx",
+    "src/components/VoiceField.tsx",
+    "src/domain/demoEntry.test.ts",
+    "src/domain/demoEntry.ts",
+    "src/features/AgentSpace.tsx",
+    "src/features/SignIn.tsx",
+    "src/main.tsx",
+    "src/studio.css"
+  ],
+  "decisions": [
+    "Aplicar referencia Gradium con assets geométricos originales y demo explícita; no recoger contraseñas ni alterar permisos. Documentación completada por el agente principal tras un relevo de documentación sin archivos."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-login-studio.md"
+  ],
+  "ontology_review": "Sin cambios: nombre y perfil son preferencias de interfaz, no identidad autenticada; experto, aprendiz, sesión y Work Map conservan sus definiciones.",
+  "validation": [
+    "npm test: 156 pruebas/23 archivos; npm run build correcto; 28 pruebas Python; navegador desktop/mobile, entrada/salida/recarga/perfiles/pausa. Revisión independiente ship. No se activaron voz ni pantalla; datos privados no verificados por rechazo de origen."
+  ],
+  "next_steps": [
+    "Revisar diseño con el usuario; definir autenticación real y configurar origen coincidente si se requiere probar la bóveda desde este preview."
+  ]
+}
