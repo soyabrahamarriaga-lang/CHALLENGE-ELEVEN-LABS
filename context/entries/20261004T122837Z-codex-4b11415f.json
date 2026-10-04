@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "id": "20261004T122837Z-codex-4b11415f",
+  "at": "2026-10-04T12:28:37.815575Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "vercel-conversation-demo",
+  "summary": "Habilitar despliegue inmediato de conversaciones en Vercel sin migrar la boveda local",
+  "result": "Una funcion Vercel entrega accesos temporales para Senior e Intern; frontend ES/EN muestra alcance sin almacenamiento y conserva ejemplos y modo local.",
+  "files": [
+    "README.md",
+    "api/demo.mjs",
+    "context/STATE.md",
+    "context/decisions/ADR-vercel-conversation-demo.md",
+    "docs/VERCEL-DEMO.md",
+    "server/livekit.mjs",
+    "server/vercelDemo.mjs",
+    "server/vercelDemo.test.mjs",
+    "src/App.tsx",
+    "src/features/AgentConversation.tsx",
+    "src/i18n/en.json",
+    "src/i18n/es.json",
+    "src/services/deployment.ts",
+    "vercel.json",
+    "vite.config.ts"
+  ],
+  "decisions": [
+    "Backend limitado a conversaciones, origen HTTPS exacto y codigo compartido obligatorio; separar el despliegue web urgente de una futura sincronizacion o instalacion local."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-vercel-conversation-demo.md"
+  ],
+  "ontology_review": "Sin cambios de entidades: esta modalidad no produce procesos ni persiste evidencias en la boveda.",
+  "validation": [
+    "214 tests Vitest y 28 Python aprobados; build TypeScript/Vite local y build VERCEL=1 aprobados; acceso temporal real de ambos agentes en voz y texto; UI en navegador confirma aviso ES/EN y acceso a ejemplos; git diff --check limpio. No hay deployment publico aun ni llamada fisica probada en el nuevo entorno."
+  ],
+  "next_steps": [
+    "Importar las cuatro variables privadas en la cuenta Vercel del operador, desplegar main y verificar la URL publica y una conversacion real. La boveda sigue local."
+  ]
+}

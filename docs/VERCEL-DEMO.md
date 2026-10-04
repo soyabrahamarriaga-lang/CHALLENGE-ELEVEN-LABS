@@ -1,0 +1,36 @@
+# Publicar la demo de conversaciones en Vercel
+
+Esta modalidad publica interfaz y acceso a los agentes Senior/Intern por voz o texto, incluidos los idiomas ES/EN y pantalla compartida. Usa Vercel Functions para obtener credenciales temporales; la conversación se conecta directamente del navegador a ElevenLabs. No requiere Render ni migración de datos.
+
+## Importación rápida
+
+1. Importar este repositorio, rama main, raíz `./`, preset **Vite**.
+2. Instalación `npm ci`, build `npm run build`, salida `dist`, Node 24.x. `vercel.json` deja estos valores preparados.
+3. En Environment Variables → Import .env, importar un archivo con estas cuatro variables (valores reales privados):
+
+   ```dotenv
+   ELEVENLABS_API_KEY=clave_privada_del_proveedor
+   ELEVENLABS_AGENT_ID=agent_2001m41w9r5jendtg1cfvgcptd4v
+   ELEVENLABS_TUTOR_AGENT_ID=agent_2501m42jwa7dfyc9xss6nxwdxf0j
+   LIVEKIT_JOIN_CODE=codigo_privado_de_al_menos_16_caracteres
+   ```
+
+4. Seleccionar Production y Preview y desplegar. No usar prefijo `VITE_` en ninguna credencial. El código de acceso se escribe en la pantalla de conversación; su nombre `LIVEKIT_JOIN_CODE` se conserva por compatibilidad y no habilita llamadas con personas.
+5. El dominio de producción y el de cada deployment se obtienen de las variables de sistema `VERCEL_PROJECT_PRODUCTION_URL`/`VERCEL_URL`. Si se agrega dominio propio, configurar `APP_ORIGIN=https://dominio-exacto` y redeploy. Sin `/` final, rutas ni localhost.
+6. Abrir la URL, elegir idioma y perfil, entrar a conversación, introducir el código, aceptar el aviso e iniciar por texto o micrófono.
+
+No importar el `.env` local completo: contiene rutas del Mac y parámetros de la demo local. El archivo preparado para el operador está fuera del repositorio, con permisos privados; no se publica ni se imprime su contenido.
+
+## Límites de esta entrega urgente
+
+- La bóveda local queda intacta y no se transfiere. La UI publicada muestra un aviso; Biblioteca, Guardadas y Mapas conducen a una explicación y permiten explorar ejemplos. No se crean procesos ni se guardan capturas/transcripciones en Vercel. ElevenLabs conserva lo que permitan sus ajustes existentes, y el tutor mantiene el conocimiento que ya tenga configurado.
+- El adaptador no importa el módulo de bóveda, no inicia sincronizadores y rechaza sus escrituras incluso si por error se importa `VAULT_PATH`.
+- El código compartido protege la creación de sesiones; no representa autenticación individual. `AGENT_OPEN_ACCESS` local no habilita acceso abierto en esta modalidad. El limitador en memoria es por instancia y no una cuota global.
+- `VERCEL=1` durante el build activa esta modalidad de interfaz. Para ensayarla localmente: `VITE_CLOUD_DEMO=true npm run build`. Un build local normal sigue usando la bóveda como antes.
+- La clave queda en la función. El frontend solo recibe un token o URL temporal. El proxy solo permite los seis endpoints de estado/disponibilidad/sesión; no habilita la ruta antigua de videollamadas.
+
+## Verificación
+
+Pruebas de HTTP crudo y JSON preprocesado por la plataforma; rutas directas y reescritas; roles independientes; códigos/consentimiento/orígenes; límites de cuerpo; bóveda deshabilitada. El adaptador obtuvo accesos temporales reales de ElevenLabs para Senior/Intern, voz/texto. Esto verifica autorización, no una llamada física ni un deployment remoto. La URL pública debe comprobarse después del deploy.
+
+Referencias: [Node.js en Vercel](https://vercel.com/docs/functions/runtimes/node-js), [variables del sistema](https://vercel.com/docs/environment-variables/system-environment-variables), [reescrituras](https://vercel.com/docs/routing/rewrites).

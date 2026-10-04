@@ -1,3 +1,4 @@
+import { cloudDemo } from './services/deployment';
 import { localizeExample } from "./i18n/examples";
 import { t, useTranslation } from "./i18n";
 import { LanguageSelect } from "./components/LanguageSelect";
@@ -79,7 +80,7 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
   const [processSaved, setProcessSaved] = useState(() => loadSaved("userhelper.process.bookmarks.v1"));
   const [processFilters, setProcessFilters] = useState(emptyProcessFilters);
   const privateView = ["library", "saved", "processes"].includes(route.view);
-  const collection = useProcessCollection(privateView);
+  const collection = useProcessCollection(privateView && !cloudDemo);
   const [libraryStatus, setLibraryStatus] = useState<LibraryStatus>("ready");
   const [menuOpen, setMenuOpen] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
@@ -318,6 +319,8 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
               : "main-content"
           }
         >
+          {cloudDemo && <p className="original-language-note" role="status">{t("Demo de conversaciones: la biblioteca y el guardado de procesos están desactivados en esta versión.")}</p>}
+          {cloudDemo && ["library", "saved", "processes"].includes(route.view) && <EmptyState title={t("La biblioteca está disponible en la versión local")} description={t("Aquí puedes conversar con los agentes y explorar ejemplos. Los procesos de tu bóveda permanecen en tu computadora.")} action={t("Explorar ejemplos")} onAction={() => navigate("examples")}/>}
           {deletion && <DeletionNotice result={deletion} onUpdated={processDeleted} onClose={() => setDeletion(null)}/>}
           {route.view === "home" && route.role === "senior" && (
             <Senior />
@@ -331,7 +334,7 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
               saved={saved}
             />
           )}
-          {(route.view === "library" || route.view === "saved") && !route.id && (
+          {(route.view === "library" || route.view === "saved") && !route.id && !cloudDemo && (
             <ProcessLibrary collection={collection} filters={processFilters} onFilters={setProcessFilters}
               onOpen={(id) => navigate("library", id)} saved={processSaved} onToggleSaved={toggleProcessSaved}
               onlySaved={route.view === "saved"} onDeleted={processDeleted} onMap={() => navigate("processes")}/>
@@ -357,12 +360,12 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
                 onAction={() => navigate("examples")}
               />
             ))}
-          {(route.view === "library" || route.view === "processes") && !!route.id && (
+          {(route.view === "library" || route.view === "processes") && !!route.id && !cloudDemo && (
             <Suspense fallback={<p role="status">{t("Preparando procedimiento…")}</p>}>
               <ProcessMaps id={route.id} onOpen={(id) => navigate("library", id)} onUpdated={collection.refresh} onDeleted={processDeleted}/>
             </Suspense>
           )}
-          {route.view === "processes" && !route.id && (
+          {route.view === "processes" && !route.id && !cloudDemo && (
             <Suspense fallback={<p role="status">{t("Preparando relaciones…")}</p>}>
               <KnowledgeMap collection={collection} filters={processFilters} onFilters={setProcessFilters}
                 onOpen={(id) => navigate("library", id)} onLibrary={() => navigate("library")}/>

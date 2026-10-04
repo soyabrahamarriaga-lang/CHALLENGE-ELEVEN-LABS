@@ -641,5 +641,10 @@
   "Rechazos y cancelaciones": "Rejections and cancellations",
   "Condición": "Condition",
   "Actividad clasificada": "Classified activity",
-  "Actividad": "Activity"
+  "Actividad": "Activity",
+  "Demo de conversaciones: la biblioteca y el guardado de procesos están desactivados en esta versión.": "Conversation demo: the library and saving processes are disabled in this version.",
+  "La biblioteca está disponible en la versión local": "The library is available in the local version",
+  "Aquí puedes conversar con los agentes y explorar ejemplos. Los procesos de tu bóveda permanecen en tu computadora.": "Here you can talk with the agents and explore examples. The processes in your vault remain on your computer.",
+  "Explica una tarea, sus decisiones y sus motivos. Puedes compartir pantalla para que el agente te acompañe.": "Explain a task, its decisions and the reasons behind them. You can share your screen so the agent can follow along.",
+  "). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.": "). This demo does not save processes or captures to the library. Use fictional data."
 }

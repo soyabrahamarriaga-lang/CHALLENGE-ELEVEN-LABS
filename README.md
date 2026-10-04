@@ -4,6 +4,10 @@ Proyecto para el Challenge 01 del 7th Global AI Hackathon (Hack-Nation × Eleven
 
 **Estado:** UserHelper en React + TypeScript, con conversación individual de ElevenLabs integrada en Mi espacio y perfiles senior/intern. Biblioteca y Mapas consultan los mismos procesos de la bóveda privada; los ejemplos sintéticos se conservan en «Explorar la biblioteca demo». Capture → Map → Teach validado todavía requiere trabajo. El harness de contexto y colaboración sigue operativo.
 
+## Publicar rápido en Vercel
+
+Preset **Vite**, rama main. [Guía de despliegue de conversaciones](docs/VERCEL-DEMO.md): incluye funciones para ambos agentes y un código de acceso. Esta modalidad permite voz/texto/pantalla y ES/EN; la bóveda y el guardado de procesos siguen en la versión local.
+
 ## Ejecutar el prototipo
 
 Se necesita Node.js 22.12 o posterior (CI utiliza Node 24), npm, Git y Python 3.9+.

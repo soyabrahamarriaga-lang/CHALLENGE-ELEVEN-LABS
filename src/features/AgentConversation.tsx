@@ -1,5 +1,6 @@
 import { AgentLanguage } from "../components/AgentLanguage";
 import { t, dateLocale, language, type Language } from "../i18n";
+import { cloudDemo } from "../services/deployment";
 import { useEffect, useRef, useState } from "react";
 import {
   AudioLines,
@@ -56,7 +57,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
   role?: Role;
 }) {
   const profile = agentProfiles[role];
-  const persistEvidence = profile.persistEvidence;
+  const persistEvidence = profile.persistEvidence && !cloudDemo;
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => { headingRef.current?.focus(); }, []);
   const [state, setState] = useState<AgentState>(initialAgentState);
@@ -448,7 +449,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
           },
           // Store evidence independently of the agent's 10-image conversation limit.
           onCapture: (capture, at) => {
-            if (!isCurrent()) return;
+            if (!isCurrent() || cloudDemo) return;
             const saving = archiveScreenCapture(conversationId, capture, at);
             pendingCaptures.current.add(saving);
             void saving
@@ -575,6 +576,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
                 : t("El micrófono está apagado. Escribe para conversar con el mismo agente.")
               : role === "intern"
                 ? t("Cuéntale qué necesitas aprender y pregúntale por el siguiente paso.")
+                : cloudDemo ? t("Explica una tarea, sus decisiones y sus motivos. Puedes compartir pantalla para que el agente te acompañe.")
                 : t("Explica una tarea, sus decisiones y sus motivos. Al compartir pantalla se guardan capturas de los cambios en la bóveda privada para ilustrar cada paso.")}
           </p>
           {!active && (
@@ -658,7 +660,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
             </button>
           )}
           <p className="agent-scope">{t("Si compartes pantalla, tu navegador la lee cada segundo: el agente recibe el texto que cambia y capturas cuando detectamos una pausa, o cuando las envías con el botón (máx.")}{" "}
-            {MAX_SCREEN_FRAMES}{t("). Además, se conservan capturas de los cambios en tu bóveda privada para ilustrar el procedimiento. Usa datos ficticios.")}</p>
+            {MAX_SCREEN_FRAMES}{cloudDemo ? t("). En esta demo no se guardan procesos ni capturas en la biblioteca. Usa datos ficticios.") : t("). Además, se conservan capturas de los cambios en tu bóveda privada para ilustrar el procedimiento. Usa datos ficticios.")}</p>
         </section>
         <section
           className="agent-transcript"
