@@ -19,9 +19,15 @@ Las transcripciones y notas que genera el agente se guardan como Markdown en una
 ```
 UserHelper-Vault/
 ├─ Inicio.md
+├─ catalogo-procesos.json  ← categorías editables
+├─ Procesos/contabilidad/<tipo>/<nombre>--<id>.md
+├─ Procesos/Indice-generado.md
 ├─ Sesiones/<AAAA-MM-DD>-<conversation_id>/
 │   ├─ transcripcion.md   ← ElevenLabs, al terminar la conversación
-│   ├─ eventos.md         ← pantalla, preguntas, guardrails (API lista; falta conectar visión/client tools)
+│   ├─ eventos.md         ← pantalla, preguntas, guardrails (OCR conectado; client tools adicionales pendientes)
+│   ├─ process-flow.json · flujo.canvas · evidencia-flujo.md · mapa-generado.md
+│   ├─ extraccion-proceso.json · proceso-metadata.json · capturas.json
+│   ├─ capturas/             ← originales privados, nunca en el repo público
 │   └─ work-map.md · debrief.md · teach-back.md
 ├─ Guardrails/            ← una nota por regla confirmada
 └─ Plantillas/
@@ -61,3 +67,7 @@ Todas excepto el webhook exigen el origen exacto de `APP_ORIGIN` y JSON.
 - La firma del webhook no se ha probado con un envío real de ElevenLabs.
 - Verificado con una conversación real del agente (46 s, 2026-10-03) importada por la sincronización; una segunda pasada la omitió.
 - La sesión `ejemplo_sintetico_demo` de la bóveda es sintética, creada para verificar la escritura; se puede borrar.
+
+## Diagramas interactivos
+
+Las nuevas importaciones generan una guía por acciones con captura, instrucciones y motivo, además del Canvas. El análisis estructurado usa Data collection del agente existente. Nombre, departamento y tipo de tarea se editan desde UserHelper; las notas se clasifican por esos campos. Las sesiones anteriores se procesan con `npm run maps:backfill` o al abrir **Mapas de procesos** en UserHelper. Abre `flujo.canvas` en Obsidian para recorrerlo. Si editas ese Canvas, se conserva: UserHelper ofrece descargar el borrador actual en otro archivo. Las notas `work-map.md` manuales no se sobrescriben. Contrato y límites: [PROCESS-MAPS.md](PROCESS-MAPS.md); ADR-0017 sustituye la extracción de ADR-0016. Las notas clasificadas editadas manualmente también se conservan. El índice se actualiza al listar o reconstruir. Recuperar análisis/imágenes previos requiere `npm run maps:rebuild`; `--reanalyze` solicita nuevo análisis al proveedor.

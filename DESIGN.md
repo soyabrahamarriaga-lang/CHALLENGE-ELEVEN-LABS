@@ -17,6 +17,10 @@ colors:
   focus: "#437e63"
   end-background: "#f9efeb"
   end-text: "#a45441"
+  map-decision: "#fcf9ef"
+  map-connection: "#82998a"
+  process-image: "#eef2ed"
+  process-reason: "#edf3eb"
 typography:
   headline:
     fontFamily: '"Manrope Variable", Manrope, sans-serif'
@@ -50,6 +54,19 @@ typography:
     fontFamily: '"Manrope Variable", Manrope, sans-serif'
     fontSize: "12px"
     fontWeight: 580
+  map-node-title:
+    fontFamily: '"Manrope Variable", Manrope, sans-serif'
+    fontSize: "16px"
+    lineHeight: 1.5
+  process-step-title:
+    fontFamily: '"Manrope Variable", Manrope, sans-serif'
+    fontSize: "23px"
+    lineHeight: 1.45
+    letterSpacing: "-0.025em"
+  process-explanation:
+    fontFamily: '"Manrope Variable", Manrope, sans-serif'
+    fontSize: "14px"
+    lineHeight: 1.85
 rounded:
   badge: "5px"
   chip: "7px"
@@ -58,6 +75,7 @@ rounded:
   card: "12px"
   stage: "16px"
   circle: "50%"
+  map-boundary: "40px"
 spacing:
   compact: "8px"
   control: "12px"
@@ -116,6 +134,31 @@ components:
     textColor: "#61764e"
     rounded: "{rounded.badge}"
     padding: "4px 7px"
+  map-node:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.card}"
+    padding: "20px"
+    width: "400px"
+  map-node-decision:
+    backgroundColor: "{colors.map-decision}"
+  map-node-boundary:
+    backgroundColor: "{colors.sage}"
+    rounded: "{rounded.map-boundary}"
+  map-action-inspector:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    padding: "24px"
+  process-step:
+    textColor: "{colors.ink}"
+    padding: "30px 0 38px"
+  process-reason:
+    backgroundColor: "{colors.process-reason}"
+    padding: "17px 19px"
+  process-metadata:
+    backgroundColor: "{colors.paper}"
+    rounded: "{rounded.card}"
+    padding: "24px"
 ---
 
 # Design System: UserHelper
@@ -126,7 +169,7 @@ components:
 
 UserHelper se siente como una mesa de trabajo luminosa: superficies blancas, fondo apenas verde y controles de bosque oscuro. La identidad acompaña una tarea en curso y la lectura posterior de sus decisiones. La densidad es operativa, con aire entre grupos y detalles compactos dentro de cada herramienta.
 
-Manrope une navegación, contenido y datos temporales. Los diagramas de ventanas, conexiones y pasos son ilustraciones construidas con CSS y SVG; el logotipo combina una U abierta con un trazo central. La personalidad es profesional, clara y respetuosa. El registro de demostración permanece visible en los recorridos sintéticos.
+Manrope une navegación, contenido y datos temporales. Las ventanas y miniaturas de la biblioteca sintética son ilustraciones construidas con CSS y SVG; los procedimientos privados muestran capturas reales junto a sus acciones cuando están disponibles; el logotipo combina una U abierta con un trazo central. La personalidad es profesional, clara y respetuosa. El registro de demostración permanece visible en los recorridos sintéticos.
 
 **Key Characteristics:**
 
@@ -136,7 +179,7 @@ Manrope une navegación, contenido y datos temporales. Los diagramas de ventanas
 - Pasos, tiempos y razones conectados por una misma selección.
 - Movimiento breve de estado y navegación, con reducción de movimiento respetada.
 
-Este documento registra el código terminado de `src/styles.css`, `src/components/Shared.tsx`, `src/App.tsx` y `src/features/`, incluida la cascada final de legibilidad. Los tokens del frontmatter son normativos; los ejemplos completos y las extensiones están en `.impeccable/design.json`.
+Este documento registra el código terminado de `src/styles.css`, `src/components/Shared.tsx`, `src/App.tsx` y `src/features/`, incluida la cascada final de legibilidad y la extensión de mapas en `src/features/ProcessMaps.tsx` y `ProcessMaps.css`. Los tokens del frontmatter son normativos; los ejemplos completos y las extensiones están en `.impeccable/design.json`.
 
 ## Colors
 
@@ -152,6 +195,10 @@ La paleta tiene una base vegetal sobria, blancos limpios y tintes suaves que sep
 
 - **Salvia, azul y arena de ilustración** (`illustration-sage`, `illustration-blue`, `illustration-sand`): familias de escenas sintéticas y miniaturas. Son tratamientos de contenido, no tres colores de acción intercambiables.
 - **Terracota de cierre** (`end-background`, `end-text`): botón de finalizar con fondo claro y texto cálido. Los errores tienen además icono y mensaje explícito.
+
+- **Decisión del procedimiento** (`map-decision`): fondo claro del nodo de decisión en la vista de diagrama; conserva la etiqueta y un borde reforzado.
+- **Imagen y motivo** (`process-image`, `process-reason`): soporte neutro para la captura y bloque salvia para el criterio del experto.
+- **Conexión del diagrama** (`map-connection`): línea continua entre acciones, con flecha; las alternativas se explican en el contenido del paso.
 
 ### Neutral
 
@@ -176,6 +223,8 @@ El sistema usa una sola familia geométrica de trazos amables. La jerarquía dep
 - **Button / Navigation:** controles compactos; la selección de navegación aumenta el peso a (740). El botón de inicio tiene una variante más visible de (14px).
 - **Tiempo:** temporizadores y marcas de reproducción usan cifras tabulares; el contador de sesión usa (19px), peso (620) y espaciado de (1px).
 
+La guía de procedimientos conserva esta familia: título según `process-step-title`, explicación según `process-explanation`, número de paso con cifras tabulares (26px) y metadatos a (12px). El título aparece antes de actividad, tipo y tiempo. En móvil, el título baja a (20px) y la explicación a (13px). El diagrama alterno usa `map-node-title`; su inspector comienza por el título de la acción (21px) y continúa con cómo ejecutarla y su motivo.
+
 **The Reading Before Ornament Rule.** La información que permite operar y comprender conserva la escala final de lectura; las pequeñas ventanas de ejemplo siguen siendo ilustraciones.
 
 ## Layout
@@ -193,6 +242,10 @@ Los cambios efectivos son:
 
 La cadencia es contextual: separaciones compactas dentro de controles y metadatos; más aire entre escenario, explicación y secciones. No imponer una cuadrícula de espaciado rígida a los valores existentes. El desplazamiento horizontal está contenido dentro del proceso, no en el documento.
 
+La guía visual de procedimientos se lee en una columna de pasos separados por líneas. Dentro de cada paso, captura y explicación comparten una cuadrícula de proporción (1.15:1), separación de (30px) y sangría de (48px) respecto al número. Hasta (1100px), desaparece esa sangría y la separación baja a (22px). Hasta (950px), imagen y explicación se apilan. Ampliar la imagen abre un diálogo independiente a tamaño original, con desplazamiento interno; conserva la cuadrícula del paso. El visor ocupa hasta (96vw), con límite de (1600px), altura máxima de (94dvh) y región de imagen desplazable hasta (76dvh).
+
+La vista alternativa de diagrama incorpora un lienzo y un inspector lateral de (360px), reducido a (300px) hasta (1100px). Hasta (950px), el inspector pasa debajo del lienzo y deja de limitar su altura interna. El lienzo pasa de (580px) a (500px) en ese rango y a (440px) hasta (580px); en este último rango se oculta el minimapa, se apilan filtros y campos de clasificación y se reorganizan las acciones. Son puntos de cambio propios de procedimientos, sin reemplazar los del marco general.
+
 ## Elevation & Depth
 
 La profundidad habitual proviene de superficies blancas, tintes y bordes de un píxel. Las tarjetas permanecen planas; su interacción cambia el borde. Las sombras se reservan para elementos superpuestos o affordances puntuales: diálogo, aviso flotante, cajón móvil y botón de reproducción sobre una miniatura. Los valores exactos viven en las extensiones del sidecar.
@@ -203,7 +256,9 @@ La profundidad habitual proviene de superficies blancas, tintes y bordes de un p
 
 Los rectángulos tienen esquinas suaves y escala de radio según función: pequeño para etiquetas, intermedio para botones y campos, mayor para tarjetas y escenario. El radio de escenario procede de `--radius`; las tarjetas de sesión y de proceso comparten el radio de tarjeta. Las escenas se recortan dentro de su contenedor.
 
-Círculos pequeños indican estado o paso habitual. Decisiones y variantes usan nodos más cuadrados; la variante añade línea discontinua y una rama lateral. Los avatares son círculos con iniciales, sin retratos sintéticos. La marca es un SVG blanco de extremos redondos dentro de un cuadrado verde redondeado; conservar su geometría, no sustituirla por un carácter tipográfico.
+En la biblioteca de ejemplos, círculos pequeños indican estado o paso habitual. Decisiones y variantes usan nodos más cuadrados; la variante añade línea discontinua y una rama lateral. Los avatares son círculos con iniciales, sin retratos sintéticos. La marca es un SVG blanco de extremos redondos dentro de un cuadrado verde redondeado; conservar su geometría, no sustituirla por un carácter tipográfico.
+
+En el diagrama alterno de procedimientos privados, el nodo es una tarjeta de borde suave. Inicio y fin usan extremos más redondos; una decisión refuerza el borde a (2px), y la selección añade el contorno verde de foco separado del borde. Las conexiones continuas bajan de una acción a la siguiente con codos suaves y flecha final. El lienzo tiene una retícula de puntos discreta; nodos y controles no reciben sombra de selección ni hover.
 
 ## Components
 
@@ -231,7 +286,25 @@ La navegación lateral usa icono lineal y etiqueta alineados. La selección aña
 
 ### Timeline and explanation
 
-La firma del sistema es la relación entre momento, paso y razón. El elemento elegido usa fondo salvia, borde y nodo distinguible; conserva su título, tipo y tiempo. Seleccionarlo actualiza la escena y el contenido contextual. Las variantes son ramas, no pasos indistinguibles. En tablet y móvil se convierte en una fila de pasos desplazable; conserva la selección y el orden de lectura.
+En la biblioteca de ejemplos, la firma del sistema es la relación entre momento, paso y razón. El elemento elegido usa fondo salvia, borde y nodo distinguible; conserva su título, tipo y tiempo. Seleccionarlo actualiza la escena y el contenido contextual. Las variantes son ramas, no pasos indistinguibles. En tablet y móvil se convierte en una fila de pasos desplazable; conserva la selección y el orden de lectura.
+
+### Process guides and action diagrams
+
+La guía visual es la vista inicial del procedimiento; «Diagrama» es una alternativa del mismo contenido. El selector de vista usa texto, icono, estado presionado y borde inferior verde. La cantidad indicada corresponde a acciones. La lista de procesos usa filas blancas con título, departamento, tipo de tarea, fecha y conteos de acciones e imágenes. Los estados «Por revisar» y «Sin tarea identificada» acompañan los registros, separados de la biblioteca sintética.
+
+Cada paso presenta número, título operativo y metadatos; después coloca la captura real junto a «Cómo hacerlo» y «Por qué se hace así». La captura conserva proporciones con ajuste `contain`, borde suave y radio de botón; su pie incluye tiempo, relación de momento cercano cuando corresponde y ampliación. La ausencia de captura se presenta como «Imagen pendiente». Un fallo de descarga indica «No pudimos cargar la imagen», aclara que la captura está registrada y ofrece «Reintentar imagen»; la variante compacta también conserva ese control. La carga muestra estado textual en una superficie con proporción (16:10), y la ampliación permanece deshabilitada hasta disponer de imagen. El contenedor de ausencia o error usa borde discontinuo; no representa una relación entre acciones. No se inventa una escena que simule evidencia.
+
+«Ampliar imagen» abre un diálogo nativo con encabezado blanco, borde y radio de tarjeta sobre fondo oscurecido. La imagen se muestra a tamaño original, sin ajuste que reduzca su tamaño dentro del visor. La región desplazable puede recibir foco; el botón de cierre recibe el foco al abrir. Se cierra con ese botón, Escape o pulsación sobre el fondo del diálogo, conservando el comportamiento de foco del diálogo nativo.
+
+El motivo usa fondo salvia. Decisiones, alternativas y condiciones para detenerse permanecen dentro de la explicación de la acción. El contenido de la conversación se consulta en un desplegable secundario, con autor y tiempo. Las instrucciones o motivos todavía ausentes se señalan como pendientes de confirmar; la presentación no acredita validación del experto.
+
+En el diagrama, cada acción muestra primero título, después tipo y tiempo, miniatura real o estado de imagen pendiente y un extracto del motivo. Inicio y fin delimitan el procedimiento. Las conexiones comparten trazo continuo; las variantes antiguas de preguntas, pantallas y reglas separadas no forman parte del repertorio actual de nodos. El inspector presenta el título y la misma explicación operativa, con conversación desplegable.
+
+React Flow conserva desplazamiento, zoom, minimapa y encuadre. Una selección por puntero o teclado actualiza el inspector; Enter selecciona y las flechas mueven el nodo. El selector y anterior/siguiente centran inmediatamente la acción elegida. «Ver todo» recupera orientación. El movimiento de nodos es exploratorio, no una edición del procedimiento.
+
+### Process classification
+
+Nombre, departamento y tipo de tarea se editan en un formulario blanco con borde, radio de tarjeta y etiquetas visibles. El nombre ocupa el ancho completo; departamento y tipo comparten dos columnas que se apilan en móvil. Los campos admiten escritura y sugerencias nativas del catálogo, incluido Contabilidad, sin una identidad visual distinta para cada departamento. Guardar usa el botón principal; cancelar usa el secundario. El catálogo organiza el contenido y no redefine la paleta del producto.
 
 ### Dialogs and feedback
 
@@ -245,8 +318,11 @@ El diálogo blanco usa radio de escenario, relleno de (28px) en escritorio y (22
 - **Do** usar verde oscuro para acciones principales y selección reconocible por más de una señal.
 - **Do** conservar texto operativo legible, cifras tabulares y foco de teclado visible.
 - **Do** colocar el título del paso antes de su tipo y posición, y mantener acción, propósito y razón juntos.
-- **Do** mantener el significado del proceso cuando pase de columna a fila desplazable.
+- **Do** mantener el significado del proceso de la biblioteca sintética cuando pase de columna a fila desplazable.
 - **Do** identificar las escenas y sesiones sintéticas como ejemplos en los recorridos de demostración.
+
+- **Do** mantener sincronizada la selección del mapa y su inspector al usar puntero, Enter o selector de pasos.
+- **Do** mantener título operativo, captura y motivo juntos; dejar la conversación en el desplegable secundario de evidencia.
 
 ### Don't:
 
@@ -256,6 +332,7 @@ El diálogo blanco usa radio de escenario, relleno de (28px) en escritorio y (22
 - **Don't** añadir una fuente ornamental que rompa la jerarquía única de Manrope.
 - **Don't** mostrar controles del cajón móvil en el escritorio ni dejar interactivo su contenido cuando esté cerrado.
 - **Don't** representar una variante como un paso habitual sin contexto, etiqueta ni distinción de forma.
+- **Don't** convertir mensajes del agente, saludos u observaciones aisladas en pasos de la guía ni sustituir capturas ausentes por escenas inventadas.
 
 ## Extensión de videollamada
 

@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "20261004T045126Z-codex-4b8b321f",
+  "at": "2026-10-04T04:51:26.956459Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "Procedimientos visuales por acción y clasificación de Contabilidad",
+  "summary": "Sustituir mapas de conversación por acciones con capturas, instrucciones, decisiones y motivos atribuidos; nombres y categorías editables.",
+  "result": "Contrato v2; guía visual y diagrama de acciones en UserHelper; Canvas con acción/imagen/motivo; notas nombradas por departamento y familia. Catálogo de seis familias con códigos 2.1–4.11 y 3C. Agente existente configurado solo en Data collection, respaldo privado y configuración conversacional verificada sin cambios. Recuperadas diez imágenes; ocho reanálisis exitosos y dos HTTP 400 del proveedor; once registros locales reconstruidos. Datos privados fuera del repo público.",
+  "files": [
+    ".impeccable/design.json",
+    "DESIGN.md",
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-0017.md",
+    "context/ontology.json",
+    "docs/ACCOUNTING-CATALOG.md",
+    "docs/OBSIDIAN.md",
+    "docs/PROCESS-MAPS.md",
+    "docs/VISION.md",
+    "package.json",
+    "scripts/configure_process_analysis.mjs",
+    "scripts/rebuild_processes.mjs",
+    "server/processCatalog.mjs",
+    "server/processExtraction.mjs",
+    "server/processFlow.mjs",
+    "server/processFlow.test.mjs",
+    "server/vault.mjs",
+    "server/vault.test.mjs",
+    "server/vaultCatalog.mjs",
+    "server/vaultMedia.mjs",
+    "server/vaultMedia.test.mjs",
+    "src/domain/processFlow.ts",
+    "src/features/AgentConversation.css",
+    "src/features/AgentConversation.tsx",
+    "src/features/ProcessMaps.css",
+    "src/features/ProcessMaps.tsx",
+    "src/services/processFlow.ts",
+    "src/services/screenWatcher.ts",
+    "src/services/vault.ts"
+  ],
+  "decisions": [
+    "ADR-0017 sustituye extracción y presentación de ADR-0016. Agrupar acciones con análisis del proveedor existente, comprobar citas y conservar borrador; fallback local; imágenes originales cercanas con asociación pendiente; conservar notas y Canvas manuales; categorías editables."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0017.md"
+  ],
+  "ontology_review": "Mantener versión 1; distinguir acción de turno; añadir departamento, tipo de tarea y captura original; razones con citas de persona; clasificación no valida reglas fiscales.",
+  "validation": [
+    "94 pruebas Vitest; 28 pruebas Python; build TypeScript/Vite correcto con aviso previo de chunk LiveKit. QA navegador escritorio/móvil: imágenes, guía, diagrama, selector, título persistido, error y reintento, visor original con scroll y Escape; sin overflow móvil. Revisión Impeccable ship tras resolver dos hallazgos. Escaneo de archivos staged/build sin valores de credenciales locales; backfill 11 sin fallos."
+  ],
+  "next_steps": [
+    "Confirmar pasos, motivos y asociaciones con experto; elegir actividad concreta y caso nuevo; validar reglas fiscales antes de implementarlas; probar captura física completa; PR14 pendiente de integrar a main."
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "id": "20261004T034758Z-codex-2ebee23c",
+  "at": "2026-10-04T03:47:58.887515Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "Diagramas interactivos de procesos en UserHelper y Obsidian",
+  "summary": "Verificar main y la bóveda existente; derivar mapas navegables y Canvas con evidencia privada.",
+  "result": "Base GitHub main 2393790 (PR13) verificada. Cada transcripción archivada genera cuatro archivos derivados locales; listado y explorador cargados bajo demanda, teclado, zoom y evidencia. Backfill y sincronización local observados: 10 mapas, cero fallas. Código preparado como PR en codex/process-flow-maps; bóveda privada no publicada.",
+  "files": [
+    ".impeccable/design.json",
+    "DESIGN.md",
+    "README.md",
+    "context/STATE.md",
+    "context/decisions/ADR-0016.md",
+    "context/ontology.json",
+    "docs/OBSIDIAN.md",
+    "docs/PROCESS-MAPS.md",
+    "package-lock.json",
+    "package.json",
+    "scripts/maps_backfill.mjs",
+    "server/main.mjs",
+    "server/processFlow.mjs",
+    "server/processFlow.test.mjs",
+    "server/vault.mjs",
+    "server/vault.test.mjs",
+    "src/App.tsx",
+    "src/domain/processFlow.ts",
+    "src/features/AgentConversation.tsx",
+    "src/features/ProcessMaps.css",
+    "src/features/ProcessMaps.tsx",
+    "src/services/processFlow.ts",
+    "src/services/vault.ts"
+  ],
+  "decisions": [
+    "ADR-0016: extracción determinista local; ramas solo ante alternativas explícitas; fuentes y Canvas manuales conservados; ediciones de Obsidian no se importan a la vista. Mantener misma protección Origin del backend local."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-0016.md"
+  ],
+  "ontology_review": "Añade process_flow_draft derivado de conversation_message y contextualizado por screen_event; orden temporal no acredita causalidad, ni borrador equivale a Work Map validado. Versión 1.",
+  "validation": [
+    "npm test: 87 pruebas en 13 archivos; npm run build: correcto (aviso previo de chunk LiveKit >500kB); Python unittest: 28 correctas; diff --check limpio; valores sensibles locales ausentes de cambios y build. UI con caso sintético: selección, Enter sobre nodo, evidencia, selector y controles; búsqueda/estado vacío y 10 sesiones reales visibles. Revisión Impeccable: ship. JSON Canvas validado por pruebas; control nativo Obsidian denegado; descarga por navegador no confirmada por timeout de herramienta."
+  ],
+  "next_steps": [
+    "Revisar e integrar PR; abrir flujo.canvas en la bóveda y confirmar criterios con el experto. Completar debrief/teach-back/Teach y evaluar extracción semántica futura, sin dar por validado este borrador."
+  ]
+}

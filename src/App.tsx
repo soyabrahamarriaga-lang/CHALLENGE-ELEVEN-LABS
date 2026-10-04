@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
   AudioLines,
+  GitBranch,
   BookOpen,
   Bookmark,
   ChevronRight,
@@ -26,6 +27,7 @@ import {
 } from "./services/sessionRepository";
 import { useDemoAgent } from "./services/useDemoAgent";
 import { timeLabel } from "./domain/callMachine";
+const ProcessMaps = lazy(() => import("./features/ProcessMaps"));
 const LiveCall = lazy(() => import("./features/LiveCall"));
 const AgentConversation = lazy(() => import("./features/AgentConversation"));
 import "./features/LiveCall.css";
@@ -126,7 +128,9 @@ export default function App() {
     }
   };
   const sectionTitle =
-    route.view === "agent"
+    route.view === "processes"
+      ? "Mapas de procesos"
+      : route.view === "agent"
       ? "Tu aprendiz de IA"
       : route.view === "call"
         ? "Videollamada"
@@ -232,6 +236,11 @@ export default function App() {
               <span className="nav-count">{saved.length}</span>
             )}
           </button>
+          <button className={route.view === "processes" ? "selected" : ""}
+            aria-current={route.view === "processes" ? "page" : undefined}
+            onClick={() => { dispatch({ type: "PAUSE" }); navigate("processes"); }}>
+            <GitBranch size={19}/> Mapas de procesos
+          </button>
           <button
             className={route.view === "agent" ? "selected" : ""}
             aria-current={route.view === "agent" ? "page" : undefined}
@@ -302,7 +311,9 @@ export default function App() {
               <strong>{sectionTitle}</strong>
             </span>
           </div>
-          {route.view === "agent" ? (
+          {route.view === "processes" ? (
+            <span className="real-call-badge"><GitBranch size={16}/>Bóveda privada</span>
+          ) : route.view === "agent" ? (
             <span className="real-call-badge">
               <AudioLines size={16} />
               ElevenLabs · Individual
@@ -399,6 +410,11 @@ export default function App() {
                 onAction={() => navigate("library")}
               />
             ))}
+          {route.view === "processes" && (
+            <Suspense fallback={<p role="status">Preparando mapas…</p>}>
+              <ProcessMaps id={route.id} onOpen={(id) => navigate("processes", id)}/>
+            </Suspense>
+          )}
           {route.view === "agent" && (
             <Suspense fallback={<p role="status">Preparando conversación…</p>}>
               <AgentConversation />
@@ -409,7 +425,7 @@ export default function App() {
               <LiveCall />
             </Suspense>
           )}
-          {!["home", "library", "saved", "session", "call", "agent"].includes(
+          {!["home", "library", "saved", "session", "call", "agent", "processes"].includes(
             route.view,
           ) && (
             <EmptyState

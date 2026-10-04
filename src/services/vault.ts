@@ -2,11 +2,17 @@
 // The vault is optional: a machine without VAULT_PATH answers 503 and the UI stays quiet.
 
 export type ArchiveResult =
-  | { status: "saved"; file: string }
+  | { status: "saved"; file: string; flowStatus?: "ready" | "failed" }
   | { status: "disabled" }
   | { status: "failed"; reason: string };
 
-export type VaultEventKind = "screen" | "question" | "answer" | "guardrail" | "decision" | "note";
+export type VaultEventKind =
+  | "screen"
+  | "question"
+  | "answer"
+  | "guardrail"
+  | "decision"
+  | "note";
 
 type Options = {
   fetcher?: typeof fetch;
@@ -16,38 +22,59 @@ type Options = {
   signal?: AbortSignal;
 };
 
-const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const ID = /^[A-Za-z0-9_-]{1,80}$/;
 
 // ElevenLabs keeps a finished conversation in "processing" for a few seconds; retry on 409.
 export async function archiveConversation(
   conversationId: string,
-  { fetcher = fetch, wait = sleep, attempts = 15, delayMs = 4000, signal }: Options = {},
+  {
+    fetcher = fetch,
+    wait = sleep,
+    attempts = 15,
+    delayMs = 4000,
+    signal,
+  }: Options = {},
 ): Promise<ArchiveResult> {
-  if (!ID.test(conversationId)) return { status: "failed", reason: "invalid_id" };
+  if (!ID.test(conversationId))
+    return { status: "failed", reason: "invalid_id" };
   for (let attempt = 1; attempt <= attempts; attempt++) {
     if (signal?.aborted) return { status: "failed", reason: "aborted" };
     let response: Response;
     try {
-      response = await fetcher(`/api/vault/conversations/${conversationId}/import`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: "{}",
-        cache: "no-store",
-        signal,
-      });
+      response = await fetcher(
+        `/api/vault/conversations/${conversationId}/import`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: "{}",
+          cache: "no-store",
+          signal,
+        },
+      );
     } catch {
       return { status: "failed", reason: "network" };
     }
     if (response.ok) {
       const body = await response.json().catch(() => ({}));
-      return { status: "saved", file: typeof body?.file === "string" ? body.file : "" };
+      return {
+        status: "saved",
+        file: typeof body?.file === "string" ? body.file : "",
+        ...(body.flowStatus === "ready" || body.flowStatus === "failed"
+          ? { flowStatus: body.flowStatus }
+          : {}),
+      };
     }
     // Vite answers 404/502 when the backend is not running; 503 = vault or key not configured.
-    if (response.status === 503 || response.status === 404) return { status: "disabled" };
+    if (response.status === 503 || response.status === 404)
+      return { status: "disabled" };
     if (response.status !== 409) {
       const body = await response.json().catch(() => ({}));
-      return { status: "failed", reason: String(body?.error || response.status) };
+      return {
+        status: "failed",
+        reason: String(body?.error || response.status),
+      };
     }
     if (attempt < attempts) await wait(delayMs);
   }
@@ -61,12 +88,45 @@ export async function logVaultEvent(
 ): Promise<boolean> {
   if (!ID.test(conversationId)) return false;
   try {
-    const response = await fetcher(`/api/vault/sessions/${conversationId}/events`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(event),
-      cache: "no-store",
+    const response = await fetcher(
+      `/api/vault/sessions/${conversationId}/events`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(event),
+        cache: "no-store",
+      },
+    );
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+// Only a screen explicitly shared by the expert reaches this function.
+export async function archiveScreenCapture(
+  conversationId: string,
+  frame: Blob,
+  at: number,
+): Promise<boolean> {
+  if (!ID.test(conversationId) || frame.size > 3 * 1024 * 1024) return false;
+  try {
+    const data = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => resolve(String(reader.result).split(",")[1]);
+      reader.readAsDataURL(frame);
     });
+    const response = await fetch(
+      `/api/vault/sessions/${conversationId}/captures`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data, at }),
+        cache: "no-store",
+        signal: AbortSignal.timeout(15000),
+      },
+    );
     return response.ok;
   } catch {
     return false;

@@ -17,19 +17,25 @@ Se añadió una sección independiente de videollamada con transporte LiveKit, c
 
 Se añadió conversación individual con el agente existente de ElevenLabs por voz o texto, independiente de la sala del equipo. Se verificaron credenciales, accesos temporales y una respuesta real por texto; la prueba física de micrófono y audio queda pendiente del operador. La API key permanece en el backend; el proveedor tiene retención de audio activada y autenticación obligatoria del agente desactivada. Detalles: docs/ELEVENLABS.md y ADR-0010.
 
-Todavía faltan visión sobre la pantalla compartida, debrief, teach-back validado, Work Map generado desde evidencia, tutor e intervención en un caso nuevo. El prototipo no demuestra todavía los mínimos Capture → Map → Teach del challenge.
+La sección Visión documenta los avances posteriores de pantalla/OCR. Todavía faltan debrief, teach-back validado, Work Map confirmado por el experto, tutor e intervención en un caso nuevo. El prototipo no demuestra todavía los mínimos Capture → Map → Teach del challenge.
 
 ## Prioridad actual del usuario
 
-Integrar el agente ElevenLabs existente para conversación individual con el experto, conservando la videollamada del equipo por separado; mantener mapa y roadmap como guía. **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC)**. T0 del 3 de octubre a las 13:41:57 se conserva: el presupuesto total pasa a 16 h 18 min 3 s; no se reinicia el reloj. Equipo de tres personas. La inspección inicial del navegador mostró una lista vacía, superada por la inspección API del agente que el usuario configuró después. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con acceso MCP autenticado todavía sin verificar. El intento de guardar autorización falló por permisos del almacén local; no bloquea el frontend simulado. No requiere API key para ese acceso MCP; la conversación de producto sí usa la API key local y ya no depende de resolver MCP.
+Corregir los mapas para representar la ejecución de tareas: acciones, imágenes, instrucciones, decisiones y motivos; conversación como evidencia secundaria. Departamento Contabilidad y seis familias editables del catálogo aportado. **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC)**. T0 del 3 de octubre a las 13:41:57 se conserva: el presupuesto total pasa a 16 h 18 min 3 s; no se reinicia el reloj. Equipo de tres personas. La inspección inicial del navegador mostró una lista vacía, superada por la inspección API del agente que el usuario configuró después. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con acceso MCP autenticado todavía sin verificar. El intento de guardar autorización falló por permisos del almacén local; no bloquea el frontend simulado. No requiere API key para ese acceso MCP; la conversación de producto sí usa la API key local y ya no depende de resolver MCP.
 
 Plan vigente: `docs/ROADMAP-15H.md`; método: `docs/WORKFLOW.md`; acceso: `docs/READINESS.md`. La ampliación v2 del harness (issue #2) se conservó localmente y queda diferida; la base estable sigue operativa.
 
 ## Bóveda Obsidian
 Transcripciones del agente se importan al terminar a una bóveda Obsidian privada (repo `userhelper-vault`, fuera de este repo público). API de eventos/notas lista para visión y Work Map. Ver docs/OBSIDIAN.md y ADR-0011. Pendiente: llamar eventos desde visión/client tools, retiro desde UI y redacción de datos personales.
 
+## Diagramas de procesos
+
+**Mapas de procesos** presenta guía visual y diagrama por acciones, imágenes originales y razones expresadas, con nombre/departamento/tipo editables. La bóveda tiene notas nombradas en `Procesos/<departamento>/<tipo>/` y conserva fuentes por sesión. Data collection del agente existente aporta extracción estructurada; se conserva su configuración conversacional. Se recuperaron diez imágenes del proveedor; ocho conversaciones pudieron reanalizarse y dos devolvieron HTTP 400. Once registros locales se reconstruyeron sin fallo de derivación; varios no contienen una tarea ejecutada y se señalan como tales. Las imágenes cercanas requieren confirmar asociación y faltantes permanecen explícitos. No se suben datos de la bóveda al repositorio público.
+
+Seis familias: compras/OC, proveedores, CFDI, retenciones, seguimiento/materialidad y negociación. Las reglas contables/fiscales recibidas se registran como propuestas no validadas, sin automatización de aprobaciones, bloqueos, impuestos ni pagos. Ver docs/ACCOUNTING-CATALOG.md, docs/PROCESS-MAPS.md y ADR-0017 (sustituye extracción/presentación de ADR-0016). Se conservan notas y Canvas manuales. Pendientes: validación experta, editor completo de pasos y confirmar asociaciones de imágenes desde la app.
+
 ## Visión
-El agente ElevenLabs (LLM `claude-haiku-4-5`, configurado por el usuario) ve capturas enviadas como `[PANTALLA mm:ss]` y pregunta por el cambio; verificado con `npm run check:vision` (docs/VISION.md, ADR-0012). La vista del agente comparte pantalla: OCR local cada segundo (texto al agente como contexto y a eventos.md) y captura en cada pausa (máx. 10), ADR-0013. Pendiente: prueba con conversación real desde la UI y campos de Data collection para el Work Map.
+El agente ElevenLabs (LLM `claude-haiku-4-5`, configurado por el usuario) ve capturas enviadas como `[PANTALLA mm:ss]` y pregunta por el cambio; verificado con `npm run check:vision` (docs/VISION.md, ADR-0012). La vista del agente comparte pantalla: OCR local cada segundo (texto al agente como contexto y a eventos.md) y captura en cada pausa (máx. 10), ADR-0013. Data collection configurado para procedimientos visuales (ADR-0017); pendiente prueba física completa de conversación/pantalla desde UI y Work Map confirmado.
 
 ## Próximo trabajo después del prototipo
 1. Elegir el flujo de 5–10 minutos y un caso nuevo para evaluar transferencia.
@@ -39,7 +45,7 @@ El agente ElevenLabs (LLM `claude-haiku-4-5`, configurado por el usuario) ve cap
 5. Ensayar los mínimos: 3 preguntas en vivo (1 guardrail), 3 preguntas nuevas de debrief, teach-back confirmado y 1 error detenido en un caso nuevo.
 
 ## Preguntas pendientes
-- ¿Flujo propio del equipo o facturas del ejemplo? No se ha elegido.
+- Dominio confirmado: Contabilidad. Falta elegir una actividad concreta y un caso nuevo de evaluación dentro del catálogo.
 - Agente/LLM y acceso temporal ElevenLabs verificados; faltan prueba de voz física, modelo de visión y política acordada de retención/acceso. No guardar credenciales en el repositorio.
 - ¿Cómo detectar lectura/pausa y cómo impedir un guardado erróneo en la interfaz elegida?
 - El límite de las 06:00 está fijado por el usuario; faltan confirmar el canal de entrega y las bases oficiales, que no constan en el PDF.
