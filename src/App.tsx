@@ -1,3 +1,5 @@
+import { DeletionNotice, type OnProcessDeleted } from "./features/DeleteProcess";
+import type { ProcessDeletion } from "./services/processFlow";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
   AudioLines,
@@ -77,6 +79,7 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
   const [menuOpen, setMenuOpen] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [deletion, setDeletion] = useState<ProcessDeletion | null>(null);
   const [toast, setToast] = useState("");
   const mainRef = useRef<HTMLElement>(null);
   useEffect(() => { mainRef.current?.focus(); }, []);
@@ -127,6 +130,15 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
     setProcessSaved(next);
     try { localStorage.setItem("userhelper.process.bookmarks.v1", JSON.stringify(next)); }
     catch { setToast("Marcador disponible solo durante esta visita."); }
+  };
+  const processDeleted: OnProcessDeleted = (id, result) => {
+    collection.remove(id);
+    const bookmarks = processSaved.filter((value) => value !== id);
+    setProcessSaved(bookmarks);
+    try { localStorage.setItem("userhelper.process.bookmarks.v1", JSON.stringify(bookmarks)); } catch { /* Session state is already updated. */ }
+    setDeletion(result);
+    if (route.id === id) navigate("library");
+    requestAnimationFrame(() => mainRef.current?.focus());
   };
   const sectionTitle =
     route.view === "processes" && !route.id
@@ -317,6 +329,7 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
               : "main-content"
           }
         >
+          {deletion && <DeletionNotice result={deletion} onUpdated={processDeleted} onClose={() => setDeletion(null)}/>}
           {route.view === "home" && route.role === "senior" && (
             <Senior />
           )}
@@ -332,7 +345,7 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
           {(route.view === "library" || route.view === "saved") && !route.id && (
             <ProcessLibrary collection={collection} filters={processFilters} onFilters={setProcessFilters}
               onOpen={(id) => navigate("library", id)} saved={processSaved} onToggleSaved={toggleProcessSaved}
-              onlySaved={route.view === "saved"} onMap={() => navigate("processes")}/>
+              onlySaved={route.view === "saved"} onDeleted={processDeleted} onMap={() => navigate("processes")}/>
           )}
           {route.view === "examples" && (
             <Library sessions={sessions} saved={saved} onlySaved={false} status={libraryStatus}
@@ -357,7 +370,7 @@ function Workspace({ entry, onExit }: { entry: DemoEntry; onExit: () => void }) 
             ))}
           {(route.view === "library" || route.view === "processes") && !!route.id && (
             <Suspense fallback={<p role="status">Preparando procedimiento…</p>}>
-              <ProcessMaps id={route.id} onOpen={(id) => navigate("library", id)} onUpdated={collection.refresh}/>
+              <ProcessMaps id={route.id} onOpen={(id) => navigate("library", id)} onUpdated={collection.refresh} onDeleted={processDeleted}/>
             </Suspense>
           )}
           {route.view === "processes" && !route.id && (

@@ -1,0 +1,17 @@
+.collection-delete, .process-delete { color: #9b3f36; }
+.collection-delete { flex-shrink: 0; margin-right: 12px; min-width: 44px; min-height: 44px; }
+.collection-delete:hover, .process-delete:hover { background: #f9eeeb; color: #80352d; }
+.delete-process-dialog { box-sizing: border-box; width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; border: 1px solid #dedfd8; border-radius: 16px; padding: 28px; color: #29392a; background: #fffefb; box-shadow: 0 22px 80px #16201430; }
+.delete-process-dialog::backdrop { background: #17211780; }
+.delete-process-symbol { display: inline-flex; padding: 12px; border-radius: 12px; background: #f9eeeb; color: #9b3f36; }
+.delete-process-dialog h2 { font-size: 23px; line-height: 1.3; letter-spacing: -.5px; margin: 20px 0 12px; }
+.delete-process-dialog p { font-size: 14px; line-height: 1.7; color: #55614f; }
+.delete-process-dialog .delete-process-name { font-weight: 650; color: #29392a; overflow-wrap: anywhere; }
+.delete-process-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+.button.delete-confirm { background: #9b3f36; border: 1px solid #9b3f36; color: white; }
+.button.delete-confirm:hover { background: #80352d; }
+.delete-process-dialog .delete-process-error { color: #9b3f36; }
+.process-deletion-notice { padding: 16px 20px; margin-bottom: 24px; border: 1px solid #cbd6c1; border-radius: 10px; background: #f1f5eb; color: #354b30; }
+.process-deletion-notice p { margin: 0 0 8px; font-size: 14px; line-height: 1.6; }
+.process-deletion-notice .text-button { margin-right: 20px; }
+@media (max-width: 520px) { .collection-row { flex-wrap: wrap; justify-content: flex-end; } .collection-open { flex-basis: 100%; } .collection-bookmark, .collection-delete { margin-bottom: 8px; } .delete-process-dialog { padding: 22px; } .delete-process-actions { flex-direction: column-reverse; } .delete-process-actions .button { width: 100%; } }

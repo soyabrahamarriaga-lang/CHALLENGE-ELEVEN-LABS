@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "id": "20261004T100701Z-codex-82dcc3ff",
+  "at": "2026-10-04T10:07:01.016613Z",
+  "actor": "codex",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "codex-desktop",
+  "task": "delete-processes",
+  "summary": "Eliminar procesos desde Biblioteca, Guardadas y el detalle con retiro persistente y actualización del tutor",
+  "result": "Función disponible en local; eliminación confirmada sobre datos ficticios, exclusión de colección/grafo/favoritos y tutor, recuperación ante fallas parciales y bloqueo de reimportaciones. Originales conservados; ningún proceso real eliminado.",
+  "files": [
+    "context/STATE.md",
+    "context/decisions/ADR-process-removal.md",
+    "context/ontology.json",
+    "docs/OBSIDIAN.md",
+    "docs/PROCESS-MAPS.md",
+    "server/processRemoval.mjs",
+    "server/processRemoval.test.mjs",
+    "server/tutorKnowledge.mjs",
+    "server/tutorKnowledge.test.mjs",
+    "server/vault.mjs",
+    "src/App.tsx",
+    "src/domain/processCollection.test.ts",
+    "src/domain/processCollection.ts",
+    "src/features/DeleteProcess.css",
+    "src/features/DeleteProcess.tsx",
+    "src/features/ProcessCollection.tsx",
+    "src/features/ProcessMaps.tsx",
+    "src/services/processFlow.ts",
+    "src/services/useProcessCollection.ts"
+  ],
+  "decisions": [
+    "Marcador privado atómico por conversación en lugar de borrar fuentes; cola compartida por bóveda dentro de un backend, actualización del tutor incluso cuando queda vacío, confirmación e idempotencia con estados parciales visibles."
+  ],
+  "adr_refs": [
+    "context/decisions/ADR-process-removal.md"
+  ],
+  "ontology_review": "La colección excluye procesos retirados y sus relaciones; el retiro de la plataforma no implica purga de evidencia/proveedor. Se acota la pregunta de retiro parcial y respaldos.",
+  "validation": [
+    "npm test: 181 pruebas, 28 archivos, todas correctas; npm run build correcto, aviso previo de tamaño del bundle del agente.",
+    "python3 -m unittest discover -s tests: 28 pruebas correctas; git diff --check correcto.",
+    "Navegador con bóveda ficticia separada: cancelar conserva, error HTTP permite reintentar, retiro limpia Guardadas/Mapas y persiste tras recarga, tutor pendiente se recupera, eliminar desde detalle vuelve a Biblioteca vacía. Teclado y diálogo móvil de 390 px sin desbordamiento; sin errores de consola.",
+    "Plataforma local 5175 y 5173 HTTP 200; colección real 25 procesos, cero fallas. Dos puertos backend comparten ahora un proceso actualizado y una sincronización para impedir publicaciones de una versión antigua."
+  ],
+  "next_steps": [
+    "Revisar el PR e integrar en main cuando el operador lo indique. Purga de originales/evidencia parcial y permisos por usuario siguen fuera de alcance."
+  ]
+}

@@ -1,4 +1,4 @@
-import type { KnowledgeGraph, ProcessFilters, ProcessSummary } from './processFlow';
+import type { ProcessCollection, KnowledgeGraph, ProcessFilters, ProcessSummary } from './processFlow';
 export const normalizeProcessText = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 export const emptyProcessFilters: ProcessFilters = { query: '', department: '', taskType: '' };
 export function filterProcesses(processes: ProcessSummary[], graph: KnowledgeGraph, filters: ProcessFilters) {
@@ -19,4 +19,11 @@ export function visibleKnowledgeGraph(graph: KnowledgeGraph, processes: ProcessS
   const facets = graph.facets.filter((f) => (kind === 'all' || f.kind === kind) && (counts.get(f.id) || 0) > 1);
   const facetsIds = new Set(facets.map((f) => f.id));
   return { facets, memberships: memberships.filter((m) => facetsIds.has(m.facetId)) };
+}
+
+export function withoutProcess(data: ProcessCollection, id: string): ProcessCollection {
+  const memberships = data.graph.memberships.filter((m) => m.processId !== id);
+  const facets = data.graph.facets.filter((f) => memberships.some((m) => m.facetId === f.id));
+  return { ...data, processes: data.processes.filter((p) => p.id !== id),
+    failures: data.failures.filter((f) => f.id !== id), graph: { ...data.graph, facets, memberships } };
 }

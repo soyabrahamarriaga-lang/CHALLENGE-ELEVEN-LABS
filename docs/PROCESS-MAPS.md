@@ -78,6 +78,7 @@ Todas las rutas de procesos usan POST JSON y el origen exacto de `APP_ORIGIN`:
 
 | Ruta | Cuerpo / resultado |
 |---|---|
+| `/api/vault/processes/:id/delete` | `{confirm:true}` → `{id, deleted:true, tutor:updated/pending/disabled, indexes:updated/pending}` |
 | `/api/vault/processes` | `{}` → lista, categorías y fallas parciales |
 | `/api/vault/sessions/:id/flow` | `{}` → procedimiento, Canvas y URI de Obsidian |
 | `/api/vault/sessions/:id/metadata` | `{name, department, taskType}` → guarda y regenera |
@@ -86,6 +87,14 @@ Todas las rutas de procesos usan POST JSON y el origen exacto de `APP_ORIGIN`:
 | `/api/vault/conversations/:id/import` | `{}` → transcripción, `flowStatus` y resultado de recuperación |
 
 El origen exacto protege el servicio local frente a páginas externas; no sustituye autenticación por persona para desplegarlo públicamente.
+
+## Eliminar un proceso
+
+En Biblioteca o Guardadas, pulsa la papelera del proceso; en su detalle, pulsa **Eliminar proceso**. Confirma el nombre. Desaparece de la colección compartida y sus relaciones, incluso después de recargar. El tutor actualiza su material para conversaciones nuevas. Un fallo remoto deja el proceso eliminado localmente y muestra un aviso con **Reintentar actualización**; sin tutor configurado el aviso lo indica. El proceso no vuelve a importarse automáticamente.
+
+El retiro es lógico: `Retirados/<id>.json` conserva el ID/fecha y bloquea listados, lecturas y escrituras posteriores. No borra originales en Obsidian/ElevenLabs, notas/Canvas manuales, historial Git ni conversaciones ya iniciadas. No hay papelera visible; restaurar administrativamente requiere retirar ese marcador y regenerar los procesos y el material del tutor. Guarda también los marcadores al sincronizar la bóveda privada.
+
+Ejecuta **un backend actualizado por bóveda**: una instancia antigua puede publicar material del tutor sin respetar los retiros. El backend serializa importaciones, índices y actualización del tutor dentro de su proceso. Ver [ADR de eliminación](../context/decisions/ADR-process-removal.md).
 
 ## Límites del borrador
 
@@ -96,6 +105,6 @@ El origen exacto protege el servicio local frente a páginas externas; no sustit
 - El formulario edita nombre/clasificación; editar contenido de pasos o confirmar asociaciones de imágenes en la app queda pendiente. Se puede trabajar manualmente en Obsidian, sin sincronización de esas ediciones hacia UserHelper.
 - Una conversación sigue siendo una unidad de mapa. No se divide automáticamente en varios procesos.
 - No implementa reglas fiscales, pagos, aprobación de OC, validación SAT, debrief, teach-back ni tutor del challenge.
-- No hay redacción automática ni retiro desde UI. Retirar una sesión exige revisar fuentes, capturas, extracciones, notas clasificadas y Canvas editados, además de la retención del proveedor.
+- Se pueden eliminar procesos de la plataforma. La redacción automática, el retiro de evidencia parcial y la purga de originales/copias permanecen pendientes.
 
 Fuentes: [Data collection de ElevenLabs](https://elevenlabs.io/docs/eleven-agents/customization/agent-analysis/data-collection), [reanálisis](https://elevenlabs.io/docs/eleven-agents/api-reference/conversations/analysis/run-analysis), [JSON Canvas 1.0](https://jsoncanvas.org/spec/1.0/), [React Flow](https://reactflow.dev/learn).

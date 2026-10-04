@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { emptyProcessFilters, filterProcesses, visibleKnowledgeGraph } from './processCollection';
+import { emptyProcessFilters, filterProcesses, visibleKnowledgeGraph, withoutProcess } from './processCollection';
 import type { ProcessSummary, KnowledgeGraph } from './processFlow';
 const processes = [
   { id: 'one', title: 'Autorizar orden', department: 'Contabilidad', taskType: 'Compras', steps: 2 },
@@ -22,4 +22,15 @@ describe('one collection for library and graph', () => {
     expect(visibleKnowledgeGraph(graph, filtered)).toEqual({ facets: [], memberships: [] });
     expect(visibleKnowledgeGraph(graph, processes, 'activity').memberships).toEqual([]);
   });
+});
+
+it('removes a process and its relationships from the shared cache without changing the source', () => {
+  const data = { processes, graph, catalog: { version: 1, defaultDepartment: "", departments: [], families: [] }, failures: [{ id: 'one', error: 'failed' }] };
+  const next = withoutProcess(data, 'one');
+  expect(next.processes.map((p) => p.id)).toEqual(['two', 'empty']);
+  expect(next.failures).toEqual([]);
+  expect(next.graph.memberships.every((m) => m.processId !== 'one')).toBe(true);
+  expect(visibleKnowledgeGraph(next.graph, next.processes).facets).toEqual([]);
+  expect(data.processes).toHaveLength(3);
+  expect(data.graph.memberships).toHaveLength(2);
 });

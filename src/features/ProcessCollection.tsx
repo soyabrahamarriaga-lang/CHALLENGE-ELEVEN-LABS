@@ -1,3 +1,4 @@
+import DeleteProcess, { type OnProcessDeleted } from "./DeleteProcess";
 import { Bookmark, ArrowUpRight, Search, RefreshCw, BookOpen, GitBranch } from 'lucide-react';
 import type { ProcessFilters, ProcessSummary } from '../domain/processFlow';
 import type { ProcessCollectionState } from '../services/useProcessCollection';
@@ -32,7 +33,7 @@ export function CollectionFilters({ processes, filters, onFilters }: { processes
 export function CollectionEmpty({ hasProcesses, onClear }: { hasProcesses: boolean; onClear: () => void }) {
   return <div className="flow-empty"><BookOpen size={28}/><h2>{hasProcesses ? 'No hay procesos con estos filtros' : 'Tu biblioteca empieza con una tarea'}</h2><p>{hasProcesses ? 'Cambia la búsqueda o los filtros para explorar la colección.' : 'Comparte una tarea con tu aprendiz y guárdala en la bóveda para verla aquí y en el mapa.'}</p>{hasProcesses && <button className="button secondary" onClick={onClear}>Limpiar filtros</button>}</div>;
 }
-export default function ProcessLibrary({ collection, filters, onFilters, onOpen, saved, onToggleSaved, onlySaved, onMap }: CollectionProps & {
+export default function ProcessLibrary({ collection, filters, onFilters, onOpen, saved, onToggleSaved, onlySaved, onMap, onDeleted }: CollectionProps & { onDeleted: OnProcessDeleted;
   saved: string[]; onToggleSaved: (id: string) => void; onlySaved: boolean; onMap: () => void;
 }) {
   const data = collection.data;
@@ -49,6 +50,7 @@ export default function ProcessLibrary({ collection, filters, onFilters, onOpen,
           {filtered.filter((p) => p.department === department && p.taskType === family).sort((a,b) => a.title.localeCompare(b.title, 'es')).map((p) => <article className="collection-row" key={p.id}>
             <button className="collection-open" onClick={() => onOpen(p.id)}><span><strong>{p.title}</strong><small>{p.steps ? `${p.steps} ${p.steps === 1 ? "acción" : "acciones"} · ${p.imageCount} con imagen · Por revisar` : 'Sin tarea identificada · Fuente conservada'}</small></span><ArrowUpRight size={18}/></button>
             <button className="icon-button collection-bookmark" aria-label={(saved.includes(p.id) ? 'Quitar de guardadas: ' : 'Guardar: ') + p.title} aria-pressed={saved.includes(p.id)} onClick={() => onToggleSaved(p.id)}><Bookmark size={18} fill={saved.includes(p.id) ? 'currentColor' : 'none'}/></button>
+            <DeleteProcess compact id={p.id} title={p.title} onDeleted={onDeleted}/>
           </article>)}
         </section>)}
       </section>)}
