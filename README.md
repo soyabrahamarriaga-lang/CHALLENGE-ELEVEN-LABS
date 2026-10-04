@@ -2,7 +2,7 @@
 
 Proyecto para el Challenge 01 del 7th Global AI Hackathon (Hack-Nation × ElevenLabs): aprender el criterio de un experto mientras trabaja, construir un Work Map verificable y enseñar a otra persona en un caso nuevo.
 
-**Estado:** UserHelper en React + TypeScript, con conversación individual de ElevenLabs integrada en Mi espacio y perfiles senior/intern de demostración. La biblioteca, escenas y procesos de ejemplo siguen siendo sintéticos. Capture → Map → Teach todavía requiere integración. El harness de contexto y colaboración sigue operativo.
+**Estado:** UserHelper en React + TypeScript, con conversación individual de ElevenLabs integrada en Mi espacio y perfiles senior/intern. Biblioteca y Mapas consultan los mismos procesos de la bóveda privada; los ejemplos sintéticos se conservan en «Explorar la biblioteca demo». Capture → Map → Teach validado todavía requiere trabajo. El harness de contexto y colaboración sigue operativo.
 
 ## Ejecutar el prototipo
 
@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Abre `http://127.0.0.1:5173`. Cambia de perfil desde «Explorar como». El botón «Demo interactiva» permite probar conexión y estados de biblioteca. Las sesiones guardadas permanecen únicamente en el navegador de esa computadora. Los recorridos de demostración no solicitan dispositivos. La conversación individual con el agente tiene consentimiento y controles propios.
+Abre `http://127.0.0.1:5173`. Cambia de perfil desde «Explorar como». El botón «Explorar la biblioteca demo» permite probar estados con ejemplos locales al navegador. Biblioteca y Mapas muestran los procesos de la bóveda configurada. Los recorridos de demostración no solicitan dispositivos. La conversación individual con el agente tiene consentimiento y controles propios.
 
 ```sh
 npm test
@@ -36,7 +36,7 @@ Configura `ELEVENLABS_TUTOR_AGENT_ID` en `.env` con el agente tutor y reinicia e
 
 ## Diagramas de tus procesos
 
-**Mapas de procesos** organiza acciones con imágenes, instrucciones, decisiones y motivos del experto. La conversación queda como evidencia secundaria. Incluye guía visual, diagrama interactivo y Canvas de Obsidian, con nombre y categorías editables; propuesta inicial: Contabilidad. Para mapas locales: `npm run maps:backfill`; análisis estructurado e imágenes del proveedor: `npm run maps:rebuild -- --reanalyze`. Los procedimientos siguen siendo borradores por revisar. Alcance, formatos y configuración: [PROCESS-MAPS.md](docs/PROCESS-MAPS.md).
+**Biblioteca** organiza los procesos de la bóveda por departamento y tipo de tarea. **Mapas de procesos** presenta la misma colección como grafo de temas y actividades compartidas, con evidencia de cada relación. Al abrir un proceso aparecen sus acciones con imágenes, instrucciones, decisiones y motivos del experto. La conversación queda como evidencia secundaria. Incluye guía visual, diagrama interactivo y Canvas de Obsidian, con nombre y categorías editables; propuesta inicial: Contabilidad. Para mapas locales: `npm run maps:backfill`; análisis estructurado e imágenes del proveedor: `npm run maps:rebuild -- --reanalyze`. Los procedimientos siguen siendo borradores por revisar. Alcance, formatos y configuración: [PROCESS-MAPS.md](docs/PROCESS-MAPS.md).
 
 ## Leer primero
 - [Roadmap hasta las 06:00 del 4 de octubre](docs/ROADMAP-15H.md): problema, opciones, mapas, hitos y reparto entre tres personas.

@@ -260,7 +260,17 @@ describe("private derived files", () => {
         .length,
     ).toBeGreaterThan(first.nodes.length);
     const vault = createVault(readVaultConfig({ VAULT_PATH: root }));
-    expect((await vault.ensureProcessMaps()).processes).toHaveLength(1);
+    const collection = await vault.ensureProcessMaps();
+    expect(collection.processes).toHaveLength(1);
+    expect(collection.graph.memberships.every((m) => collection.processes.some((p) => p.id === m.processId))).toBe(true);
+    const networkPath = join(root, "Procesos", "Mapa-de-conocimiento-generado.canvas");
+    expect(JSON.parse(await readFile(networkPath, "utf8")).nodes.filter((n) => n.type === "file").map((n) => n.id)).toEqual(collection.processes.map((p) => p.id));
+    await writeFile(networkPath, "MANUAL GRAPH");
+    await vault.saveProcessMetadata(input.id, {name: "Revisar solicitud renombrada", department: "Contabilidad", taskType: "Compras"});
+    const renamed = await vault.ensureProcessMaps();
+    expect(renamed.processes[0].title).toBe("Revisar solicitud renombrada");
+    expect(await readFile(networkPath, "utf8")).toBe("MANUAL GRAPH");
+    expect(JSON.parse(await readFile(join(root, "Procesos", "Mapa-de-conocimiento-actualizado.canvas"), "utf8")).nodes.find((n) => n.id === input.id).file).toContain("revisar-solicitud-renombrada");
     await expect(vault.getProcessFlow("missing")).resolves.toBeNull();
   });
   it("regenerates from new evidence while preserving an edited Obsidian canvas", async () => {

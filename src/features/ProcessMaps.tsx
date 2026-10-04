@@ -16,7 +16,6 @@ import {
   ExternalLink,
   GitBranch,
   RefreshCw,
-  Search,
   ImageOff,
   Pencil,
   Check,
@@ -27,7 +26,6 @@ import {
 import type {
   FlowResponse,
   ProcessFlow,
-  ProcessSummary,
   ProcessNode,
   ProcessImage,
   ProcessMetadata,
@@ -35,23 +33,11 @@ import type {
 import { flowClock, flowLabels } from "../domain/processFlow";
 import {
   getProcessFlow,
-  listProcesses,
   saveProcessMetadata,
   getProcessImage,
 } from "../services/processFlow";
 import "@xyflow/react/dist/style.css";
 import "./ProcessMaps.css";
-const dateLabel = (value: string) => {
-  const d = new Date(value);
-  return Number.isFinite(d.getTime())
-    ? d.toLocaleString("es-MX", {
-        day: "numeric",
-        month: "short",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "Fecha no disponible";
-};
 function downloadCanvas(canvas: object) {
   const url = URL.createObjectURL(
     new Blob([JSON.stringify(canvas, null, 2)], { type: "application/json" }),
@@ -555,17 +541,15 @@ function MetadataEditor({
 export default function ProcessMaps({
   id,
   onOpen,
+  onUpdated,
 }: {
   id: string;
   onOpen: (id: string) => void;
+  onUpdated: () => void;
 }) {
-  const [processes, setProcesses] = useState<ProcessSummary[]>([]);
   const [data, setData] = useState<FlowResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [failed, setFailed] = useState(0);
-  const [query, setQuery] = useState("");
-  const [family, setFamily] = useState("");
   const [retry, setRetry] = useState(0);
   const [view, setView] = useState<"guide" | "diagram">("guide");
   const [editing, setEditing] = useState(false);
@@ -579,16 +563,8 @@ export default function ProcessMaps({
     setEditing(false);
     const load = async () => {
       try {
-        if (id) {
-          const r = await getProcessFlow(id, abort.signal);
-          if (live) setData(r);
-        } else {
-          const r = await listProcesses(abort.signal);
-          if (live) {
-            setProcesses(r.processes);
-            setFailed(r.failures.length);
-          }
-        }
+        const r = await getProcessFlow(id, abort.signal);
+        if (live) setData(r);
       } catch (e) {
         if (live)
           setError(
@@ -608,13 +584,6 @@ export default function ProcessMaps({
       clearTimeout(timeout);
     };
   }, [id, retry]);
-  const filtered = processes.filter(
-    (p) =>
-      (p.title + " " + p.department + " " + p.taskType)
-        .toLowerCase()
-        .includes(query.toLowerCase()) &&
-      (!family || p.taskType === family),
-  );
   const count =
     data?.flow.nodes.filter((n) => n.kind === "step" || n.kind === "decision")
       .length || 0;
@@ -623,7 +592,7 @@ export default function ProcessMaps({
       {id && (
         <button className="text-button flow-back" onClick={() => onOpen("")}>
           <ArrowLeft size={16} />
-          Todos los procesos
+          Volver a la biblioteca
         </button>
       )}
       <div className="page-heading">
@@ -662,81 +631,6 @@ export default function ProcessMaps({
           </button>
         </div>
       )}
-      {!loading && !error && !id && (
-        <>
-          <div className="process-filters">
-            <label className="flow-search">
-              <Search size={18} />
-              <span className="sr-only">Buscar proceso</span>
-              <input
-                placeholder="Buscar por proceso, departamento o tarea…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-            </label>
-            <label>
-              Tipo de tarea
-              <select
-                value={family}
-                onChange={(e) => setFamily(e.target.value)}
-              >
-                <option value="">Todos los tipos</option>
-                {[...new Set(processes.map((p) => p.taskType))]
-                  .sort()
-                  .map((t) => (
-                    <option key={t}>{t}</option>
-                  ))}
-              </select>
-            </label>
-          </div>
-          {failed > 0 && (
-            <p role="status" className="flow-warning">
-              {failed} registros necesitan revisión. Sus fuentes se conservan.
-            </p>
-          )}
-          <div className="flow-list">
-            {filtered.map((p) => (
-              <button
-                className="flow-list-row"
-                onClick={() => onOpen(p.id)}
-                key={p.id}
-              >
-                <span className="flow-list-icon">
-                  <GitBranch size={24} />
-                </span>
-                <span className="flow-list-title">
-                  <strong>{p.title}</strong>
-                  <small>
-                    {p.department} · {p.taskType}
-                  </small>
-                  <small>{dateLabel(p.startedAt)}</small>
-                </span>
-                <span className="flow-list-meta">
-                  {p.steps} acciones · {p.imageCount} con imagen
-                  <span>
-                    {p.steps ? "Por revisar" : "Sin tarea identificada"}
-                  </span>
-                </span>
-                <ArrowRight size={19} />
-              </button>
-            ))}
-          </div>
-          {!filtered.length && (
-            <div className="flow-empty">
-              <h2>
-                {processes.length
-                  ? "No encontramos ese proceso"
-                  : "Aún no hay procesos guardados"}
-              </h2>
-              <p>
-                {processes.length
-                  ? "Prueba otra palabra o cambia el filtro."
-                  : "Comparte una tarea con tu aprendiz para conservar sus acciones y motivos."}
-              </p>
-            </div>
-          )}
-        </>
-      )}
       {!loading && !error && data && (
         <>
           <div className="process-classification">
@@ -754,7 +648,7 @@ export default function ProcessMaps({
             <MetadataEditor
               key={data.flow.sourceDigest}
               flow={data.flow}
-              onSaved={setData}
+              onSaved={(next) => { setData(next); onUpdated(); }}
               onClose={() => setEditing(false)}
             />
           )}

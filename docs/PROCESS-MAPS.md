@@ -1,10 +1,20 @@
 # Procedimientos visuales en UserHelper y Obsidian
 
-Cada proceso presenta **acciones de trabajo con imagen, instrucciones, decisión y motivo del experto**. La conversación es evidencia secundaria. El resultado sigue siendo un procedimiento por revisar, no conocimiento confirmado. Decisión vigente: [ADR-0017](../context/decisions/ADR-0017.md), que sustituye la extracción de ADR-0016.
+Cada proceso presenta **acciones de trabajo con imagen, instrucciones, decisión y motivo del experto**. La conversación es evidencia secundaria. El resultado sigue siendo un procedimiento por revisar, no conocimiento confirmado. Extracción: [ADR-0017](../context/decisions/ADR-0017.md), que sustituye la extracción de ADR-0016.
+
+## Una colección, dos vistas
+
+**Biblioteca** agrupa por departamento y tipo de tarea, y ordena alfabéticamente dentro de cada grupo. **Mapas de procesos** presenta exactamente los mismos IDs como un grafo proceso ↔ tema/actividad. Ambos usan una única lectura de `POST /api/vault/processes`, comparten búsqueda/filtros y se actualizan juntos al renombrar o reclasificar. No son dos bases de datos. **Guardadas** filtra esta colección por marcadores de este navegador. Los ejemplos anteriores siguen disponibles en «Explorar la biblioteca demo» y conservan su almacenamiento separado.
+
+El mapa une procesos con menciones explícitas a temas contables o con el mismo código de actividad del catálogo. Se analizan título de acción, instrucciones, decisión, motivo y límites documentados; no se utiliza la conversación bruta, el agente, el nombre del proceso ni el departamento como prueba de una relación. Cada conexión conserva paso, campo, extracto e IDs de evidencia. Selecciona nodo o conexión para consultar el sustento; el selector del panel ofrece la misma exploración con teclado o en móvil.
+
+Solo aparecen nodos de tema/actividad compartidos por al menos dos procesos **dentro de los filtros actuales**. Todos los procesos permanecen en el mapa, incluso los aislados o sin tarea identificada. Los enlaces no llevan flechas: una coincidencia no acredita causalidad, secuencia, equivalencia de políticas ni validación experta. La detección usa un vocabulario explícito de Contabilidad y códigos del catálogo; no es búsqueda semántica general y puede omitir sinónimos o temas fuera de ese vocabulario. No llama a un proveedor de IA ni consume nuevos tokens.
+
+Decisión de navegación y colección: [ADR-0018](../context/decisions/ADR-0018.md), que sustituye esa parte de ADR-0017. La extracción y la guía por acciones de ADR-0017 siguen vigentes.
 
 ## Usar el procedimiento
 
-Abre **Mapas de procesos**, busca por nombre/departamento/tarea o filtra por tipo. La **Guía visual** muestra cada acción con su captura e instrucciones. «Por qué se hace así» conserva el motivo expresado; si falta, se señala. «Consultar evidencia» despliega las citas que sustentan ese paso. **Diagrama** ofrece zoom, desplazamiento, selector y navegación de acciones. Los movimientos de nodos en UserHelper son temporales.
+Abre **Biblioteca**, busca por nombre/tema o filtra por departamento y tipo. Selecciona un proceso. La **Guía visual** muestra cada acción con su captura e instrucciones. «Por qué se hace así» conserva el motivo expresado; si falta, se señala. «Consultar evidencia» despliega las citas que sustentan ese paso. **Diagrama** ofrece zoom, desplazamiento, selector y navegación de acciones. Los movimientos de nodos en UserHelper son temporales.
 
 **Editar nombre y categoría** guarda un título concreto como «Rechazar una orden de compra» y permite escribir departamento/tipo nuevos. La propuesta inicial es Contabilidad con seis familias: [catálogo y reglas candidatas](ACCOUNTING-CATALOG.md). Las sugerencias globales se editan en `catalogo-procesos.json` de la bóveda; el formulario corrige cada proceso, no administra globalmente el catálogo remoto del agente.
 
@@ -16,6 +26,9 @@ Abre **Mapas de procesos**, busca por nombre/departamento/tarea o filtra por tip
 catalogo-procesos.json
 Procesos/
   Indice-generado.md
+  Relaciones-generadas.md                 # sustento y enlaces de las coincidencias
+  Mapa-de-conocimiento-generado.canvas    # grafo de la colección completa
+  mapa-conocimiento-estado.json           # huella para preservar ediciones
   contabilidad/<tipo-de-tarea>/<nombre-del-proceso>--<conversation_id>.md
 Sesiones/<fecha>-<conversation_id>/
   transcripcion.md          # fuente; se conserva
@@ -32,7 +45,7 @@ Sesiones/<fecha>-<conversation_id>/
   work-map.md               # notas manuales; no se reemplazan
 ```
 
-El nombre legible identifica el proceso; el ID distingue ejecuciones. Al renombrar, solo se retira la nota generada anterior si sigue intacta. Fuentes y notas modificadas se conservan. `Indice-generado.md` se actualiza al listar/reconstruir procesos. No hay push automático de la bóveda a GitHub.
+El nombre legible identifica el proceso; el ID distingue ejecuciones. Al renombrar, solo se retira la nota generada anterior si sigue intacta. Fuentes y notas modificadas se conservan. `Indice-generado.md` se actualiza al listar/reconstruir procesos. El grafo global y `Relaciones-generadas.md` se regeneran junto al índice usando la colección completa (los filtros de UserHelper son temporales). Abre el Canvas global desde Obsidian o desde el enlace en la nota de relaciones. Si editaste ese Canvas, se conserva y la nueva derivación se guarda como `Mapa-de-conocimiento-actualizado.canvas`; esta copia actualizada es generada. Conserva notas propias fuera de los índices generados. No hay push automático de la bóveda a GitHub.
 
 ## Configuración y sesiones anteriores
 

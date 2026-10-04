@@ -102,3 +102,31 @@ export const flowLabels: Record<FlowKind, string> = {
 };
 export const flowClock = (at: number) =>
   `${String(Math.floor(at / 60)).padStart(2, "0")}:${String(Math.floor(at % 60)).padStart(2, "0")}`;
+
+export interface KnowledgeFacet {
+  id: string;
+  label: string;
+  kind: 'topic' | 'activity';
+}
+export interface KnowledgeMembership {
+  id: string;
+  processId: string;
+  facetId: string;
+  proofs: { stepId: string; stepTitle: string; field: string; excerpt: string; evidenceIds: string[] }[];
+}
+export interface KnowledgeGraph {
+  version: 1;
+  facets: KnowledgeFacet[];
+  memberships: KnowledgeMembership[];
+}
+export interface ProcessCollection {
+  processes: ProcessSummary[];
+  failures: { id: string; error: string }[];
+  catalog: ProcessCatalog;
+  graph: KnowledgeGraph;
+}
+export interface ProcessFilters {
+  query: string;
+  department: string;
+  taskType: string;
+}

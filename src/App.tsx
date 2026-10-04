@@ -21,15 +21,19 @@ import { InternHome, Library } from "./features/Library";
 import { SessionDetail } from "./features/SessionDetail";
 import { demoRepository } from "./services/sessionRepository";
 import { parseRoute } from "./domain/navigation";
+import { useProcessCollection } from "./services/useProcessCollection";
+import { emptyProcessFilters } from "./domain/processCollection";
+import ProcessLibrary from "./features/ProcessCollection";
+const KnowledgeMap = lazy(() => import("./features/KnowledgeMap"));
 const ProcessMaps = lazy(() => import("./features/ProcessMaps"));
 import "./features/LiveCall.css";
 function readRoute() {
   return parseRoute(window.location.hash);
 }
-function loadSaved(): string[] {
+function loadSaved(key = "userhelper.demo.bookmarks"): string[] {
   try {
     const value: unknown = JSON.parse(
-      localStorage.getItem("userhelper.demo.bookmarks") || "[]",
+      localStorage.getItem(key) || "[]",
     );
     return Array.isArray(value)
       ? value.filter((x) => typeof x === "string")
@@ -41,7 +45,11 @@ function loadSaved(): string[] {
 export default function App() {
   const [route, setRoute] = useState(readRoute);
   const [sessions] = useState(() => demoRepository.list());
-  const [saved, setSaved] = useState(loadSaved);
+  const [saved, setSaved] = useState(() => loadSaved());
+  const [processSaved, setProcessSaved] = useState(() => loadSaved("userhelper.process.bookmarks.v1"));
+  const [processFilters, setProcessFilters] = useState(emptyProcessFilters);
+  const privateView = ["library", "saved", "processes"].includes(route.view);
+  const collection = useProcessCollection(privateView);
   const [libraryStatus, setLibraryStatus] = useState<LibraryStatus>("ready");
   const [menuOpen, setMenuOpen] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
@@ -90,9 +98,16 @@ export default function App() {
       );
     }
   };
+  const toggleProcessSaved = (id: string) => {
+    const next = processSaved.includes(id) ? processSaved.filter((v) => v !== id) : [...processSaved, id];
+    setProcessSaved(next);
+    try { localStorage.setItem("userhelper.process.bookmarks.v1", JSON.stringify(next)); }
+    catch { setToast("Marcador disponible solo durante esta visita."); }
+  };
   const sectionTitle =
-    route.view === "processes"
+    route.view === "processes" && !route.id
       ? "Mapas de procesos"
+      : route.view === "examples" ? "Biblioteca de ejemplos"
       : route.view === "home"
           ? route.role === "senior"
             ? "Mi espacio"
@@ -173,7 +188,7 @@ export default function App() {
           </button>
           <button
             className={
-              route.view === "library" || route.view === "session"
+              route.view === "library" || (route.view === "processes" && !!route.id)
                 ? "selected"
                 : ""
             }
@@ -181,7 +196,7 @@ export default function App() {
             onClick={() => navigate("library")}
           >
             <BookOpen size={19} />
-            Biblioteca<span className="nav-count">{sessions.length}</span>
+            Biblioteca{collection.data && <span className="nav-count">{collection.data.processes.length}</span>}
           </button>
           <button
             className={route.view === "saved" ? "selected" : ""}
@@ -190,12 +205,12 @@ export default function App() {
           >
             <Bookmark size={18} />
             Guardadas
-            {saved.length > 0 && (
-              <span className="nav-count">{saved.length}</span>
+            {processSaved.length > 0 && (
+              <span className="nav-count">{collection.data ? collection.data.processes.filter((p) => processSaved.includes(p.id)).length : processSaved.length}</span>
             )}
           </button>
-          <button className={route.view === "processes" ? "selected" : ""}
-            aria-current={route.view === "processes" ? "page" : undefined}
+          <button className={route.view === "processes" && !route.id ? "selected" : ""}
+            aria-current={route.view === "processes" && !route.id ? "page" : undefined}
             onClick={() => navigate("processes")}>
             <GitBranch size={19}/> Mapas de procesos
           </button>
@@ -252,7 +267,7 @@ export default function App() {
               <strong>{sectionTitle}</strong>
             </span>
           </div>
-          {route.view === "processes" ? (
+          {privateView ? (
             <span className="real-call-badge"><GitBranch size={16}/>Bóveda privada</span>
           ) : route.view === "home" ? (
             <span className="real-call-badge">
@@ -289,16 +304,14 @@ export default function App() {
               saved={saved}
             />
           )}
-          {(route.view === "library" || route.view === "saved") && (
-            <Library
-              key={route.view}
-              sessions={sessions}
-              saved={saved}
-              onlySaved={route.view === "saved"}
-              status={libraryStatus}
-              setStatus={setLibraryStatus}
-              openSession={(id) => navigate("session", id)}
-            />
+          {(route.view === "library" || route.view === "saved") && !route.id && (
+            <ProcessLibrary collection={collection} filters={processFilters} onFilters={setProcessFilters}
+              onOpen={(id) => navigate("library", id)} saved={processSaved} onToggleSaved={toggleProcessSaved}
+              onlySaved={route.view === "saved"} onMap={() => navigate("processes")}/>
+          )}
+          {route.view === "examples" && (
+            <Library sessions={sessions} saved={saved} onlySaved={false} status={libraryStatus}
+              setStatus={setLibraryStatus} openSession={(id) => navigate("session", id)}/>
           )}
           {route.view === "session" &&
             (currentSession ? (
@@ -307,22 +320,28 @@ export default function App() {
                 session={currentSession}
                 saved={saved.includes(currentSession.id)}
                 onToggleSaved={() => toggleSaved(currentSession.id)}
-                onBack={() => navigate("library")}
+                onBack={() => navigate("examples")}
               />
             ) : (
               <EmptyState
                 title="Esta sesión no está disponible"
                 description="Puede que se haya creado en otro navegador. Explora las sesiones de ejemplo para continuar."
-                action="Ir a la biblioteca"
-                onAction={() => navigate("library")}
+                action="Explorar ejemplos"
+                onAction={() => navigate("examples")}
               />
             ))}
-          {route.view === "processes" && (
-            <Suspense fallback={<p role="status">Preparando mapas…</p>}>
-              <ProcessMaps id={route.id} onOpen={(id) => navigate("processes", id)}/>
+          {(route.view === "library" || route.view === "processes") && !!route.id && (
+            <Suspense fallback={<p role="status">Preparando procedimiento…</p>}>
+              <ProcessMaps id={route.id} onOpen={(id) => navigate("library", id)} onUpdated={collection.refresh}/>
             </Suspense>
           )}
-          {!["home", "library", "saved", "session", "processes"].includes(
+          {route.view === "processes" && !route.id && (
+            <Suspense fallback={<p role="status">Preparando relaciones…</p>}>
+              <KnowledgeMap collection={collection} filters={processFilters} onFilters={setProcessFilters}
+                onOpen={(id) => navigate("library", id)} onLibrary={() => navigate("library")}/>
+            </Suspense>
+          )}
+          {!["home", "library", "saved", "session", "examples", "processes"].includes(
             route.view,
           ) && (
             <EmptyState
@@ -360,11 +379,10 @@ export default function App() {
           onClose={() => setDemoOpen(false)}
         >
           <p className="modal-description">
-            Prueba los estados de la biblioteca con datos de ejemplo.
-            Estos controles solo cambian cómo se muestra la biblioteca.
+            Prueba los estados de la biblioteca de ejemplos. Estos controles no modifican los procesos de tu bóveda.
           </p>
           <section className="demo-control-section">
-            <h3>Biblioteca</h3>
+            <h3>Biblioteca de ejemplos</h3>
             <div className="demo-control-buttons">
               {(["ready", "loading", "empty", "error"] as LibraryStatus[]).map(
                 (status, index) => (
@@ -373,7 +391,7 @@ export default function App() {
                     key={status}
                     onClick={() => {
                       setLibraryStatus(status);
-                      navigate("library");
+                      navigate("examples");
                       setDemoOpen(false);
                     }}
                   >
@@ -412,16 +430,13 @@ export default function App() {
             <h3>Si eres intern</h3>
             <p>
               En Mi aprendizaje puedes conversar con tu tutor por voz o texto.
-              Abre la biblioteca, elige una sesión y selecciona sus pasos. La
-              escena de ejemplo, las razones y las variantes se muestran juntas
-              para mantener el contexto.
+              Abre la biblioteca y elige un proceso para consultar sus acciones, imágenes, decisiones y motivos.
             </p>
             <h3>En esta etapa</h3>
             <p>
-              Los perfiles y procesos de la biblioteca son ejemplos.
-              Mi espacio conecta con tu agente de ElevenLabs. Si la bóveda
-              está configurada, allí se guardan las transcripciones; puedes
-              consultar sus diagramas en Mapas de procesos.
+              Los perfiles y la biblioteca de ejemplos son simulados. Mi espacio conecta con tu agente de ElevenLabs.
+              Biblioteca y Mapas muestran los mismos procesos de tu bóveda privada: ordenados por departamento o relacionados por temas.
+              Abre un proceso para consultar sus acciones, imágenes y motivos.
             </p>
           </div>
           <div className="modal-actions">

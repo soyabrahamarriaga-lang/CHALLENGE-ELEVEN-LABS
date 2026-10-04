@@ -400,7 +400,7 @@ export default function AgentConversation({ health, onPhaseChange, role = "senio
                 "El diagrama está pendiente; puedes reintentar desde Mapas de procesos. "}
               <a
                 href={
-                  "#senior/processes/" +
+                  "#senior/library/" +
                   encodeURIComponent(state.conversationId)
                 }
               >

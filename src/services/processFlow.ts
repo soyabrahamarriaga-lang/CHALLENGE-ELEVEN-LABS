@@ -1,4 +1,4 @@
-import type { FlowResponse, ProcessSummary } from "../domain/processFlow";
+import type { FlowResponse, ProcessCollection } from "../domain/processFlow";
 export async function readProcessData<T>(
   path: string,
   signal?: AbortSignal,
@@ -18,15 +18,16 @@ export async function readProcessData<T>(
           ? "Este proceso aún no tiene una transcripción disponible."
           : response.status === 403
             ? "Abre UserHelper desde la dirección autorizada del equipo."
-            : "No pudimos leer los mapas. Comprueba que el servicio de la bóveda esté activo y vuelve a intentarlo.",
+            : "No pudimos leer los procesos. Comprueba que el servicio de la bóveda esté activo y vuelve a intentarlo.",
     );
   return response.json();
 }
-export const listProcesses = (signal?: AbortSignal) =>
-  readProcessData<{
-    processes: ProcessSummary[];
-    failures: { id: string; error: string }[];
-  }>("processes", signal);
+export async function listProcesses(signal?: AbortSignal): Promise<ProcessCollection> {
+  const data = await readProcessData<ProcessCollection>("processes", signal);
+  if (!Array.isArray(data.processes) || !Array.isArray(data.graph?.facets) || !Array.isArray(data.graph?.memberships))
+    throw new Error("El servicio de la bóveda necesita actualizarse. Reinicia el backend y vuelve a intentar.");
+  return data;
+}
 export const getProcessFlow = (id: string, signal?: AbortSignal) =>
   readProcessData<FlowResponse>(
     "sessions/" + encodeURIComponent(id) + "/flow",

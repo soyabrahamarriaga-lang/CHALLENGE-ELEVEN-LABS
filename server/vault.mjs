@@ -1,3 +1,5 @@
+import { buildKnowledgeGraph, knowledgeToCanvas } from "./processKnowledge.mjs";
+import { writeKnowledgeIndex } from "./vaultCatalog.mjs";
 import { extractionFromConversation } from "./processExtraction.mjs";
 import {
   saveCapture,
@@ -426,6 +428,7 @@ export function createVault(config) {
     async ensureProcessMaps() {
       const sessions = await this.listSessions();
       const processes = [];
+      const flows = [];
       const failures = [];
       for (const session of sessions) {
         const id = session.conversacion;
@@ -433,7 +436,8 @@ export function createVault(config) {
           continue;
         try {
           const flow = await ensureProcessFlow(root, session.folder, id);
-          if (flow)
+          if (flow) {
+            flows.push(flow);
             processes.push({
               id,
               folder: session.folder,
@@ -453,6 +457,7 @@ export function createVault(config) {
               canvasEdited: flow.canvasEdited,
               evidenceCount: flow.evidence.length,
             });
+          }
         } catch {
           failures.push({ id, error: "flow_unavailable" });
         }
@@ -462,7 +467,11 @@ export function createVault(config) {
           (Date.parse(b.startedAt) || 0) - (Date.parse(a.startedAt) || 0),
       );
       await writeProcessIndex(root, processes);
-      return { processes, failures, catalog: await readProcessCatalog(root) };
+      const catalog = await readProcessCatalog(root);
+      const graph = buildKnowledgeGraph(flows, catalog);
+      const canvas = knowledgeToCanvas(processes, graph);
+      await writeKnowledgeIndex(root, processes, graph, canvas);
+      return { processes, failures, catalog, graph };
     },
     async listSessions() {
       const sessions = inside("Sesiones");
