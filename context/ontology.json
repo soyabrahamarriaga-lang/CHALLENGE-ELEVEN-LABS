@@ -176,6 +176,13 @@
       "definition": "Texto emitido por la persona o el agente, incluido texto derivado de voz; requiere atribución y confirmación antes de tratarse como razón validada.",
       "status": "confirmed",
       "evidence": "Integración ElevenLabs; ADR-0010."
+    },
+    {
+      "id": "process_flow_draft",
+      "name": "Borrador de flujo de proceso",
+      "definition": "Grafo derivado de una conversación y sus observaciones, con citas atribuidas; su orden temporal y clasificación no acreditan causalidad ni validación experta.",
+      "status": "confirmed",
+      "evidence": "Solicitud del usuario de diagramas en UserHelper y Obsidian; ADR-0016."
     }
   ],
   "relations": [
@@ -298,6 +305,18 @@
       "to": "conversation_message",
       "meaning": "La conversación contiene mensajes atribuidos; una transcripción no es un Work Map.",
       "from": "agent_conversation"
+    },
+    {
+      "from": "process_flow_draft",
+      "type": "derived_from",
+      "to": "conversation_message",
+      "meaning": "Los nodos conservan palabras atribuidas y referencias de tiempo."
+    },
+    {
+      "from": "process_flow_draft",
+      "type": "contextualized_by",
+      "to": "screen_event",
+      "meaning": "Las observaciones visuales cercanas son contexto y requieren comprobar su relación con el paso."
     }
   ],
   "invariants": [
@@ -316,7 +335,10 @@
     "La disponibilidad de credenciales no demuestra conexión efectiva con el agente.",
     "Una conversación individual ElevenLabs no se difunde automáticamente a la sala LiveKit del equipo.",
     "Descartar mensajes locales no elimina audio o transcripciones conservados por el proveedor.",
-    "Un mensaje del agente que afirma observar no demuestra que la pantalla haya sido enviada o interpretada."
+    "Un mensaje del agente que afirma observar no demuestra que la pantalla haya sido enviada o interpretada.",
+    "Un borrador de flujo no equivale a un Work Map confirmado; el orden temporal no demuestra causalidad.",
+    "Una alternativa que no está expresada no se inventa para completar un diagrama.",
+    "Los diagramas derivados de transcripciones privadas permanecen en la bóveda privada."
   ],
   "open_questions": [
     "¿Qué flujo y casos se usarán para demostrar transferencia?",

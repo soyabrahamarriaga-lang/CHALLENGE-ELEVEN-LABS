@@ -1,6 +1,7 @@
+import { ensureProcessFlow, flowToCanvas } from "./processFlow.mjs";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { mkdir, readFile, readdir, rename, writeFile, appendFile, stat } from "node:fs/promises";
-import { isAbsolute, resolve, sep } from "node:path";
+import { isAbsolute, resolve, sep, basename } from "node:path";
 
 // The vault is a private Obsidian folder outside this public repository.
 // This module only writes Markdown inside it; Obsidian is a viewer, not a dependency.
@@ -212,7 +213,10 @@ export function createVault(config) {
       const folder =
         (await findFolder(conversation.conversation_id)) || sessionFolder(conversation);
       await writeAtomic(inside("Sesiones", folder, "transcripcion.md"), transcriptToMarkdown(conversation));
-      return { folder, file: `Sesiones/${folder}/transcripcion.md` };
+      let flowStatus = "ready";
+      try { await ensureProcessFlow(root, folder, conversation.conversation_id); }
+      catch { flowStatus = "failed"; } // Preserve the successful transcript even if a derived map fails.
+      return { folder, file: `Sesiones/${folder}/transcripcion.md`, flowStatus };
     },
     async appendEvent(conversationId, event) {
       const folder = await ensureFolder(conversationId);
@@ -232,6 +236,26 @@ export function createVault(config) {
       const folder = await ensureFolder(conversationId);
       await writeAtomic(inside("Sesiones", folder, `${name}.md`), String(markdown));
       return { folder, file: `Sesiones/${folder}/${name}.md` };
+    },
+    async getProcessFlow(conversationId) {
+      if (!ID.test(conversationId)) throw new Error("invalid-id");
+      const folder = await findFolder(conversationId);
+      if (!folder) return null;
+      return ensureProcessFlow(root, folder, conversationId);
+    },
+    async ensureProcessMaps() {
+      const sessions = await this.listSessions();
+      const processes = [];
+      const failures = [];
+      for (const session of sessions) {
+        const id = session.conversacion;
+        if (!ID.test(id || "") || !session.files.includes("transcripcion.md")) continue;
+        try {
+          const flow = await ensureProcessFlow(root, session.folder, id);
+          if (flow) processes.push({ id, folder: session.folder, title: flow.title, startedAt: session.inicio, duration: Number(session.duracion_s) || 0, steps: flow.nodes.length - 2, decisions: flow.nodes.filter(n => n.kind === "decision").length, status: flow.status, canvasEdited: flow.canvasEdited, evidenceCount: flow.evidence.length });
+        } catch { failures.push({ id, error: "flow_unavailable" }); }
+      }
+      return { processes, failures };
     },
     async listSessions() {
       const sessions = inside("Sesiones");
@@ -321,6 +345,11 @@ export function createVaultHandler(config = readVaultConfig(), options = {}) {
       if (!req.headers["content-type"]?.startsWith("application/json"))
         return send(res, 415, { error: "json_required" });
 
+      // POST reads preserve the existing exact-Origin guard (same-origin GETs omit Origin).
+      if (path === "/api/vault/processes") {
+        try { JSON.parse(await readRaw(req, 1024)); } catch { return send(res, 400, { error: "invalid_request" }); }
+        return send(res, 200, await vault.ensureProcessMaps());
+      }
       const parts = path.split("/").filter(Boolean); // api, vault, collection, id, action, name
       const [, , collection, id, action, name] = parts;
       if (!ID.test(id || "")) return send(res, 400, { error: "invalid_id" });
@@ -341,6 +370,11 @@ export function createVaultHandler(config = readVaultConfig(), options = {}) {
         return send(res, 400, { error: "invalid_request" });
       }
 
+      if (action === "flow" && parts.length === 5) {
+        const flow = await vault.getProcessFlow(id);
+        if (!flow) return send(res, 404, { error: "flow_not_found" });
+        return send(res, 200, { flow, canvas: flowToCanvas(flow), obsidianUri: "obsidian://open?" + new URLSearchParams({ vault: basename(vault.root), file: `Sesiones/${flow.folder}/flujo.canvas` }) });
+      }
       if (action === "events" && parts.length === 5) {
         if (!body || !EVENT_KINDS.has(body.kind) || typeof body.text !== "string" || !body.text.trim())
           return send(res, 400, { error: "invalid_event" });

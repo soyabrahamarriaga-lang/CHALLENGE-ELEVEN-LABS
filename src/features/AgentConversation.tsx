@@ -402,6 +402,11 @@ export default function AgentConversation() {
             : archive.status === "saved"
               ? `Transcripción guardada en la bóveda: ${archive.file}`
               : `No se pudo guardar en la bóveda (${archive.reason}).`}
+          {archive !== "saving" && archive.status === "saved" && (
+            <> {archive.flowStatus === "failed" && "El diagrama está pendiente; puedes reintentar desde Mapas de procesos. "}
+              <a href={"#senior/processes/" + encodeURIComponent(state.conversationId)}>Ver diagrama del proceso</a>
+            </>
+          )}
         </p>
       )}
       {state.error && (

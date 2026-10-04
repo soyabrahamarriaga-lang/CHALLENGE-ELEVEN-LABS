@@ -28,7 +28,11 @@ Completar `.env` con la URL y credenciales de LiveKit, sala y código de equipo.
 
 ## Conversación individual con tu agente
 
-Completar `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` en `.env`, conservar el código de equipo y reiniciar `npm run dev:token`. Abrir **Tu aprendiz de IA**, aceptar el aviso e iniciar por voz o texto. La clave permanece en el backend. Esta conversación no se escucha en la sala del equipo; pantalla y Work Map siguen pendientes. Configuración, privacidad y resultados: [ELEVENLABS.md](docs/ELEVENLABS.md).
+Completar `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` en `.env`, conservar el código de equipo y reiniciar `npm run dev:token`. Abrir **Tu aprendiz de IA**, aceptar el aviso e iniciar por voz o texto. La clave permanece en el backend. La conversación individual puede compartir pantalla con OCR y conserva transcripciones en la bóveda; el Work Map validado sigue pendiente. Configuración, privacidad y resultados: [ELEVENLABS.md](docs/ELEVENLABS.md).
+
+## Diagramas de tus procesos
+
+**Mapas de procesos** muestra las conversaciones de la bóveda privada como diagramas con zoom, navegación por pasos y evidencia. Cada transcripción archivada genera también un Canvas de Obsidian. Para sesiones anteriores: `npm run maps:backfill`. Los mapas son borradores; sus decisiones y reglas requieren revisión. Alcance, formatos y configuración: [PROCESS-MAPS.md](docs/PROCESS-MAPS.md).
 
 ## Leer primero
 - [Roadmap hasta las 06:00 del 4 de octubre](docs/ROADMAP-15H.md): problema, opciones, mapas, hitos y reparto entre tres personas.

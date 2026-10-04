@@ -190,7 +190,17 @@ describe("vault HTTP service", () => {
     expect(calls[0].key).toBe("only-a-test-key");
     const folders = await readdir(join(api.dir, "Sesiones"));
     expect(folders).toHaveLength(1);
-    expect((await readdir(join(api.dir, "Sesiones", folders[0]))).sort()).toEqual(["eventos.md", "transcripcion.md"]);
+    expect((await readdir(join(api.dir, "Sesiones", folders[0]))).sort()).toEqual(["eventos.md", "evidencia-flujo.md", "flujo.canvas", "mapa-generado.md", "process-flow.json", "transcripcion.md"]);
+    const processes = await (await api.post("/api/vault/processes", {})).json();
+    expect(processes.processes[0]).toMatchObject({ id: "conv_test123", status: "draft" });
+    const mapped = await api.post("/api/vault/sessions/conv_test123/flow", {});
+    expect(mapped.headers.get("cache-control")).toBe("no-store");
+    const detail = await mapped.json();
+    expect(detail.flow.evidence.some(e => e.role === "expert")).toBe(true);
+    expect(detail.obsidianUri).toContain("obsidian://open?");
+    expect(detail.canvas.nodes.length).toBeGreaterThan(2);
+    expect((await api.post("/api/vault/processes", {}, {Origin:"https://evil.example"})).status).toBe(403);
+    expect((await api.post("/api/vault/sessions/conv_missing/flow", {})).status).toBe(404);
     const list = await (await fetch(api.base + "/api/vault/sessions", { headers: { Origin: ORIGIN } })).json();
     expect(list.sessions[0]).toMatchObject({ conversacion: "conv_test123", duracion_s: "312", resultado: "success" });
   });

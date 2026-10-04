@@ -17,16 +17,20 @@ Se añadió una sección independiente de videollamada con transporte LiveKit, c
 
 Se añadió conversación individual con el agente existente de ElevenLabs por voz o texto, independiente de la sala del equipo. Se verificaron credenciales, accesos temporales y una respuesta real por texto; la prueba física de micrófono y audio queda pendiente del operador. La API key permanece en el backend; el proveedor tiene retención de audio activada y autenticación obligatoria del agente desactivada. Detalles: docs/ELEVENLABS.md y ADR-0010.
 
-Todavía faltan visión sobre la pantalla compartida, debrief, teach-back validado, Work Map generado desde evidencia, tutor e intervención en un caso nuevo. El prototipo no demuestra todavía los mínimos Capture → Map → Teach del challenge.
+La sección Visión documenta los avances posteriores de pantalla/OCR. Todavía faltan debrief, teach-back validado, Work Map confirmado por el experto, tutor e intervención en un caso nuevo. El prototipo no demuestra todavía los mínimos Capture → Map → Teach del challenge.
 
 ## Prioridad actual del usuario
 
-Integrar el agente ElevenLabs existente para conversación individual con el experto, conservando la videollamada del equipo por separado; mantener mapa y roadmap como guía. **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC)**. T0 del 3 de octubre a las 13:41:57 se conserva: el presupuesto total pasa a 16 h 18 min 3 s; no se reinicia el reloj. Equipo de tres personas. La inspección inicial del navegador mostró una lista vacía, superada por la inspección API del agente que el usuario configuró después. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con acceso MCP autenticado todavía sin verificar. El intento de guardar autorización falló por permisos del almacén local; no bloquea el frontend simulado. No requiere API key para ese acceso MCP; la conversación de producto sí usa la API key local y ya no depende de resolver MCP.
+Verificar la versión actual de main y la bóveda, y generar diagramas de procesos interactivos tanto en UserHelper como en Obsidian. **Límite corregido por el usuario: 4 de octubre de 2026 a las 06:00, America/Mexico_City (12:00 UTC)**. T0 del 3 de octubre a las 13:41:57 se conserva: el presupuesto total pasa a 16 h 18 min 3 s; no se reinicia el reloj. Equipo de tres personas. La inspección inicial del navegador mostró una lista vacía, superada por la inspección API del agente que el usuario configuró después. El usuario eligió continuar por MCP: servidor remoto registrado en Codex, con acceso MCP autenticado todavía sin verificar. El intento de guardar autorización falló por permisos del almacén local; no bloquea el frontend simulado. No requiere API key para ese acceso MCP; la conversación de producto sí usa la API key local y ya no depende de resolver MCP.
 
 Plan vigente: `docs/ROADMAP-15H.md`; método: `docs/WORKFLOW.md`; acceso: `docs/READINESS.md`. La ampliación v2 del harness (issue #2) se conservó localmente y queda diferida; la base estable sigue operativa.
 
 ## Bóveda Obsidian
 Transcripciones del agente se importan al terminar a una bóveda Obsidian privada (repo `userhelper-vault`, fuera de este repo público). API de eventos/notas lista para visión y Work Map. Ver docs/OBSIDIAN.md y ADR-0011. Pendiente: llamar eventos desde visión/client tools, retiro desde UI y redacción de datos personales.
+
+## Diagramas de procesos
+
+Se añade **Mapas de procesos** en UserHelper y JSON Canvas en la bóveda. Cada transcripción archivada genera un borrador local con citas y momentos; comando de backfill para sesiones anteriores. No se usa otro proveedor de IA. Alternativas solo ante condiciones explícitas; el orden temporal no se presenta como causalidad ni el borrador como conocimiento validado. Se conservan notas originales y Canvas editados. Detalles: docs/PROCESS-MAPS.md y ADR-0016.
 
 ## Visión
 El agente ElevenLabs (LLM `claude-haiku-4-5`, configurado por el usuario) ve capturas enviadas como `[PANTALLA mm:ss]` y pregunta por el cambio; verificado con `npm run check:vision` (docs/VISION.md, ADR-0012). La vista del agente comparte pantalla: OCR local cada segundo (texto al agente como contexto y a eventos.md) y captura en cada pausa (máx. 10), ADR-0013. Pendiente: prueba con conversación real desde la UI y campos de Data collection para el Work Map.

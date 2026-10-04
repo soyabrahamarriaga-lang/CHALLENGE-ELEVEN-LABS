@@ -2,7 +2,7 @@
 // The vault is optional: a machine without VAULT_PATH answers 503 and the UI stays quiet.
 
 export type ArchiveResult =
-  | { status: "saved"; file: string }
+  | { status: "saved"; file: string; flowStatus?: "ready" | "failed" }
   | { status: "disabled" }
   | { status: "failed"; reason: string };
 
@@ -41,7 +41,7 @@ export async function archiveConversation(
     }
     if (response.ok) {
       const body = await response.json().catch(() => ({}));
-      return { status: "saved", file: typeof body?.file === "string" ? body.file : "" };
+      return { status: "saved", file: typeof body?.file === "string" ? body.file : "", ...(body.flowStatus === "ready" || body.flowStatus === "failed" ? { flowStatus: body.flowStatus } : {}) };
     }
     // Vite answers 404/502 when the backend is not running; 503 = vault or key not configured.
     if (response.status === 503 || response.status === 404) return { status: "disabled" };

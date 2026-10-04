@@ -52,6 +52,8 @@ export function startAgentSync(config, { log = console, sync = syncAgentConversa
     if (running) return;
     running = true;
     try {
+      const maps = await vault.ensureProcessMaps();
+      if (maps.failures.length) log.error(`[vault] ${maps.failures.length} diagramas pendientes: revisar permisos y archivos de la bóveda`);
       const result = await sync(config, vault);
       for (const file of result.imported) log.info(`[vault] transcripción guardada: ${file}`);
     } catch (error) {
