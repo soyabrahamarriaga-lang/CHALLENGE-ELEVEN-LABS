@@ -40,6 +40,19 @@ Completar `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` en `.env`, conservar el c
 - [Decisiones](context/decisions/ADR-0001.md) y [bitácora por aporte](context/entries/).
 - [Flujo de colaboración](CONTRIBUTING.md), [instrucciones para agentes](AGENTS.md) y [Claude](CLAUDE.md).
 
+## Correr la demo en tu Mac (un comando)
+Requisitos: Git y Node 22.12+ (`brew install node`). Las claves de ElevenLabs se piden al equipo **por privado**; nunca van a GitHub.
+
+```sh
+git clone https://github.com/soyabrahamarriaga-lang/CHALLENGE-ELEVEN-LABS.git ~/CHALLENGE-ELEVEN-LABS
+cd ~/CHALLENGE-ELEVEN-LABS
+npm run demo
+```
+
+Si ya tienes el repo: `git switch main && git pull && npm run demo`.
+
+`npm run demo` instala dependencias si faltan, crea `.env`, activa el inicio del agente sin código (ADR-0014), pide `ELEVENLABS_API_KEY` y `ELEVENLABS_AGENT_ID` la primera vez, levanta backend (3001) y app (5173) y abre `#senior/agent`. Ctrl+C detiene todo. Si lo corre otro agente sin terminal interactiva, agrega las dos claves a `.env` a mano antes. Bóveda opcional: docs/OBSIDIAN.md.
+
 ## Preparar otra computadora
 Se necesita Git, Python 3.9+ y acceso a este repositorio. El harness no requiere paquetes externos.
 

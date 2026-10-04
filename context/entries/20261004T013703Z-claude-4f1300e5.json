@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "id": "20261004T013703Z-claude-4f1300e5",
+  "at": "2026-10-04T01:37:03.384635Z",
+  "actor": "claude",
+  "operator": "soyabrahamarriaga-lang",
+  "tool": "claude-code-desktop",
+  "task": "one-command-demo",
+  "summary": "Correr UserHelper en otra Mac con un solo comando: npm run demo",
+  "result": "npm run demo instala dependencias, crea .env, activa AGENT_OPEN_ACCESS, pide las claves de ElevenLabs si faltan (o se detiene con instrucciones sin terminal), levanta backend y app y abre el agente. Probado en un clon nuevo sin claves; el arranque de servidores no se probó aquí porque los puertos 3001/5173 estaban ocupados por la app en uso.",
+  "files": [
+    "README.md",
+    "package.json",
+    "scripts/demo.mjs",
+    "scripts/demo_env.mjs",
+    "scripts/demo_env.test.mjs"
+  ],
+  "decisions": [
+    "Las claves no se versionan (repo público): el script las pide localmente y las escribe solo en .env. Pedido por el usuario para que un compañero lo corra directo en su Mac."
+  ],
+  "adr_refs": [],
+  "ontology_review": "Sin cambio.",
+  "validation": [
+    "npm test: 72 pruebas pasaron (4 nuevas de demo_env).",
+    "Clon nuevo sin node_modules ni .env: instaló 82 paquetes, creó .env, puso AGENT_OPEN_ACCESS=true y se detuvo pidiendo ELEVENLABS_API_KEY y ELEVENLABS_AGENT_ID."
+  ],
+  "next_steps": [
+    "Que el compañero corra npm run demo en su Mac con las claves recibidas por privado."
+  ]
+}
